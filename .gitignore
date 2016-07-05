@@ -1,0 +1,6 @@
+.idea/
+vendor/
+tests/
+*.zip
+*.xlsx
+*.html
