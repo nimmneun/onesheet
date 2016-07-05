@@ -8,7 +8,7 @@ namespace OneSheet;
 
 /**
  * Class Style
- * @package Sheety
+ * @package OneSheet
  */
 class Style
 {

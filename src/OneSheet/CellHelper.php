@@ -10,7 +10,7 @@ namespace OneSheet;
  * Static class to build cell strings.
  *
  * Class CellHelper
- * @package Sheety
+ * @package OneSheet
  */
 class CellHelper
 {

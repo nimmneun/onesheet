@@ -12,7 +12,7 @@ namespace OneSheet;
  * DOM/SimpleXml objects ... total performance and memory killer.
  *
  * Class RowHelper
- * @package Sheety
+ * @package OneSheet
  */
 class RowHelper
 {
@@ -23,16 +23,6 @@ class RowHelper
      * @var int
      */
     private static $rowIndex = 0;
-
-    /**
-     * Return last written row index.
-     *
-     * @return int
-     */
-    public static function lastRowIndex()
-    {
-        return self::$rowIndex;
-    }
 
     /**
      * Build XML String for a single data row and return it.

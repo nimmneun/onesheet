@@ -29,7 +29,7 @@ namespace OneSheet;
 
 /**
  * Class Writer
- * @package Sheety
+ * @package OneSheet
  */
 class Writer
 {

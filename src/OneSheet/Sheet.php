@@ -8,7 +8,7 @@ namespace OneSheet;
 
 /**
  * Class Sheet to write the sheet1.xml contents to file.
- * @package Sheety
+ * @package OneSheet
  */
 class Sheet
 {

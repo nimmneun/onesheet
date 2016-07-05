@@ -8,7 +8,7 @@ namespace OneSheet;
 
 /**
  * Class StyleHelper to build new style strings for style.xml.
- * @package Sheety
+ * @package OneSheet
  */
 class StyleHelper
 {
