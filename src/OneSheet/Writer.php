@@ -45,10 +45,10 @@ class Writer
 
     /**
      * XmlWriter constructor.
-     * @param string $fileName
      * @param Sheet $sheet
+     * @param string $fileName
      */
-    public function __construct($fileName = 'dummy.xlsx', Sheet $sheet)
+    public function __construct(Sheet $sheet, $fileName = 'dummy.xlsx')
     {
         $this->zip = new \ZipArchive();
         $this->zip->open($fileName, \ZipArchive::CREATE + \ZipArchive::CM_STORE);
