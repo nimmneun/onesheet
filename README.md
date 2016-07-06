@@ -1,4 +1,8 @@
 # OneSheet
+
+[![Build Status](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
+
 OneSheet is a simple **single sheet** excel/xlsx file writer for php 5.3+
 
 Since performance and memory usage were the main drivers, DOM and SimpleXml
