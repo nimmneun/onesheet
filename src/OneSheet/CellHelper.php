@@ -59,7 +59,7 @@ class CellHelper
             $value = self::escape($value);
         }
 
-        return '<c r="' . self::buildId($cellNo, $rowId) . '" s="' . $styleId. '" t="inlineStr"><is><t>' . $value . '</t></is></c>';
+        return '<c r="' . self::buildId($cellNo, $rowId) . '" s="' . $styleId . '" t="inlineStr"><is><t>' . $value . '</t></is></c>';
     }
 
     /**
