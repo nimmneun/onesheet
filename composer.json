@@ -1,6 +1,6 @@
 {
     "name":             "nimmneun/onesheet",
-    "description":      "OneSheet is a simple single sheet excel/xslx file writer for php 5.3+",
+    "description":      "OneSheet is a fast and lightweight single sheet excel/xlsx file writer for php 5.3+",
     "homepage":         "https://github.com/nimmneun/onesheet",
     "type":             "library",
     "license":          "MIT",
