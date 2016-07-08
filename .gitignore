@@ -1,4 +1,4 @@
 .idea/
 vendor/
-tests/
-composer.lock
+dummy/
+

@@ -1,19 +1,29 @@
 {
-    "name": "nimmneun/onesheet",
-    "description": "OneSheet is a simple single sheet excel/xslx file writer for php 5.3+",
-    "license": "MIT",
+    "name":             "nimmneun/onesheet",
+    "description":      "OneSheet is a simple single sheet excel/xslx file writer for php 5.3+",
+    "homepage":         "https://github.com/nimmneun/onesheet",
+    "type":             "library",
+    "license":          "MIT",
+    "keywords":          [
+        "excel",
+        "xlsx",
+        "excel2007"
+    ],
     "authors": [
         {
-            "name": "Stefan",
-            "email": "nimmneun@gmail.com"
+            "name":     "Stefan",
+            "email":    "nimmneun@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "OneSheet\\": "src/OneSheet/"
         }
     },
+    "require": {
+        "php": "^5.3|^7.0"
+    },
     "require-dev": {
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": "~4.8|~5.0"
     }
 }
