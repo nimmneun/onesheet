@@ -7,14 +7,18 @@
 namespace OneSheet;
 
 /**
- * Class StyleHelper to build new style strings for style.xml.
+ * Class StyleHelper to build new style strings for style.xml. Every style
+ * has it's own font, fill, cellXfs since it's that much simpler to handle
+ * and less prone to error.
+ * The first 2 styles (index 0 and 1) are "reserved", because no matter
+ * what ... the second <fill> always ended up as grey125.
+ *
  * @package OneSheet
  */
 class StyleHelper
 {
     /**
      * Increase style index with every built style.
-     * Start from 2, because 0 and 1 are reserved.
      *
      * @var int
      */
@@ -25,7 +29,7 @@ class StyleHelper
      *
      * @var string
      */
-    private static $fontXml = '<font><sz val="11"/><color rgb="000000"/><name val="Calibri"/></font><font><sz val="11"/><color rgb="000000"/><name val="Calibri"/><b/></font>';
+    private static $fontXml = '<font><sz val="11"/><color rgb="000000"/><name val="Calibri"/></font><font><sz val="11"/><color rgb="000000"/><name val="Calibri"/></font>';
 
     /**
      * Concatenated <fill> strings
@@ -35,7 +39,7 @@ class StyleHelper
     private static $fillXml = '<fill><patternFill patternType="none"/></fill><fill><patternFill patternType="grey125"/></fill>';
 
     /**
-     * Build a single new style based on given params.
+     * Build a single new style based on given params and return it's id.
      * Every newly built style will result in a completely new style set.
      *
      * @param Style $style

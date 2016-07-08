@@ -69,26 +69,32 @@ class Style
     }
 
     /**
+     * Set font size.
+     *
      * @param int $size
      * @return Style
      */
-    public function setSize($size)
+    public function size($size)
     {
         $this->size = $size;
         return $this;
     }
 
     /**
+     * Set font color.
+     *
      * @param string $color
      * @return Style
      */
     public function color($color)
     {
-        $this->color = $color;
+        $this->color = strtoupper($color);
         return $this;
     }
 
     /**
+     * Set font name.
+     *
      * @param string $name
      * @return Style
      */
@@ -99,6 +105,8 @@ class Style
     }
 
     /**
+     * Make font bold.
+     *
      * @return Style
      */
     public function bold()
@@ -108,6 +116,8 @@ class Style
     }
 
     /**
+     * Make font italic.
+     *
      * @return Style
      */
     public function italic()
@@ -117,6 +127,8 @@ class Style
     }
 
     /**
+     * Underline the font text.
+     *
      * @return Style
      */
     public function underline()
@@ -126,12 +138,14 @@ class Style
     }
 
     /**
+     * Set the cell fill/background color.
+     *
      * @param string $fill
      * @return Style
      */
     public function fill($fill)
     {
-        $this->fill = $fill;
+        $this->fill = strtoupper($fill);
         return $this;
     }
 }

@@ -6,9 +6,9 @@
 OneSheet is a simple **single sheet** excel/xlsx file writer for php 5.3+
 
 Since performance and memory usage were the main drivers, DOM and SimpleXml
-where out of the question. Same goes for Cell and even Row objects.
+where out of the question. Same goes for cell or even row objects.
 
-This lib was built to satisfy the following needs:
+This lib is still WIP was built to satisfy the following needs:
 - Write a single sheet with up to 2^20 rows fast and with a small
   memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
@@ -26,20 +26,30 @@ Current major drawback(s):
 ```php
 <?php require_once '../vendor/autoload.php';
 
-$sheet = new \OneSheet\Sheet('A2');
-
+// generate some dummy data
 $dataRows = array();
-for ($i = 0; $i <= 1000; $i++) {
-    $dataRows[$i]['SomeInt'] = $i;
-    $dataRows[$i]['SomeFloat'] = number_format($i/3, 3);
-    $dataRows[$i]['SomeString'] = substr(md5(microtime(1)+$i), rand(10,20));
+for ($i = 1; $i <= 10000; $i++) {
+    $dataRows[] = range($i, $i+4);
 }
 
-$headerStyle = new \OneSheet\Style();
+// memorize timings and memory usage
+$t = -microtime(1);
+$m = -memory_get_usage(1);
 
-$sheet->addRow(array_keys($dataRows[0]), $headerStyle->bold()->color('FFFFFF')->fill('777777'));
+// create new sheet & freeze everthing above the 2nd row
+$sheet = new \OneSheet\Sheet('A2');
+
+// create new style and add headline using the style
+$headerStyle = new \OneSheet\Style();
+$sheet->addRow(
+    array('some', 'fancy', 'table', 'header', 'here'),
+    $headerStyle->bold()->color('FFFFFF')->fill('555555')
+);
+
+// add all data rows at once
 $sheet->addRows($dataRows);
 
+// create/write the xlsx file ... on close
 $writer = new \OneSheet\Writer($sheet, 'somefile.xlsx');
 $writer->close();
 ```

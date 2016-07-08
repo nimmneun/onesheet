@@ -41,7 +41,6 @@ class CellHelper
 
     /**
      * Build and return the string for a single cell.
-     * Only very basic escaping is done for now.
      *
      * @param int $rowId
      * @param int $cellNo
@@ -70,6 +69,6 @@ class CellHelper
      */
     private static function escape($value)
     {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($value, ENT_QUOTES);
     }
 }
