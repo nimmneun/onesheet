@@ -8,7 +8,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for php 5.3+
 Since performance and memory usage were the main drivers, DOM and SimpleXml
 where out of the question. Same goes for cell or even row objects.
 
-This lib is still WIP was built to satisfy the following needs:
+This mini library is still WIP and was built to satisfy the following needs:
 - Write a single sheet with up to 2^20 rows fast and with a small
   memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
@@ -36,7 +36,7 @@ for ($i = 1; $i <= 10000; $i++) {
 $t = -microtime(1);
 $m = -memory_get_usage(1);
 
-// create new sheet & freeze everthing above the 2nd row
+// create new sheet & freeze everything above the 2nd row
 $sheet = new \OneSheet\Sheet('A2');
 
 // create new style and add headline using the style
