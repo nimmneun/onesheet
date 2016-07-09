@@ -52,4 +52,8 @@ $sheet->addRows($dataRows);
 // create/write the xlsx file ... on close
 $writer = new \OneSheet\Writer($sheet, 'somefile.xlsx');
 $writer->close();
+
+// echo OneSheet timings und memory usage
+echo (microtime(1) + $t) . ' seconds' . PHP_EOL;
+echo (memory_get_usage(1) + $m) . ' bytes' . PHP_EOL;
 ```
