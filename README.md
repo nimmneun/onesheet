@@ -5,6 +5,8 @@
 
 OneSheet is a simple **single sheet** excel/xlsx file writer for php 5.3+
 
+![Resulting OneSheet File in Excel](./tests/generated_xlsx_sample.png)
+
 Since performance and memory usage were the main drivers, DOM and SimpleXml
 where out of the question. Same goes for cell or even row objects.
 
