@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author neun
- * @since  2016-07-09
- */
 class TestCellHelper extends PHPUnit_Framework_TestCase
 {
     public function testBuildString()
