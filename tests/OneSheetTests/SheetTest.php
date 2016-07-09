@@ -1,9 +1,15 @@
 <?php
 
-class SheetTest extends PHPUnit_Framework_TestCase
+namespace OneSheetTests;
+
+use OneSheet\Sheet;
+use OneSheet\Style;
+use OneSheet\StyleHelper;
+
+class SheetTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var OneSheet\Sheet
+     * @var Sheet
      */
     protected static $sheet;
 
@@ -14,13 +20,13 @@ class SheetTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$sheet = new \OneSheet\Sheet('A2');
+        self::$sheet = new Sheet('A2');
         self::$path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml';
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', new OneSheet\Sheet('B2'));
+        $this->assertInstanceOf('OneSheet\Sheet', new Sheet('B2'));
     }
 
     public function testSheetFilePath()
@@ -32,7 +38,7 @@ class SheetTest extends PHPUnit_Framework_TestCase
 
     public function testAddStyle()
     {
-        $this->assertGreaterThan(1, \OneSheet\StyleHelper::buildStyle(new OneSheet\Style()));
+        $this->assertGreaterThan(1, StyleHelper::buildStyle(new Style()));
     }
 
     public function testAddRows()
@@ -41,13 +47,10 @@ class SheetTest extends PHPUnit_Framework_TestCase
         $string = uniqid();
 
         self::$sheet->addRows(array(array($number)), 1);
-        $style = new \OneSheet\Style();
+        $style = new Style();
         self::$sheet->addRows(array(array($string)), $style);
         $xml = file_get_contents(self::$path);
 
         $this->assertEquals(1, preg_match('~'. $number . '.*' . $string . '~', $xml, $match));
     }
-
-
-
 }
