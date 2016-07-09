@@ -6,7 +6,3 @@ php:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --no-interaction
-script:
-  - phpunit --coverage-text --coverage-clover tmp/build/clover.xml
-after_script:
-  - php vendor/bin/coveralls -v
