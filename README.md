@@ -6,8 +6,9 @@
 
 OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 Install via ```composer require nimmneun/onesheet``` or just clone it.
-To control wheter a numeric value generated as a string or number field,
-simple typecast integers and doubles before adding the row to the sheet.
+
+To control wheter a numeric value is generated as a string or number field,
+simply typecast integers and doubles before adding the row to the sheet.
 
 ![Resulting OneSheet File in Excel](./tests/generated_xlsx_sample.png)
 
