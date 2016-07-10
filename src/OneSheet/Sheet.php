@@ -35,6 +35,8 @@ class Sheet
         }
 
         $this->spl->fwrite('<sheetData>');
+
+        CellHelper::setCtrlCharacterMap(CtrlCharater::getMap());
     }
 
     /**

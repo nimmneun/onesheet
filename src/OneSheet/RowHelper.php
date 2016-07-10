@@ -37,7 +37,7 @@ class RowHelper
 
         $cellXml = '';
         foreach (array_values($dataRow) as $cellNumber => $cellValue) {
-            $cellXml .= CellHelper::buildString(self::$rowIndex, $cellNumber, $cellValue, $styleId);
+            $cellXml .= CellHelper::buildCell(self::$rowIndex, $cellNumber, $cellValue, $styleId);
         }
 
         return '<row r="' . self::$rowIndex . '" spans="1:' . count($dataRow) . '">' . $cellXml . '</row>';
