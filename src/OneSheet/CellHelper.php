@@ -7,7 +7,9 @@
 namespace OneSheet;
 
 /**
- * Static class to build cell strings.
+ * Static class to build cell strings. Wheter a numeric value
+ * is written as a number or string type cell is determined
+ * by type, which allows for some control by typecasting.
  *
  * Class CellHelper
  * @package OneSheet
@@ -31,9 +33,6 @@ class CellHelper
 
     /**
      * Build and return the string for a single cell.
-     * Wheter a numeric value is written as a number
-     * or string type cell is determined by type,
-     * which allows for some control by typecasting.
      *
      * @param int $rowId
      * @param int $cellNo
