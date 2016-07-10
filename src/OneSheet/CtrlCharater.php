@@ -21,7 +21,7 @@ class CtrlCharater
     public static function getMap()
     {
         $map = array();
-        foreach (range(0,255) as $int) {
+        foreach (range(0, 255) as $int) {
             if (ctype_cntrl(chr($int))) {
                 $map['from'][] = chr($int);
                 $map['to'][] = sprintf('_x%04s_', strtoupper(dechex($int)));
