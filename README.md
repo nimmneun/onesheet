@@ -1,17 +1,20 @@
 # OneSheet
 
-[![Build Status](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/build.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/build-status/master)
+[![Build Status](https://travis-ci.org/nimmneun/OneSheet.svg?branch=master)](https://travis-ci.org/nimmneun/OneSheet)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for php 5.3+
+OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
+Install via ```composer require nimmneun/onesheet``` or just clone it.
+To control wheter a numeric value generated as a string or number field,
+simple typecast integers and doubles before adding the row to the sheet.
 
 ![Resulting OneSheet File in Excel](./tests/generated_xlsx_sample.png)
 
 Since performance and memory usage were the main drivers, DOM and SimpleXml
 where out of the question. Same goes for cell or even row objects.
 
-This mini library is still WIP and was built to satisfy the following needs:
+This XLSX writer/generator is still WIP and was built to satisfy the following needs:
 - Write a single sheet with up to 2^20 rows fast and with a small
   memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
@@ -19,12 +22,8 @@ This mini library is still WIP and was built to satisfy the following needs:
   a row level.
 
 Current major drawback(s):
-- No cell individualisation, everything is applied at a row level
-  and its intended to keep it that way.
-- No calculated/formula cells. Only inlineStr and simple number type
-  cells and it will probably stay that way.
-- No control character escaping todo: RowHelper::addEscapeRow()
-
+- No cell individualisation, everything is applied at a row level.
+- No calculated/formula cells.
 
 ```php
 <?php require_once '../vendor/autoload.php';

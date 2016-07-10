@@ -31,6 +31,9 @@ class CellHelper
 
     /**
      * Build and return the string for a single cell.
+     * Wheter a numeric value is written as a number
+     * or string type cell is determined by type,
+     * which allows for some control by typecasting.
      *
      * @param int $rowId
      * @param int $cellNo
@@ -41,9 +44,9 @@ class CellHelper
      */
     public static function buildCell($rowId, $cellNo, $value, $styleId = 0)
     {
-        if (is_numeric($value)) {
+        if (is_int($value) || is_double($value)) {
             return '<c r="' . self::buildId($cellNo, $rowId) . '" s="' . $styleId . '"><v>' . $value . '</v></c>';
-        } elseif (ctype_alnum($value)) {
+        } elseif (ctype_alnum($value) || is_numeric($value)) {
             return '<c r="' . self::buildId($cellNo, $rowId) . '" s="' . $styleId . '" t="inlineStr"><is><t>'
             . $value . '</t></is></c>';
         } elseif (ctype_print($value)) {
