@@ -13,9 +13,16 @@ namespace OneSheet;
 class Sheet
 {
     /**
+     * Contains the <sheetData> section.
+     *
      * @var \SplFileObject
      */
-    private $spl;
+    private $sheetData;
+
+    /**
+     * @var RowBuilderInterface
+     */
+    private $rowBuilder;
 
     /**
      * Sheet constructor to init SplFileObject and write xml header.
@@ -23,27 +30,39 @@ class Sheet
      * It has to be done right away, since everything is immediately
      * written to the SplFileObject.
      *
-     * @param string|null $freezePaneCellId
+     * @param RowBuilderInterface $rowBuilder
+     * @param string|null         $freezePaneCellId
      */
-    public function __construct($freezePaneCellId = null)
+    public function __construct(RowBuilderInterface $rowBuilder, $freezePaneCellId = null)
     {
-        $this->spl = new \SplFileObject(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml', 'wb+');
-        $this->spl->fwrite('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xml:space="preserve" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">');
+        $this->rowBuilder = $rowBuilder;
+
+        $this->sheetData = new \SplFileObject(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml', 'wb+');
+        $this->sheetData->fwrite('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xml:space="preserve" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">');
 
         if (1 == preg_match('~[A-Z]+([1-9]?[0-9]+)$~', $freezePaneCellId, $match)) {
-            $this->spl->fwrite('<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1"><pane ySplit="' . (array_pop($match)-1) . '" topLeftCell="' . $freezePaneCellId . '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>');
+            $this->sheetData->fwrite('<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1"><pane ySplit="' . (array_pop($match) - 1) . '" topLeftCell="' . $freezePaneCellId . '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>');
         }
 
-        $this->spl->fwrite('<sheetData>');
+        $this->sheetData->fwrite('<sheetData>');
+    }
 
-        CellHelper::setCtrlCharacterMap(CtrlCharater::getMap());
+    /**
+     * Instantiate new sheet with default RowBuilder implementation.
+     *
+     * @param string|null $freezePaneCellId
+     * @return Sheet
+     */
+    public static function fromDefaults($freezePaneCellId = null)
+    {
+        return new self(new DefaultRowBuilder(new DefaultCellBuilder()), $freezePaneCellId);
     }
 
     /**
      * Add single data row to sheet and add new style,
      * if its not an integer.
      *
-     * @param array $dataRow
+     * @param array     $dataRow
      * @param int|Style $style
      */
     public function addRow(array $dataRow, $style = 0)
@@ -52,13 +71,13 @@ class Sheet
             $style = $this->addStyle($style);
         }
 
-        $this->spl->fwrite(RowHelper::buildRow($dataRow, $style));
+        $this->sheetData->fwrite($this->rowBuilder->build($dataRow, $style));
     }
 
     /**
      * Add multiple data rows to sheet.
      *
-     * @param array $dataRows
+     * @param array     $dataRows
      * @param int|Style $style
      */
     public function addRows(array $dataRows, $style = 0)
@@ -86,7 +105,7 @@ class Sheet
      */
     public function sheetFilePath()
     {
-        $this->spl->fwrite('</sheetData></worksheet>');
-        return (string)$this->spl->getFileInfo();
+        $this->sheetData->fwrite('</sheetData></worksheet>');
+        return (string)$this->sheetData->getFileInfo();
     }
 }

@@ -20,13 +20,13 @@ class SheetTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$sheet = new Sheet('A2');
+        self::$sheet = Sheet::fromDefaults();
         self::$path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml';
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', new Sheet('B2'));
+        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults());
     }
 
     public function testSheetFilePath()

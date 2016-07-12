@@ -13,14 +13,14 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 {
     public function testSheet()
     {
-        $sheet = new Sheet();
+        $sheet = Sheet::fromDefaults();
         $writer = new Writer($sheet);
         $this->assertEquals($writer->sheet(), $sheet);
     }
 
     public function testClose()
     {
-        $writer = new Writer(new Sheet(), sys_get_temp_dir() . '/onesheet.xlsx');
+        $writer = new Writer(Sheet::fromDefaults(), sys_get_temp_dir() . '/onesheet.xlsx');
         $writer->close();
         $this->assertFileExists(sys_get_temp_dir() . '/onesheet.xlsx');
     }
