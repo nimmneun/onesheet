@@ -4,7 +4,7 @@ namespace OneSheetTests;
 
 use OneSheet\DefaultCellBuilder;
 
-class TestDefaultCellBuilder extends \PHPUnit_Framework_TestCase
+class DefaultCellBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
