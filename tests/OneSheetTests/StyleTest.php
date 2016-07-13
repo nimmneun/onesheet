@@ -29,5 +29,9 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $style->fill('eeeeee');
         $string = '<fill><patternFill patternType="solid"><fgColor rgb="EEEEEE"/></patternFill></fill>';
         $this->assertEquals($string, $style->getFillXml());
+
+        $style = new Style();
+        $string = '<fill><patternFill patternType="none"/></fill>';
+        $this->assertEquals($string, $style->getFillXml());
     }
 }

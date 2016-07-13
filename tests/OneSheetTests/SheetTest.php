@@ -3,7 +3,6 @@
 namespace OneSheetTests;
 
 use OneSheet\Sheet;
-use OneSheet\Style;
 use OneSheet\StyleHelper;
 
 class SheetTest extends \PHPUnit_Framework_TestCase
@@ -26,7 +25,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults());
+        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults('A2'));
     }
 
     public function testSheetFilePath()
@@ -38,7 +37,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
 
     public function testAddStyle()
     {
-        $this->assertGreaterThan(1, StyleHelper::buildStyle(new Style()));
+        $this->assertGreaterThan(1, StyleHelper::buildStyle($this->getMockBuilder('\\OneSheet\\Style')->getMock()));
     }
 
     public function testAddRows()
@@ -47,7 +46,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $string = uniqid();
 
         self::$sheet->addRows(array(array($number)), 1);
-        $style = new Style();
+        $style = $this->getMockBuilder('\\OneSheet\\Style')->getMock();
         self::$sheet->addRows(array(array($string)), $style);
         $xml = file_get_contents(self::$path);
 

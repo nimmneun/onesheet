@@ -7,13 +7,16 @@
 namespace OneSheet;
 
 /**
- * Class CellBuilder to build xml cell strings. Wheter a numeric
- * value is written as a number or string type cell is simply
- * determined by type, to allow for some control by typecasting.
- *
+ * Class DefaultCellBuilder to build xml cell strings.
+ * Wheter a numeric value is written as a number or string type cell
+ * is simply determined by type, to allow for some control by typecasting.
+ * (Premature) performance considerations (50.000 rows x 15 columns):
+ * - sprintf 8.3s
+ * - '<c>' . $value . '</c>' 8.1s
+ * - "<c>{$value}</c>" 7.9s
  * @package OneSheet
  */
-class DefaultCellBuilder implements CellBuilderInterface, NumberCellInterface, StringCellInterface
+class DefaultCellBuilder implements CellBuilderInterface
 {
     /**
      * A-Z character array to build cell ids.
@@ -65,13 +68,13 @@ class DefaultCellBuilder implements CellBuilderInterface, NumberCellInterface, S
         $cellId = $this->getCellId($cellNumber, $rowNumber);
 
         if (is_int($value) || is_double($value)) {
-            return sprintf(self::NUMBER_XML, $cellId, $styleId, $value);
+            return sprintf(CellXml::NUMBER, $cellId, $styleId, $value);
         } elseif (ctype_alnum($value) || is_numeric($value)) {
-            return sprintf(self::STRING_XML, $cellId, $styleId, $value);
+            return sprintf(CellXml::STRING, $cellId, $styleId, $value);
         } elseif (ctype_print($value)) {
-            return sprintf(self::STRING_XML, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
+            return sprintf(CellXml::STRING, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
         } else {
-            return sprintf(self::STRING_XML, $cellId, $styleId, $this->escapeControlCharacters($value));
+            return sprintf(CellXml::STRING, $cellId, $styleId, $this->escapeControlCharacters($value));
         }
     }
 
