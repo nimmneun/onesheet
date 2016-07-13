@@ -68,13 +68,13 @@ class DefaultCellBuilder implements CellBuilderInterface
         $cellId = $this->getCellId($cellNumber, $rowNumber);
 
         if (is_int($value) || is_double($value)) {
-            return sprintf(CellXml::NUMBER, $cellId, $styleId, $value);
+            return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $value);
         } elseif (ctype_alnum($value) || is_numeric($value)) {
-            return sprintf(CellXml::STRING, $cellId, $styleId, $value);
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId, $value);
         } elseif (ctype_print($value)) {
-            return sprintf(CellXml::STRING, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
         } else {
-            return sprintf(CellXml::STRING, $cellId, $styleId, $this->escapeControlCharacters($value));
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escapeControlCharacters($value));
         }
     }
 

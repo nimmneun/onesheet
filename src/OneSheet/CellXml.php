@@ -16,10 +16,10 @@ class CellXml
     /**
      * XML constant for numeric values.
      */
-    const NUMBER = '<c r="%s" s="%d"><v>%s</v></c>';
+    const NUMBER_XML = '<c r="%s" s="%d"><v>%s</v></c>';
 
     /**
      * XML constant for string values.
      */
-    const STRING = '<c r="%s" s="%d" t="inlineStr"><is><t>%s</t></is></c>';
+    const STRING_XML = '<c r="%s" s="%d" t="inlineStr"><is><t>%s</t></is></c>';
 }
