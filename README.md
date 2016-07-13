@@ -4,8 +4,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
-Install via ```composer require nimmneun/onesheet``` or just clone it.
+OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+.
 
 To control wheter a numeric value is generated as a string or number field,
 simply typecast integers and doubles before adding the row to the sheet.
@@ -21,6 +20,7 @@ This XLSX writer/generator is still WIP and was built to satisfy the following n
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Option to use different fonts, styles and background colors on
   a row level.
+- PHP 5.3 compatibility.
 
 Current major drawback(s):
 - No cell individualisation, everything is applied at a row level.
@@ -40,7 +40,7 @@ $t = -microtime(1);
 $m = -memory_get_usage(1);
 
 // create new sheet & freeze everything above the 2nd row
-$sheet = new \OneSheet\Sheet('A2');
+$sheet = OneSheet\Sheet::fromDefaults('A2');
 
 // create new style and add headline using the style
 $headerStyle = new \OneSheet\Style();
@@ -52,7 +52,7 @@ $sheet->addRow(
 // add all data rows at once
 $sheet->addRows($dataRows);
 
-// create/write the xlsx file ... on close
+// create/write the xlsx file
 $writer = new \OneSheet\Writer($sheet, 'somefile.xlsx');
 $writer->close();
 

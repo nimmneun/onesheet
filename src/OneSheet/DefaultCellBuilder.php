@@ -71,8 +71,12 @@ class DefaultCellBuilder implements CellBuilderInterface
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $value);
         } elseif (ctype_alnum($value) || is_numeric($value)) {
             return sprintf(CellXml::STRING_XML, $cellId, $styleId, $value);
+        } elseif (is_bool($value)) {
+            return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$value);
         } elseif (ctype_print($value)) {
             return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
+        } elseif (0 == strlen($value)) {
+            return '';
         } else {
             return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escapeControlCharacters($value));
         }

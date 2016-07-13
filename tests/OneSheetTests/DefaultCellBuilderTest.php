@@ -13,6 +13,12 @@ class DefaultCellBuilderTest extends \PHPUnit_Framework_TestCase
         $string = $cellBuilder->build(33, 44, 987456);
         $this->assertEquals('<c r="AS33" s="0"><v>987456</v></c>', $string);
 
+        $string = $cellBuilder->build(3, 2, true, 1);
+        $this->assertEquals('<c r="C3" s="1" t="b"><v>1</v></c>', $string);
+
+        $string = $cellBuilder->build(3, 2, null, 1);
+        $this->assertEquals('', $string);
+
         $string = $cellBuilder->build(33, 44, "987456");
         $this->assertEquals('<c r="AS33" s="0" t="inlineStr"><is><t>987456</t></is></c>', $string);
 
