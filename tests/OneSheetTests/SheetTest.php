@@ -3,7 +3,6 @@
 namespace OneSheetTests;
 
 use OneSheet\Sheet;
-use OneSheet\Style;
 use OneSheet\StyleHelper;
 
 class SheetTest extends \PHPUnit_Framework_TestCase
@@ -20,13 +19,13 @@ class SheetTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::$sheet = new Sheet('A2');
+        self::$sheet = Sheet::fromDefaults();
         self::$path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml';
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', new Sheet('B2'));
+        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults('A2'));
     }
 
     public function testSheetFilePath()
@@ -38,7 +37,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
 
     public function testAddStyle()
     {
-        $this->assertGreaterThan(1, StyleHelper::buildStyle(new Style()));
+        $this->assertGreaterThan(1, StyleHelper::buildStyle($this->getMockBuilder('\\OneSheet\\Style')->getMock()));
     }
 
     public function testAddRows()
@@ -47,7 +46,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $string = uniqid();
 
         self::$sheet->addRows(array(array($number)), 1);
-        $style = new Style();
+        $style = $this->getMockBuilder('\\OneSheet\\Style')->getMock();
         self::$sheet->addRows(array(array($string)), $style);
         $xml = file_get_contents(self::$path);
 
