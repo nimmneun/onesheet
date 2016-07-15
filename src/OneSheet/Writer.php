@@ -51,7 +51,7 @@ class Writer
     public function __construct(Sheet $sheet, $fileName = 'dummy.xlsx')
     {
         $this->zip = new \ZipArchive();
-        $this->zip->open($fileName, \ZipArchive::CREATE + \ZipArchive::CM_STORE);
+        $this->zip->open($fileName, \ZipArchive::CREATE|\ZipArchive::CM_STORE);
         $this->sheet = $sheet;
     }
 

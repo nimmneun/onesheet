@@ -46,10 +46,10 @@ class DefaultCellBuilder implements CellBuilderInterface
     {
         $this->characters = range('A', 'Z');
 
-        for ($i = 0; $i <= 255; $i++) {
-            if (ctype_cntrl($char = chr($i))) {
+        foreach(range(chr(0), chr(31)) as $key => $char) {
+            if (!in_array($char, array("\n", "\r", "\t"))) {
                 $this->controlCharacters[] = $char;
-                $this->escapeCharacters[] = sprintf('_x%04s_', strtoupper(dechex($i)));
+                $this->escapeCharacters[] = sprintf('_x%04s_', strtoupper(dechex($key)));
             }
         }
     }
@@ -69,14 +69,10 @@ class DefaultCellBuilder implements CellBuilderInterface
 
         if (is_int($value) || is_double($value)) {
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $value);
-        } elseif (ctype_alnum($value) || is_numeric($value)) {
-            return sprintf(CellXml::STRING_XML, $cellId, $styleId, $value);
         } elseif (is_bool($value)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$value);
-        } elseif (ctype_print($value)) {
-            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($value, ENT_QUOTES));
-        } elseif (0 == strlen($value)) {
-            return '';
+        } elseif (is_numeric($value) || $this->isWordCharacter($value)) {
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($value));
         } else {
             return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escapeControlCharacters($value));
         }
@@ -97,6 +93,17 @@ class DefaultCellBuilder implements CellBuilderInterface
         }
 
         return $this->getCellId(floor($cellNumber / 26) - 1) . $this->characters[$cellNumber % 26] . $rowNumber;
+    }
+
+    /**
+     * Determine if the string requires additional escaping.
+     *
+     * @param string $value
+     * @return bool
+     */
+    private function isWordCharacter($value)
+    {
+        return 1 != preg_match('~[^\w]~', $value);
     }
 
     /**

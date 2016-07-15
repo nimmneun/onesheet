@@ -7,7 +7,7 @@
 namespace OneSheet;
 
 /**
- * Class RowBuilder to generate XML row strings.
+ * Class DefaultRowBuilder to generate XML row strings.
  *
  * @package OneSheet
  */
