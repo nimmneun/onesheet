@@ -17,7 +17,7 @@ class Sheet
      *
      * @var \SplFileObject
      */
-    private $sheetData;
+    private $spl;
 
     /**
      * @var RowBuilderInterface
@@ -37,14 +37,14 @@ class Sheet
     {
         $this->rowBuilder = $rowBuilder;
 
-        $this->sheetData = new \SplFileObject(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml', 'wb+');
-        $this->sheetData->fwrite('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xml:space="preserve" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">');
+        $this->spl = new \SplFileObject(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml', 'wb+');
+        $this->spl->fwrite(SheetXml::HEADER_XML);
 
         if (1 == preg_match('~[A-Z]+([1-9]?[0-9]+)$~', $freezePaneCellId, $match)) {
-            $this->sheetData->fwrite('<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1"><pane ySplit="' . (array_pop($match) - 1) . '" topLeftCell="' . $freezePaneCellId . '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>');
+            $this->spl->fwrite(sprintf(SheetXml::SHEETVIEWS_XML, (array_pop($match) - 1), $freezePaneCellId));
         }
 
-        $this->sheetData->fwrite('<sheetData>');
+        $this->spl->fwrite('<sheetData>');
     }
 
     /**
@@ -71,7 +71,7 @@ class Sheet
             $style = $this->addStyle($style);
         }
 
-        $this->sheetData->fwrite($this->rowBuilder->build($dataRow, $style));
+        $this->spl->fwrite($this->rowBuilder->build($dataRow, $style));
     }
 
     /**
@@ -105,7 +105,7 @@ class Sheet
      */
     public function sheetFilePath()
     {
-        $this->sheetData->fwrite('</sheetData></worksheet>');
-        return (string)$this->sheetData->getFileInfo();
+        $this->spl->fwrite('</sheetData></worksheet>');
+        return (string)$this->spl->getFileInfo();
     }
 }
