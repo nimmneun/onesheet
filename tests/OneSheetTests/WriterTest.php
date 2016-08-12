@@ -1,27 +1,28 @@
 <?php
-/**
- * @author neun
- * @since  2016-07-10
- */
 
-namespace OneSheetTests;
+namespace OneSheetTest;
 
-use OneSheet\Sheet;
+use OneSheet\Style\Style;
 use OneSheet\Writer;
 
 class WriterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSheet()
+    public function testGetSheet()
     {
-        $sheet = Sheet::fromDefaults();
-        $writer = new Writer($sheet);
-        $this->assertEquals($writer->sheet(), $sheet);
+        $writer = new Writer();
+        $this->assertInstanceOf('OneSheet\Sheet', $writer->getSheet());
     }
 
-    public function testClose()
+    public function testAddRows()
     {
-        $writer = new Writer(Sheet::fromDefaults(), sys_get_temp_dir() . '/onesheet.xlsx');
-        $writer->close();
-        $this->assertFileExists(sys_get_temp_dir() . '/onesheet.xlsx');
+        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'onesheet_test.xlsx';
+
+        $writer = new Writer();
+        $writer->getSheet()->enableCellWidthEstimation();
+        $writer->addRows(array(range(1,3), range('a', 'z')), new Style());
+        $writer->writeToFile($fileName);
+
+        $this->assertFileExists($fileName);
+        unlink($fileName);
     }
 }

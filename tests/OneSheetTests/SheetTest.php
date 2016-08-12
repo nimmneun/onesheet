@@ -1,55 +1,36 @@
 <?php
+/**
+ * @author neun
+ * @since  2016-08-12
+ */
 
-namespace OneSheetTests;
+namespace OneSheetTest;
 
 use OneSheet\Sheet;
-use OneSheet\StyleHelper;
+use OneSheet\Style\Style;
 
 class SheetTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Sheet
-     */
-    protected static $sheet;
-
-    /**
-     * @var string
-     */
-    private static $path;
-
-    public static function setUpBeforeClass()
+    public function testEnableCellWidthEstimation()
     {
-        self::$sheet = Sheet::fromDefaults();
-        self::$path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml';
+        $sheet = new Sheet();
+        $sheet->enableCellWidthEstimation();
+        $this->assertTrue($sheet->isCellWidthEstimationEnabled());
     }
 
-    public function testConstructor()
+    public function testDisableCellWidthEstimation()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults('A2'));
+        $sheet = new Sheet();
+        $sheet->disableCellWidthEstimation();
+        $this->assertFalse($sheet->isCellWidthEstimationEnabled());
     }
 
-    public function testSheetFilePath()
+    public function testAddRow()
     {
-        $this->assertEquals(
-            self::$path, self::$sheet->sheetFilePath()
-        );
-    }
-
-    public function testAddStyle()
-    {
-        $this->assertGreaterThan(1, StyleHelper::buildStyle($this->getMockBuilder('\\OneSheet\\Style')->getMock()));
-    }
-
-    public function testAddRows()
-    {
-        $number = time();
-        $string = uniqid();
-
-        self::$sheet->addRows(array(array($number)), 1);
-        $style = $this->getMockBuilder('\\OneSheet\\Style')->getMock();
-        self::$sheet->addRows(array(array($string)), $style);
-        $xml = file_get_contents(self::$path);
-
-        $this->assertEquals(1, preg_match('~'. $number . '.*' . $string . '~', $xml, $match));
+        $sheet = new Sheet();
+        $sheet->enableCellWidthEstimation();
+        $expectedXml = '<row r="1" spans="1:2"><c r="A1" s="0" t="inlineStr"><is><t>Heinz</t></is></c><c r="B1" s="0" t="inlineStr"><is><t>Becker</t></is></c></row>';
+        $xml = $sheet->addRow(array('Heinz', 'Becker'), new Style());
+        $this->assertEquals($expectedXml, $xml);
     }
 }
