@@ -9,7 +9,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 To control wheter a numeric value is generated as a string or number field,
 simply typecast integers and doubles before adding the row to the sheet.
 
-![Resulting OneSheet File in Excel](./tests/generated_xlsx_sample.png)
+![Resulting OneSheet File in Excel](./tests/generated_auto_column_sizing_sample.png)
 
 Since performance and memory usage were the main drivers, DOM and SimpleXml
 where out of the question. Same goes for cell or even row objects.
@@ -20,12 +20,14 @@ This XLSX writer/generator is still WIP and was built to satisfy the following n
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Option to use different fonts, styles and background colors on
   a row level.
+- Option to auto-size column widths to fit cell contents
 - PHP 5.3 compatibility.
 
 Current major drawback(s):
 - No cell individualisation, everything is applied at a row level.
 - No calculated/formula cells.
 
+Please be aware that there might be several api breaking changes until version 1.0.0 is released!
 ```php
 <?php require_once '../vendor/autoload.php';
 
