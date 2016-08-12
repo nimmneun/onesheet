@@ -33,10 +33,10 @@ class Sheet
     /**
      * @var bool
      */
-    private $useCellWidthEstimation = false;
+    private $useCellAutosizing = false;
 
     /**
-     * Hold width of the widest row.
+     * Holds width/column count of the widest row.
      *
      * @var int
      */
@@ -47,7 +47,7 @@ class Sheet
      *
      * @var array
      */
-    private $cellWidths;
+    private $columnWidths;
 
     /**
      * Sheet constructor.
@@ -59,37 +59,37 @@ class Sheet
     }
 
     /**
-     * Enable cell width estimation.
+     * Enable cell autosizing (~30% performance hit!).
      */
-    public function enableCellWidthEstimation()
+    public function enableCellAutosizing()
     {
-        $this->useCellWidthEstimation = true;
+        $this->useCellAutosizing = true;
     }
 
     /**
-     * Disable cell width estimation (default).
+     * Disable cell autosizing (default).
      */
-    public function disableCellWidthEstimation()
+    public function disableCellAutosizing()
     {
-        $this->useCellWidthEstimation = false;
+        $this->useCellAutosizing = false;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isCellWidthEstimationEnabled()
+    public function isCellAutosizingEnabled()
     {
-        return $this->useCellWidthEstimation;
+        return $this->useCellAutosizing;
     }
 
     /**
-     * Return array containing all cell widths.
+     * Return array containing all column widths.
      *
      * @return array
      */
-    public function getCellWidths()
+    public function getColumnWidths()
     {
-        return $this->cellWidths;
+        return $this->columnWidths;
     }
 
     /**
@@ -117,9 +117,10 @@ class Sheet
         $this->widthCalculator->setFont($style->font());
         $cellXml = $this->getCellXml($row, $style);
 
-        if (13 > $style->font()->getSize()) {
+        if (!$this->useCellAutosizing || $style->font()->getSize() < 14) {
             return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $rowWidth, $cellXml);
         }
+
         return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth, $style->font()->getSize() * 1.4, $cellXml);
     }
 
@@ -149,8 +150,8 @@ class Sheet
             if (0 == strlen($cellValue)) {
                 continue;
             }
-            if ($this->useCellWidthEstimation) {
-                $this->updateCellWidths($cellValue, $cellIndex, $style);
+            if ($this->useCellAutosizing) {
+                $this->updateColumnWidths($cellValue, $cellIndex, $style);
             }
             $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue, $style->getId());
         }
@@ -165,14 +166,14 @@ class Sheet
      * @param       $cellIndex
      * @param Style $style
      */
-    private function updateCellWidths($value, $cellIndex, Style $style)
+    private function updateColumnWidths($value, $cellIndex, Style $style)
     {
         $cellWidth = $this->widthCalculator->getCellWidth($value, $style->font()->isBold());
 
-        if (!isset($this->cellWidths[$cellIndex])
-            || $this->cellWidths[$cellIndex] < $cellWidth
+        if (!isset($this->columnWidths[$cellIndex])
+            || $this->columnWidths[$cellIndex] < $cellWidth
         ) {
-            $this->cellWidths[$cellIndex] = $cellWidth;
+            $this->columnWidths[$cellIndex] = $cellWidth;
         }
     }
 }

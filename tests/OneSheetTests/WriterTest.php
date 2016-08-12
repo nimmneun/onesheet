@@ -18,7 +18,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'onesheet_test.xlsx';
 
         $writer = new Writer();
-        $writer->getSheet()->enableCellWidthEstimation();
+        $writer->getSheet()->enableCellAutosizing();
         $writer->addRows(array(range(1,3), range('a', 'z')), new Style());
         $writer->writeToFile($fileName);
 

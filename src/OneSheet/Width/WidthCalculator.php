@@ -4,6 +4,12 @@ namespace OneSheet\Width;
 
 use OneSheet\Style\Font;
 
+/**
+ * Class WidthCalculator to calculate the approximate width of
+ * a cell content.
+ *
+ * @package OneSheet\Width
+ */
 class WidthCalculator
 {
     /**
@@ -25,11 +31,13 @@ class WidthCalculator
     }
 
     /**
+     * Returns a approximate width of a cell value.
+     *
      * @param mixed $value
-     * @param bool  $bold
+     * @param bool  $isBold
      * @return float
      */
-    public function getCellWidth($value, $bold)
+    public function getCellWidth($value, $isBold)
     {
         $width = 1;
         foreach (str_split($value) as $character) {
@@ -40,10 +48,12 @@ class WidthCalculator
             }
         }
 
-        return !$bold ? $width : $width * 1.1;
+        return $isBold ? $width * 1.1 : $width;
     }
 
     /**
+     * Set proper font sizes by font.
+     *
      * @param Font $font
      */
     public function setFont(Font $font)

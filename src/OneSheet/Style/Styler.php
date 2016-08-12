@@ -28,7 +28,8 @@ class Styler
     {
         $this->addStyle(new Style());
         $grey = new Style();
-        $this->addStyle($grey->fill()->setPattern('grey125')->style());
+        $grey->fill()->setPattern('grey125');
+        $this->addStyle($grey);
     }
 
     /**

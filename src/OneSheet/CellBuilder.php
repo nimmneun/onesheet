@@ -55,10 +55,10 @@ class CellBuilder
 
         if (is_int($cellValue) || is_double($cellValue)) {
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $cellValue);
-        } elseif (is_numeric($cellValue) || 1 != preg_match('~[^\w]~', $cellValue)) {
-            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($cellValue, ENT_QUOTES));
         } elseif (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
+        } elseif (is_numeric($cellValue) || 1 != preg_match('~[^\w]~', $cellValue)) {
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($cellValue, ENT_QUOTES));
         }
 
         return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escape($cellValue));
@@ -82,7 +82,7 @@ class CellBuilder
     }
 
     /**
-     * Escape/replace control characters characters.
+     * Escape/replace control characters.
      *
      * @param string $value
      * @return string

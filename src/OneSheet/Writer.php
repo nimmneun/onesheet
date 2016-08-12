@@ -58,18 +58,20 @@ class Writer
     }
 
     /**
-     * @param array     $rows
-     * @param Style|int $style
+     * @param array(array) $rows
+     * @param Style|int    $style
      */
     public function addRows(array $rows, $style = 0)
     {
-        foreach ($rows as $row) {
-            $this->addRow($row, $style);
+        if (count($rows) !== count($rows, COUNT_RECURSIVE)) {
+            foreach ($rows as $row) {
+                $this->addRow($row, $style);
+            }
         }
     }
 
     /**
-     * @param array     $row
+     * @param array $row
      * @param Style|int $style
      */
     public function addRow(array $row, $style = 0)

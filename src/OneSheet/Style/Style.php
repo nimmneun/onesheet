@@ -71,7 +71,7 @@ class Style
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return Style
      */
     public function setId($id)

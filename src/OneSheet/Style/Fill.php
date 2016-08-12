@@ -22,29 +22,6 @@ class Fill
     private $pattern = 'none';
 
     /**
-     * @var Style
-     */
-    private $style;
-
-    /**
-     * Font constructor.
-     *
-     * @param Style $style
-     */
-    public function __construct(Style $style)
-    {
-        $this->style = $style;
-    }
-
-    /**
-     * @return Style
-     */
-    public function style()
-    {
-        return $this->style;
-    }
-
-    /**
      * @param string $color
      * @return Fill
      */

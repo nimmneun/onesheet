@@ -82,9 +82,9 @@ class Finalizer
      */
     private function writeColumnWidths()
     {
-        if (0 < count($this->sheet->getCellWidths())) {
+        if (0 < count($this->sheet->getColumnWidths())) {
             $this->sheetFile->fwrite('<cols>');
-            foreach ($this->sheet->getCellWidths() as $columnNumber => $columnWidth) {
+            foreach ($this->sheet->getColumnWidths() as $columnNumber => $columnWidth) {
                 $this->sheetFile->fwrite(sprintf(SheetXml::COLUMN_XML, ($columnNumber + 1), ($columnNumber + 1),
                     $columnWidth));
             }

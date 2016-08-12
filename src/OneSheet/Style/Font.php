@@ -47,29 +47,6 @@ class Font
     private $color = '000000';
 
     /**
-     * @var Style
-     */
-    private $style;
-
-    /**
-     * Font constructor.
-     *
-     * @param Style $style
-     */
-    public function __construct(Style $style)
-    {
-        $this->style = $style;
-    }
-
-    /**
-     * @return Style
-     */
-    public function style()
-    {
-        return $this->style;
-    }
-
-    /**
      * @return Font
      */
     public function setItalic()
