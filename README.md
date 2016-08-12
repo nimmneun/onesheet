@@ -42,21 +42,13 @@ $t = -microtime(1);
 $m = -memory_get_usage(1);
 
 // create new sheet & freeze everything above the 2nd row
-$sheet = OneSheet\Sheet::fromDefaults('A2');
-
-// create new style and add headline using the style
-$headerStyle = new \OneSheet\Style();
-$sheet->addRow(
-    array('some', 'fancy', 'table', 'header', 'here'),
-    $headerStyle->bold()->color('FFFFFF')->fill('555555')
-);
+$oneSheet = new \OneSheet\Writer();
 
 // add all data rows at once
-$sheet->addRows($dataRows);
+$oneSheet->addRows($dataRows);
 
 // create/write the xlsx file
-$writer = new \OneSheet\Writer($sheet, 'somefile.xlsx');
-$writer->close();
+$oneSheet->writeToFile('somefile.xlsx');
 
 // echo OneSheet timings und memory usage
 echo (microtime(1) + $t) . ' seconds' . PHP_EOL;
