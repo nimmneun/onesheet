@@ -44,6 +44,25 @@ class Writer
     }
 
     /**
+     * All cells _above_ this cell will be fozen/fixed.
+     *
+     * @param int $cellId
+     */
+    public function setfreezePaneCellId($cellId)
+    {
+        $this->sheet->setFreezePaneId($cellId);
+    }
+
+    /**
+     *  @return Writer
+     */
+    public function enableCellAutosizing()
+    {
+        $this->sheet->enableCellAutosizing();
+        return $this;
+    }
+
+    /**
      * Initialize writer defaults.
      */
     private function initialize()
@@ -52,14 +71,6 @@ class Writer
         $this->sheetFile->fwrite(str_repeat(' ', pow(2, 20)) . '<sheetData>');
         $this->styler = new Styler();
         $this->sheet = new Sheet();
-    }
-
-    /**
-     * @return Sheet
-     */
-    public function getSheet()
-    {
-        return $this->sheet;
     }
 
     /**
@@ -81,7 +92,7 @@ class Writer
      */
     public function addRow(array $row, Style $style = null)
     {
-        $style = $style instanceof Style ? $style : $this->styler->getStyleById(0);
+        $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
         $this->styler->addStyle($style);
         $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
     }

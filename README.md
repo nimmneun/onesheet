@@ -42,7 +42,8 @@ $m = -memory_get_usage(1);
 
 // create new sheet & freeze everything above the 2nd row
 $oneSheet = new \OneSheet\Writer();
-$oneSheet->getSheet()->enableCellAutosizing();
+$oneSheet->enableCellAutosizing();
+$oneSheet->setfreezePaneCellId('A2');
 
 // add some styling
 $style = new \OneSheet\Style\Style();
@@ -50,6 +51,11 @@ $style->setFontName('Arial')->setFontSize(13)
     ->setFontColor('ffffff')
     ->setFillColor('555555')
     ->setFillPattern('solid');
+
+// add single data row
+$oneSheet->addRow(
+    array('some', 'fancy', 'header', 'right', 'here'), $style
+);
 
 // add all data rows at once
 $oneSheet->addRows($dataRows);

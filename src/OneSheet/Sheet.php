@@ -4,6 +4,7 @@ namespace OneSheet;
 
 use OneSheet\Xml\RowXml;
 use OneSheet\Style\Style;
+use OneSheet\Xml\SheetXml;
 use OneSheet\Width\WidthCalculator;
 
 /**
@@ -27,6 +28,11 @@ class Sheet
      * @var bool
      */
     private $useCellAutosizing = false;
+
+    /**
+     * @var int
+     */
+    private $freezePaneId;
 
     /**
      * Track next row index.
@@ -75,14 +81,6 @@ class Sheet
     }
 
     /**
-     * @return bool
-     */
-    public function isCellAutosizingEnabled()
-    {
-        return $this->useCellAutosizing;
-    }
-
-    /**
      * Return array containing all column widths.
      *
      * @return array
@@ -127,6 +125,14 @@ class Sheet
     }
 
     /**
+     * @param int $cellId
+     */
+    public function setFreezePaneId($cellId)
+    {
+        $this->freezePaneId = $cellId;
+    }
+
+    /**
      * Track widest row for dimensions xml (e.g. A1:K123).
      *
      * @param int $rowWidth
@@ -149,7 +155,9 @@ class Sheet
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
-            if (0 == strlen($cellValue)) continue;
+            if (0 == strlen($cellValue)) {
+                continue;
+            }
             if ($this->useCellAutosizing) {
                 $this->updateColumnWidths($cellValue, $cellIndex, $style);
             }
@@ -176,5 +184,20 @@ class Sheet
         ) {
             $this->columnWidths[$cellIndex] = $cellWidth;
         }
+    }
+
+    /**
+     * Return freeze pane xml string for sheezview.
+     *
+     * @return string
+     */
+    public function getFreezePaneXml()
+    {
+        if (!$this->freezePaneId
+            || 1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneId, $m)
+        ) {
+            return '';
+        }
+        return sprintf(SheetXml::FREEZE_PANE_XML, array_pop($m) - 1, $this->freezePaneId);
     }
 }

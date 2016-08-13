@@ -79,7 +79,8 @@ class Finalizer
         $this->sheetFile->fwrite(SheetXml::HEADER_XML);
         $this->sheetFile->fwrite(sprintf(SheetXml::DIMENSION_XML,
             $this->sheet->getDimensionUpperBound()));
-        $this->sheetFile->fwrite(sprintf(SheetXml::SHEETVIEWS_XML, '1', 'A2')); // freeze
+        $this->sheetFile->fwrite(sprintf(SheetXml::SHEETVIEWS_XML,
+                $this->sheet->getFreezePaneXml()));
         $this->writeColumnWidths();
         $this->zip->addFile($this->sheetFile->getFilePath(), 'xl/worksheets/sheet1.xml');
     }

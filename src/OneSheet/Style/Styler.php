@@ -66,11 +66,10 @@ class Styler
     private function register(Component $component, &$collection)
     {
         $hash = md5($component->asXml());
-        $newId = count($collection);
-
         if (isset($this->hashes[$hash])) {
             $component->setId($this->hashes[$hash]);
         } else {
+            $newId = count($collection);
             $component->setId($newId);
             $collection[$newId] = $component;
             $this->hashes[$hash] = $newId;
@@ -78,12 +77,11 @@ class Styler
     }
 
     /**
-     * @param int $id
      * @return Style
      */
-    public function getStyleById($id)
+    public function getDefaultStyle()
     {
-        return isset($this->styles[$id]) ? $this->styles[$id] : new Style();
+        return $this->styles[0];
     }
 
     /**

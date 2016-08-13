@@ -17,12 +17,17 @@ class SheetXml
     /**
      * Constant for single sheetview xml string.
      */
-    const SHEETVIEWS_XML = '<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1"><pane ySplit="%d" topLeftCell="%s" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+    const SHEETVIEWS_XML = '<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1">%s</sheetView></sheetViews>';
 
     /**
      * Constant for dimesion xml string.
      */
     const DIMENSION_XML = '<dimension ref="A1:%s"/>';
+
+    /**
+     * Constant for sheetview pane.
+     */
+    const FREEZE_PANE_XML = '<pane ySplit="%d" topLeftCell="%s" activePane="bottomLeft" state="frozen"/>';
 
     /**
      * Constant for single column width string.
