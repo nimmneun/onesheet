@@ -54,11 +54,24 @@ class Writer
     }
 
     /**
+     * Start recording row specs for column autosizing.
+     *
      *  @return Writer
      */
     public function enableCellAutosizing()
     {
         $this->sheet->enableCellAutosizing();
+        return $this;
+    }
+
+    /**
+     * Stop recording row specs for column autosizing.
+     *
+     *  @return Writer
+     */
+    public function disableCellAutosizing()
+    {
+        $this->sheet->disableCellAutosizing();
         return $this;
     }
 
@@ -79,10 +92,12 @@ class Writer
      */
     public function addRows(array $rows, Style $style = null)
     {
-        if (count($rows) !== count($rows, COUNT_RECURSIVE)) {
-            foreach ($rows as $row) {
-                $this->addRow($row, $style);
-            }
+        if (count($rows) === count($rows, COUNT_RECURSIVE)) {
+            throw new \InvalidArgumentException("Array must contain arrays!");
+        }
+
+        foreach ($rows as $row) {
+            $this->addRow($row, $style);
         }
     }
 
