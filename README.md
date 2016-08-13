@@ -8,7 +8,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 
 ![Resulting OneSheet File in Excel](./tests/generated_auto_column_sizing_sample.png)
 
-This XLSX writer/generator is still WIP and was built to satisfy the following needs:
+This XLSX writer/generator was built to satisfy the following needs:
 - Write a single sheet with up to 2^20 rows fast and with a small
   memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
@@ -21,7 +21,7 @@ Current major drawback(s):
 - No cell individualisation, everything is applied at a row level.
 - No calculated/formula cells.
 
-Please be aware that there might be several api breaking changes until version 1.0.0 is released!
+This library is still WIP, so please be aware that there might be api breaking changes in minor versions (0.*.0) until version 1.0.0 is released!
 
 ###Install
 Install via composer
@@ -43,6 +43,13 @@ $m = -memory_get_usage(1);
 // create new sheet & freeze everything above the 2nd row
 $oneSheet = new \OneSheet\Writer();
 $oneSheet->getSheet()->enableCellAutosizing();
+
+// add some styling
+$style = new \OneSheet\Style\Style();
+$style->setFontName('Arial')->setFontSize(13)
+    ->setFontColor('ffffff')
+    ->setFillColor('555555')
+    ->setFillPattern('solid');
 
 // add all data rows at once
 $oneSheet->addRows($dataRows);
