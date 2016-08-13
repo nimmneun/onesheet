@@ -131,7 +131,7 @@ class Font
      */
     public function setColor($color)
     {
-        $this->color = $color;
+        $this->color = strtoupper($color);
         return $this;
     }
 

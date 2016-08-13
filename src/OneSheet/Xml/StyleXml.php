@@ -37,7 +37,7 @@ class StyleXml
     /**
      * Constant for single uncolored fill (background) xml string.
      */
-    const BLANK_FILL_XML = '<fill><patternFill patternType="%s"/></fill>';
+    const PATTERN_FILL_XML = '<fill><patternFill patternType="%s"/></fill>';
 
     /**
      * Constant for cellXf style xml strings.

@@ -48,7 +48,7 @@ class WidthCalculator
             }
         }
 
-        return $isBold ? $width * 1.1 : $width;
+        return $isBold ? $width * 1.09 : $width;
     }
 
     /**

@@ -27,8 +27,7 @@ class Fill
      */
     public function setColor($color)
     {
-        $this->color = $color;
-        $this->pattern = 'solid';
+        $this->color = strtoupper($color);
         return $this;
     }
 
@@ -50,6 +49,6 @@ class Fill
         if ($this->color) {
             return sprintf(StyleXml::COLORED_FILL_XML, $this->color);
         }
-        return sprintf(StyleXml::BLANK_FILL_XML, $this->pattern);
+        return sprintf(StyleXml::PATTERN_FILL_XML, $this->pattern);
     }
 }

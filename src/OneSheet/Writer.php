@@ -59,9 +59,9 @@ class Writer
 
     /**
      * @param array $rows
-     * @param Style|int    $style
+     * @param Style $style
      */
-    public function addRows(array $rows, $style = 0)
+    public function addRows(array $rows, Style $style = null)
     {
         if (count($rows) !== count($rows, COUNT_RECURSIVE)) {
             foreach ($rows as $row) {
@@ -71,10 +71,10 @@ class Writer
     }
 
     /**
-     * @param array     $row
-     * @param Style|int $style
+     * @param array $row
+     * @param Style $style
      */
-    public function addRow(array $row, $style = 0)
+    public function addRow(array $row, Style $style = null)
     {
         $style = $this->loadOrRegisterStyle($style);
         $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
@@ -83,15 +83,15 @@ class Writer
     /**
      * Load or register a given style.
      *
-     * @param Style|int $style
+     * @param Style $style
      * @return Style
      */
-    private function loadOrRegisterStyle($style = 0)
+    private function loadOrRegisterStyle(Style $style = null)
     {
         if ($style instanceof Style) {
             $this->styler->addStyle($style);
         } else {
-            $style = $this->styler->getStyleById((int)$style);
+            $style = $this->styler->getStyleById(0);
         }
 
         return $style;
