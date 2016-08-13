@@ -1,37 +1,55 @@
 <?php
-/**
- * @author neun
- * @since  2016-07-10
- */
 
-namespace OneSheetTests;
+namespace OneSheetTest;
 
-use OneSheet\Style;
+use OneSheet\Style\Style;
+use OneSheet\Style\Styler;
 
 class StyleTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetFontXml()
+    public function testFont()
     {
         $style = new Style();
-        $style->size(15)
-            ->color('ff9900')
-            ->name('Arial')
-            ->bold()
-            ->italic()
-            ->underline();
-        $string = '<font><sz val="15"/><color rgb="FF9900"/><name val="Arial"/><b/><i/><u/></font>';
-        $this->assertEquals($string, $style->getFontXml());
+        $style->setFontName('Arial')
+            ->setFontSize(13)
+            ->setFontColor('ffffff')
+            ->setFontBold()
+            ->setFontItalic()
+            ->setFontUnderline()
+            ->setFontStrikethrough();
+        $expectedXml = '<font><sz val="13"/><color rgb="FFFFFF"/><name val="Arial"/><b/><i/><u/><s/></font>';
+        $this->assertEquals($expectedXml, $style->getFont()->asXml());
     }
 
-    public function testGetFillXml()
+    public function testFill()
     {
         $style = new Style();
-        $style->fill('eeeeee');
-        $string = '<fill><patternFill patternType="solid"><fgColor rgb="EEEEEE"/></patternFill></fill>';
-        $this->assertEquals($string, $style->getFillXml());
+        $style->setFillColor('555555')
+            ->setFillPattern('solid');
+        $expectedXml = '<fill><patternFill patternType="solid"><fgColor rgb="555555"/></patternFill></fill>';
+        $this->assertEquals($expectedXml, $style->getFill()->asXml());
 
         $style = new Style();
-        $string = '<fill><patternFill patternType="none"/></fill>';
-        $this->assertEquals($string, $style->getFillXml());
+        $expectedXml = '<fill><patternFill patternType="none"/></fill>';
+        $this->assertEquals($expectedXml, $style->getFill()->asXml());
+    }
+
+    public function testLock()
+    {
+        $styler = new Styler();
+        $style = new Style();
+
+        $unlockedFont = $style->getFont();
+        $unlockedFill = $style->getFill();
+
+        $styler->addStyle($style);
+
+        $lockedFont = $style->getFont()->setColor('abcdef');
+        $this->assertEquals($unlockedFont, $style->getFont());
+        $this->assertNotEquals($unlockedFont, $lockedFont);
+
+        $lockedFill = $style->setFillColor('abcdef');
+        $this->assertEquals($unlockedFill, $style->getFill());
+        $this->assertNotEquals($unlockedFill, $lockedFill);
     }
 }

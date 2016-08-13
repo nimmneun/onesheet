@@ -1,55 +1,32 @@
 <?php
 
-namespace OneSheetTests;
+namespace OneSheetTest;
 
 use OneSheet\Sheet;
-use OneSheet\StyleHelper;
+use OneSheet\Style\Style;
 
 class SheetTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Sheet
-     */
-    protected static $sheet;
-
-    /**
-     * @var string
-     */
-    private static $path;
-
-    public static function setUpBeforeClass()
+    public function testEnableCellAutosizing()
     {
-        self::$sheet = Sheet::fromDefaults();
-        self::$path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml';
+        $sheet = new Sheet();
+        $sheet->enableCellAutosizing();
+        $this->assertTrue($sheet->isCellAutosizingEnabled());
     }
 
-    public function testConstructor()
+    public function testDisableCellAutosizing()
     {
-        $this->assertInstanceOf('OneSheet\Sheet', Sheet::fromDefaults('A2'));
+        $sheet = new Sheet();
+        $sheet->disableCellAutosizing();
+        $this->assertFalse($sheet->isCellAutosizingEnabled());
     }
 
-    public function testSheetFilePath()
+    public function testAddRow()
     {
-        $this->assertEquals(
-            self::$path, self::$sheet->sheetFilePath()
-        );
-    }
-
-    public function testAddStyle()
-    {
-        $this->assertGreaterThan(1, StyleHelper::buildStyle($this->getMockBuilder('\\OneSheet\\Style')->getMock()));
-    }
-
-    public function testAddRows()
-    {
-        $number = time();
-        $string = uniqid();
-
-        self::$sheet->addRows(array(array($number)), 1);
-        $style = $this->getMockBuilder('\\OneSheet\\Style')->getMock();
-        self::$sheet->addRows(array(array($string)), $style);
-        $xml = file_get_contents(self::$path);
-
-        $this->assertEquals(1, preg_match('~'. $number . '.*' . $string . '~', $xml, $match));
+        $sheet = new Sheet();
+        $sheet->enableCellAutosizing();
+        $expectedXml = '<row r="1" spans="1:3"><c r="A1" s="0" t="inlineStr"><is><t>Heinz</t></is></c><c r="B1" s="0" t="inlineStr"><is><t>Becker &amp; Decker</t></is></c><c r="C1" s="0" t="b"><v>1</v></c></row>';
+        $xml = $sheet->addRow(array('Heinz', 'Becker & Decker', true), new Style());
+        $this->assertEquals($expectedXml, $xml);
     }
 }

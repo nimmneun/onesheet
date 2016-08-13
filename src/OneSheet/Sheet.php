@@ -1,111 +1,180 @@
 <?php
-/**
- * @author neun
- * @since  2016-07-03
- */
 
 namespace OneSheet;
 
+use OneSheet\Xml\RowXml;
+use OneSheet\Style\Style;
+use OneSheet\Width\WidthCalculator;
+
 /**
- * Class Sheet to write the sheet1.xml contents to file.
+ * Class Sheet
+ *
  * @package OneSheet
  */
 class Sheet
 {
     /**
-     * Contains the <sheetData> section.
-     *
-     * @var \SplFileObject
+     * @var CellBuilder
      */
-    private $sheetData;
+    private $cellBuilder;
 
     /**
-     * @var RowBuilderInterface
+     * @var WidthCalculator
      */
-    private $rowBuilder;
+    private $widthCalculator;
 
     /**
-     * Sheet constructor to init SplFileObject and write xml header.
-     * Optionally supply a cell id like e.g. A2 to add freeze pane.
-     * It has to be done right away, since everything is immediately
-     * written to the SplFileObject.
-     *
-     * @param RowBuilderInterface $rowBuilder
-     * @param string|null         $freezePaneCellId
+     * @var bool
      */
-    public function __construct(RowBuilderInterface $rowBuilder, $freezePaneCellId = null)
+    private $useCellAutosizing = false;
+
+    /**
+     * Track next row index.
+     *
+     * @var int
+     */
+    private $rowIndex = 1;
+
+    /**
+     * Holds width/column count of the widest row.
+     *
+     * @var int
+     */
+    private $maxRowWidth;
+
+    /**
+     * Holds widths of the widest cells for column sizing.
+     *
+     * @var array
+     */
+    private $columnWidths;
+
+    /**
+     * Sheet constructor.
+     */
+    public function __construct()
     {
-        $this->rowBuilder = $rowBuilder;
-
-        $this->sheetData = new \SplFileObject(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sheet1.xml', 'wb+');
-        $this->sheetData->fwrite('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xml:space="preserve" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">');
-
-        if (1 == preg_match('~[A-Z]+([1-9]?[0-9]+)$~', $freezePaneCellId, $match)) {
-            $this->sheetData->fwrite('<sheetViews><sheetView tabSelected="1" workbookViewId="0" showGridLines="true" showRowColHeaders="1"><pane ySplit="' . (array_pop($match) - 1) . '" topLeftCell="' . $freezePaneCellId . '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>');
-        }
-
-        $this->sheetData->fwrite('<sheetData>');
+        $this->cellBuilder = new CellBuilder();
+        $this->widthCalculator = new WidthCalculator();
     }
 
     /**
-     * Instantiate new sheet with default RowBuilder implementation.
-     *
-     * @param string|null $freezePaneCellId
-     * @return Sheet
+     * Enable cell autosizing (~30% performance hit!).
      */
-    public static function fromDefaults($freezePaneCellId = null)
+    public function enableCellAutosizing()
     {
-        return new self(new DefaultRowBuilder(new DefaultCellBuilder()), $freezePaneCellId);
+        $this->useCellAutosizing = true;
     }
 
     /**
-     * Add single data row to sheet and add new style,
-     * if its not an integer.
-     *
-     * @param array     $dataRow
-     * @param int|Style $style
+     * Disable cell autosizing (default).
      */
-    public function addRow(array $dataRow, $style = 0)
+    public function disableCellAutosizing()
     {
-        if (!is_int($style)) {
-            $style = $this->addStyle($style);
-        }
-
-        $this->sheetData->fwrite($this->rowBuilder->build($dataRow, $style));
+        $this->useCellAutosizing = false;
     }
 
     /**
-     * Add multiple data rows to sheet.
-     *
-     * @param array     $dataRows
-     * @param int|Style $style
+     * @return bool
      */
-    public function addRows(array $dataRows, $style = 0)
+    public function isCellAutosizingEnabled()
     {
-        foreach ($dataRows as $dataRow) {
-            $this->addRow($dataRow, $style);
-        }
+        return $this->useCellAutosizing;
     }
 
     /**
-     * Add new style and return its id.
+     * Return array containing all column widths.
      *
-     * @param Style $style
-     * @return int
+     * @return array
      */
-    public function addStyle(Style $style)
+    public function getColumnWidths()
     {
-        return StyleHelper::buildStyle($style);
+        return $this->columnWidths;
     }
 
     /**
-     * Write closing xml tag and return path to sheet file.
+     * Return cellId for dimensions.
      *
      * @return string
      */
-    public function sheetFilePath()
+    public function getDimensionUpperBound()
     {
-        $this->sheetData->fwrite('</sheetData></worksheet>');
-        return (string)$this->sheetData->getFileInfo();
+        return $this->cellBuilder->getCellId($this->maxRowWidth, $this->rowIndex - 1);
+    }
+
+    /**
+     * Add single row and style to sheet.
+     *
+     * @param array $row
+     * @param Style $style
+     *
+     * @return string
+     */
+    public function addRow(array $row, Style $style)
+    {
+        $rowWidth = count($row);
+        $this->updateMaxRowWidth($rowWidth);
+
+        $this->widthCalculator->setFont($style->getFont());
+        $cellXml = $this->getCellXml($row, $style);
+
+        if (!$this->useCellAutosizing || $style->getFont()->getSize() < 14) {
+            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $rowWidth, $cellXml);
+        }
+
+        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth,
+            $style->getFont()->getSize() * 1.4, $cellXml);
+    }
+
+    /**
+     * Track widest row for dimensions xml (e.g. A1:K123).
+     *
+     * @param int $rowWidth
+     */
+    private function updateMaxRowWidth($rowWidth)
+    {
+        if ($this->maxRowWidth < $rowWidth) {
+            $this->maxRowWidth = $rowWidth;
+        }
+    }
+
+    /**
+     * Get xml string for single cell and update cell widths.
+     *
+     * @param array $row
+     * @param Style $style
+     * @return string
+     */
+    private function getCellXml(array $row, Style $style)
+    {
+        $cellXml = '';
+        foreach (array_values($row) as $cellIndex => $cellValue) {
+            if (0 == strlen($cellValue)) continue;
+            if ($this->useCellAutosizing) {
+                $this->updateColumnWidths($cellValue, $cellIndex, $style);
+            }
+            $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue,
+                $style->getId());
+        }
+
+        return $cellXml;
+    }
+
+    /**
+     * Track cell width for column width sizing.
+     *
+     * @param mixed $value
+     * @param int   $cellIndex
+     * @param Style $style
+     */
+    private function updateColumnWidths($value, $cellIndex, Style $style)
+    {
+        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont()->isBold());
+
+        if (!isset($this->columnWidths[$cellIndex])
+            || $this->columnWidths[$cellIndex] < $cellWidth
+        ) {
+            $this->columnWidths[$cellIndex] = $cellWidth;
+        }
     }
 }

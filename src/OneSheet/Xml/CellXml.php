@@ -1,13 +1,9 @@
 <?php
-/**
- * @author neun
- * @since  2016-07-13
- */
 
-namespace OneSheet;
+namespace OneSheet\Xml;
 
 /**
- * Class CellXml serves as provider for cell xml strings.
+ * Class CellXml
  *
  * @package OneSheet
  */
