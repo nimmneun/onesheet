@@ -20,6 +20,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->getSheet()->enableCellAutosizing();
         $writer->addRows(array(range(1,3), range('a', 'z')), new Style());
+        $writer->addRows(array(range(1,3), range('a', 'z')));
         $writer->writeToFile($fileName);
 
         $this->assertFileExists($fileName);

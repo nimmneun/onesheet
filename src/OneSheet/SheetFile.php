@@ -22,13 +22,13 @@ class SheetFile
     /**
      * SheetFile constructor.
      *
-     * @throws \Exception
+     * @throws \RuntimeException
      */
     public function __construct()
     {
         $this->filePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(null, 1) . '.xml';
         if (!$this->filePointer = fopen($this->filePath, 'wb+')) {
-            throw new \Exception("Failed to create temporary file {$this->filePath}!");
+            throw new \RuntimeException("Failed to create temporary file {$this->filePath}!");
         }
     }
 

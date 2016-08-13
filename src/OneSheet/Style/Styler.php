@@ -5,7 +5,7 @@ namespace OneSheet\Style;
 use OneSheet\Xml\StyleXml;
 
 /**
- * Class Styler
+ * Class Styler to keep track of registered styles.
  *
  * @package OneSheet
  */
@@ -15,6 +15,16 @@ class Styler
      * @var Style[]
      */
     private $styles = array();
+
+    /**
+     * @var Font[]
+     */
+    private $fonts = array();
+
+    /**
+     * @var Fill[]
+     */
+    private $fills = array();
 
     /**
      * @var array
@@ -32,42 +42,48 @@ class Styler
     }
 
     /**
-     * Register a new style if it doesnt exists.
+     * Add a new style, if it doesnt exists yet.
      *
      * @param Style $style
      */
     public function addStyle(Style $style)
     {
-        if (!isset($this->hashes[$style->getHash()])) {
-            $this->registerStyle($style, $style->getHash());
-        } else {
-            $style->setId($this->styles[$this->hashes[$style->getHash()]]->getId());
+        if (null === $style->getId()) {
+            $this->register($style->getFont(), $this->fonts);
+            $this->register($style->getFill(), $this->fills);
+            $this->register($style, $this->styles);
+            $style->lock();
         }
-        $style->lock();
     }
 
     /**
-     * Register and lock new style.
+     * Register a new Style compoment its compoments to account
+     * for reusable styles, fills, fonts, ...
      *
-     * @param Style  $style
-     * @param string $styleHash
+     * @param Component $component
+     * @param array     $collection
      */
-    private function registerStyle(Style $style, $styleHash)
+    private function register(Component $component, &$collection)
     {
-        $style->setId(count($this->styles))->getId();
-        $this->styles[$style->getId()] = $style;
-        $this->hashes[$styleHash] = $style->getId();
+        $hash = md5($component->asXml());
+        $newId = count($collection);
+
+        if (isset($this->hashes[$hash])) {
+            $component->setId($this->hashes[$hash]);
+        } else {
+            $component->setId($newId);
+            $collection[$newId] = $component;
+            $this->hashes[$hash] = $newId;
+        }
     }
 
     /**
-     * Return style by its id.
-     *
      * @param int $id
      * @return Style
      */
     public function getStyleById($id)
     {
-        return $this->styles[$id];
+        return isset($this->styles[$id]) ? $this->styles[$id] : new Style();
     }
 
     /**
@@ -80,13 +96,19 @@ class Styler
         $fontsXml = $fillsXml = $cellXfsXml = '';
         foreach ($this->styles as $style) {
             $cellXfsXml .= $style->asXml();
-            $fontsXml .= $style->getFont()->asXml();
-            $fillsXml .= $style->getFill()->asXml();
+        }
+
+        foreach ($this->fonts as $font) {
+            $fontsXml .= $font->asXml();
+        }
+
+        foreach ($this->fills as $fill) {
+            $fillsXml .= $fill->asXml();
         }
 
         return sprintf(StyleXml::STYLE_SHEET_XML,
-            sprintf(StyleXml::FONTS_XML, count($this->styles), $fontsXml),
-            sprintf(StyleXml::FILLS_XML, count($this->styles), $fillsXml),
+            sprintf(StyleXml::FONTS_XML, count($this->fonts), $fontsXml),
+            sprintf(StyleXml::FILLS_XML, count($this->fills), $fillsXml),
             sprintf(StyleXml::CELL_XFS_XML, count($this->styles), $cellXfsXml)
         );
     }

@@ -28,6 +28,11 @@ class Writer
     private $sheet;
 
     /**
+     * @var string
+     */
+    private $encoding;
+
+    /**
      * Writer constructor.
      *
      * @param string $encoding
@@ -45,8 +50,8 @@ class Writer
     {
         $this->sheetFile = new SheetFile();
         $this->sheetFile->fwrite(str_repeat(' ', pow(2, 20)) . '<sheetData>');
-        $this->sheet = new Sheet();
         $this->styler = new Styler();
+        $this->sheet = new Sheet();
     }
 
     /**
@@ -76,25 +81,9 @@ class Writer
      */
     public function addRow(array $row, Style $style = null)
     {
-        $style = $this->loadOrRegisterStyle($style);
+        $style = $style instanceof Style ? $style : $this->styler->getStyleById(0);
+        $this->styler->addStyle($style);
         $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
-    }
-
-    /**
-     * Load or register a given style.
-     *
-     * @param Style $style
-     * @return Style
-     */
-    private function loadOrRegisterStyle(Style $style = null)
-    {
-        if ($style instanceof Style) {
-            $this->styler->addStyle($style);
-        } else {
-            $style = $this->styler->getStyleById(0);
-        }
-
-        return $style;
     }
 
     /**
@@ -104,7 +93,7 @@ class Writer
      */
     public function writeToFile($fileName = 'dummy.xlsx')
     {
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->encoding);
         $finalizer->finalize($fileName);
     }
 }

@@ -34,17 +34,24 @@ class Finalizer
     private $styler;
 
     /**
+     * @var string
+     */
+    private $encoding;
+
+    /**
      * Finalizer constructor.
      *
      * @param Sheet     $sheet
      * @param Styler    $styler
      * @param SheetFile $sheetFile
+     * @param string    $encoding
      */
-    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile)
+    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile, $encoding)
     {
         $this->sheet = $sheet;
         $this->styler = $styler;
         $this->sheetFile = $sheetFile;
+        $this->encoding = $encoding;
         $this->zip = new \ZipArchive();
     }
 

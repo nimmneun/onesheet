@@ -9,8 +9,13 @@ use OneSheet\Xml\StyleXml;
  *
  * @package OneSheet
  */
-class Font
+class Font implements Component
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -45,6 +50,24 @@ class Font
      * @var string
      */
     private $color = '000000';
+
+    /**
+     * @param int $id
+     * @return Font
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return Font

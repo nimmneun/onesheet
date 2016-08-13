@@ -2,9 +2,9 @@
 
 namespace OneSheet;
 
+use OneSheet\Xml\RowXml;
 use OneSheet\Style\Style;
 use OneSheet\Width\WidthCalculator;
-use OneSheet\Xml\RowXml;
 
 /**
  * Class Sheet
@@ -149,9 +149,7 @@ class Sheet
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
-            if (0 == strlen($cellValue)) {
-                continue;
-            }
+            if (0 == strlen($cellValue)) continue;
             if ($this->useCellAutosizing) {
                 $this->updateColumnWidths($cellValue, $cellIndex, $style);
             }

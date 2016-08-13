@@ -9,8 +9,13 @@ use OneSheet\Xml\StyleXml;
  *
  * @package OneSheet
  */
-class Fill
+class Fill implements Component
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -20,6 +25,24 @@ class Fill
      * @var string
      */
     private $pattern = 'none';
+
+    /**
+     * @param int $id
+     * @return Fill
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param string $color

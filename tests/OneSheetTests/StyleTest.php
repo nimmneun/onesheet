@@ -40,10 +40,16 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $style = new Style();
 
         $unlockedFont = $style->getFont();
-        $styler->addStyle($style);
-        $lockedFont = $style->getFont()->setColor('abcdef');
+        $unlockedFill = $style->getFill();
 
+        $styler->addStyle($style);
+
+        $lockedFont = $style->getFont()->setColor('abcdef');
         $this->assertEquals($unlockedFont, $style->getFont());
         $this->assertNotEquals($unlockedFont, $lockedFont);
+
+        $lockedFill = $style->setFillColor('abcdef');
+        $this->assertEquals($unlockedFill, $style->getFill());
+        $this->assertNotEquals($unlockedFill, $lockedFill);
     }
 }

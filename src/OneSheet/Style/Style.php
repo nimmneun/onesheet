@@ -9,7 +9,7 @@ use OneSheet\Xml\StyleXml;
  *
  * @package OneSheet
  */
-class Style
+class Style implements Component
 {
     /**
      * @var int
@@ -36,8 +36,8 @@ class Style
      */
     public function __construct()
     {
-        $this->font = new Font($this);
-        $this->fill = new Fill($this);
+        $this->font = new Font();
+        $this->fill = new Fill();
     }
 
     /**
@@ -78,22 +78,6 @@ class Style
             return clone $this->fill;
         }
         return $this->fill;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHash()
-    {
-        return md5($this->font->asXml() . $this->fill->asXml());
-    }
-
-    /**
-     * @return string
-     */
-    public function asXml()
-    {
-        return sprintf(StyleXml::DEFAULT_XF_XML, $this->getId(), $this->getId());
     }
 
     /**
@@ -168,7 +152,7 @@ class Style
      */
     public function setFillColor($color)
     {
-        $this->fill->setColor($color);
+        $this->getFill()->setColor($color);
         return $this;
     }
 
@@ -178,16 +162,23 @@ class Style
      */
     public function setFillPattern($pattern)
     {
-        $this->fill->setPattern($pattern);
+        $this->getFill()->setPattern($pattern);
         return $this;
     }
 
     /**
-     * @return Style
+     * Lock current style.
      */
     public function lock()
     {
         $this->isLocked = true;
-        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function asXml()
+    {
+        return sprintf(StyleXml::DEFAULT_XF_XML, $this->font->getId(), $this->fill->getId());
     }
 }
