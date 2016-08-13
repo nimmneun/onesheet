@@ -27,6 +27,11 @@ class Style
     private $fill;
 
     /**
+     * @var bool
+     */
+    private $isLocked = false;
+
+    /**
      * Style constructor.
      */
     public function __construct()
@@ -56,16 +61,22 @@ class Style
     /**
      * @return Font
      */
-    public function font()
+    public function getFont()
     {
+        if ($this->isLocked) {
+            return clone $this->font;
+        }
         return $this->font;
     }
 
     /**
      * @return Fill
      */
-    public function fill()
+    public function getFill()
     {
+        if ($this->isLocked) {
+            return clone $this->fill;
+        }
         return $this->fill;
     }
 
@@ -91,7 +102,7 @@ class Style
      */
     public function setFontName($name)
     {
-        $this->font->setName($name);
+        $this->getFont()->setName($name);
         return $this;
     }
 
@@ -101,7 +112,7 @@ class Style
      */
     public function setFontSize($size)
     {
-        $this->font->setSize($size);
+        $this->getFont()->setSize($size);
         return $this;
     }
 
@@ -111,7 +122,7 @@ class Style
      */
     public function setFontColor($color)
     {
-        $this->font->setColor($color);
+        $this->getFont()->setColor($color);
         return $this;
     }
 
@@ -120,7 +131,7 @@ class Style
      */
     public function setFontBold()
     {
-        $this->font->setBold();
+        $this->getFont()->setBold();
         return $this;
     }
 
@@ -129,7 +140,7 @@ class Style
      */
     public function setFontItalic()
     {
-        $this->font->setItalic();
+        $this->getFont()->setItalic();
         return $this;
     }
 
@@ -138,7 +149,7 @@ class Style
      */
     public function setFontUnderline()
     {
-        $this->font->setUnderline();
+        $this->getFont()->setUnderline();
         return $this;
     }
 
@@ -147,7 +158,7 @@ class Style
      */
     public function setFontStrikethrough()
     {
-        $this->font->setStrikethrough();
+        $this->getFont()->setStrikethrough();
         return $this;
     }
 
@@ -168,6 +179,15 @@ class Style
     public function setFillPattern($pattern)
     {
         $this->fill->setPattern($pattern);
+        return $this;
+    }
+
+    /**
+     * @return Style
+     */
+    public function lock()
+    {
+        $this->isLocked = true;
         return $this;
     }
 }

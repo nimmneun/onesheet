@@ -115,15 +115,15 @@ class Sheet
         $rowWidth = count($row);
         $this->updateMaxRowWidth($rowWidth);
 
-        $this->widthCalculator->setFont($style->font());
+        $this->widthCalculator->setFont($style->getFont());
         $cellXml = $this->getCellXml($row, $style);
 
-        if (!$this->useCellAutosizing || $style->font()->getSize() < 14) {
+        if (!$this->useCellAutosizing || $style->getFont()->getSize() < 14) {
             return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $rowWidth, $cellXml);
         }
 
         return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth,
-            $style->font()->getSize() * 1.4, $cellXml);
+            $style->getFont()->getSize() * 1.4, $cellXml);
     }
 
     /**
@@ -171,7 +171,7 @@ class Sheet
      */
     private function updateColumnWidths($value, $cellIndex, Style $style)
     {
-        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->font()->isBold());
+        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont()->isBold());
 
         if (!isset($this->columnWidths[$cellIndex])
             || $this->columnWidths[$cellIndex] < $cellWidth

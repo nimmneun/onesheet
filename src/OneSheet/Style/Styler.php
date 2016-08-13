@@ -28,8 +28,7 @@ class Styler
     {
         $this->addStyle(new Style());
         $grey = new Style();
-        $grey->fill()->setPattern('grey125');
-        $this->addStyle($grey);
+        $this->addStyle($grey->setFillPattern('grey125'));
     }
 
     /**
@@ -44,10 +43,11 @@ class Styler
         } else {
             $style->setId($this->styles[$this->hashes[$style->getHash()]]->getId());
         }
+        $style->lock();
     }
 
     /**
-     * Register a new style.
+     * Register and lock new style.
      *
      * @param Style  $style
      * @param string $styleHash
@@ -80,8 +80,8 @@ class Styler
         $fontsXml = $fillsXml = $cellXfsXml = '';
         foreach ($this->styles as $style) {
             $cellXfsXml .= $style->asXml();
-            $fontsXml .= $style->font()->asXml();
-            $fillsXml .= $style->fill()->asXml();
+            $fontsXml .= $style->getFont()->asXml();
+            $fillsXml .= $style->getFill()->asXml();
         }
 
         return sprintf(StyleXml::STYLE_SHEET_XML,
