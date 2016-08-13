@@ -26,7 +26,7 @@ class SheetFile
      */
     public function __construct()
     {
-        $this->filePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.xml';
+        $this->filePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(null, 1) . '.xml';
         if (!$this->filePointer = fopen($this->filePath, 'wb+')) {
             throw new \Exception("Failed to create temporary file {$this->filePath}!");
         }
@@ -55,7 +55,7 @@ class SheetFile
     public function __destruct()
     {
         fclose($this->filePointer);
-        unlink($this->getFilePath());
+        unlink($this->filePath);
     }
 
     /**

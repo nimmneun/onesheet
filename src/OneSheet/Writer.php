@@ -43,7 +43,7 @@ class Writer
      */
     private function initialize()
     {
-        $this->sheetFile = new SheetFile(sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.xml', 'wb+');
+        $this->sheetFile = new SheetFile();
         $this->sheetFile->fwrite(str_repeat(' ', pow(2, 20)) . '<sheetData>');
         $this->sheet = new Sheet();
         $this->styler = new Styler();
@@ -58,7 +58,7 @@ class Writer
     }
 
     /**
-     * @param array(array) $rows
+     * @param array $rows
      * @param Style|int    $style
      */
     public function addRows(array $rows, $style = 0)
@@ -71,7 +71,7 @@ class Writer
     }
 
     /**
-     * @param array $row
+     * @param array     $row
      * @param Style|int $style
      */
     public function addRow(array $row, $style = 0)

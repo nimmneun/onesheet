@@ -36,9 +36,9 @@ class Finalizer
     /**
      * Finalizer constructor.
      *
-     * @param Sheet       $sheet
-     * @param Styler      $styler
-     * @param SheetFile   $sheetFile
+     * @param Sheet     $sheet
+     * @param Styler    $styler
+     * @param SheetFile $sheetFile
      */
     public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile)
     {
@@ -46,7 +46,6 @@ class Finalizer
         $this->styler = $styler;
         $this->sheetFile = $sheetFile;
         $this->zip = new \ZipArchive();
-
     }
 
     /**
@@ -59,7 +58,7 @@ class Finalizer
         $this->zip->open($fileName, \ZipArchive::CREATE);
         $this->finalizeSheet();
         $this->finalizeStyles();
-        $this->writeDefaultXmls();
+        $this->finalizeDefaultXmls();
         $this->zip->close();
     }
 
@@ -71,7 +70,8 @@ class Finalizer
         $this->sheetFile->fwrite('</sheetData></worksheet>');
         $this->sheetFile->rewind();
         $this->sheetFile->fwrite(SheetXml::HEADER_XML);
-        $this->sheetFile->fwrite(sprintf(SheetXml::DIMENSION_XML, $this->sheet->getDimensionUpperBound()));
+        $this->sheetFile->fwrite(sprintf(SheetXml::DIMENSION_XML,
+            $this->sheet->getDimensionUpperBound()));
         $this->sheetFile->fwrite(sprintf(SheetXml::SHEETVIEWS_XML, '1', 'A2')); // freeze
         $this->writeColumnWidths();
         $this->zip->addFile($this->sheetFile->getFilePath(), 'xl/worksheets/sheet1.xml');
@@ -85,8 +85,10 @@ class Finalizer
         if (0 < count($this->sheet->getColumnWidths())) {
             $this->sheetFile->fwrite('<cols>');
             foreach ($this->sheet->getColumnWidths() as $columnNumber => $columnWidth) {
-                $this->sheetFile->fwrite(sprintf(SheetXml::COLUMN_XML, ($columnNumber + 1), ($columnNumber + 1),
-                    $columnWidth));
+                $this->sheetFile->fwrite(
+                    sprintf(SheetXml::COLUMN_XML, ($columnNumber + 1), ($columnNumber + 1),
+                        $columnWidth)
+                );
             }
             $this->sheetFile->fwrite('</cols>');
         }
@@ -103,7 +105,7 @@ class Finalizer
     /**
      * Add default xmls to zip archive.
      */
-    private function writeDefaultXmls()
+    private function finalizeDefaultXmls()
     {
         $this->zip->addFromString('[Content_Types].xml', DefaultXml::CONTENT_TYPES);
         $this->zip->addFromString('docProps/core.xml',

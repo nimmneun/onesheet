@@ -24,16 +24,16 @@ class Sheet
     private $widthCalculator;
 
     /**
+     * @var bool
+     */
+    private $useCellAutosizing = false;
+
+    /**
      * Track next row index.
      *
      * @var int
      */
     private $rowIndex = 1;
-
-    /**
-     * @var bool
-     */
-    private $useCellAutosizing = false;
 
     /**
      * Holds width/column count of the widest row.
@@ -107,6 +107,7 @@ class Sheet
      *
      * @param array $row
      * @param Style $style
+     *
      * @return string
      */
     public function addRow(array $row, Style $style)
@@ -121,7 +122,8 @@ class Sheet
             return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $rowWidth, $cellXml);
         }
 
-        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth, $style->font()->getSize() * 1.4, $cellXml);
+        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth,
+            $style->font()->getSize() * 1.4, $cellXml);
     }
 
     /**
@@ -153,7 +155,8 @@ class Sheet
             if ($this->useCellAutosizing) {
                 $this->updateColumnWidths($cellValue, $cellIndex, $style);
             }
-            $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue, $style->getId());
+            $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue,
+                $style->getId());
         }
 
         return $cellXml;
@@ -163,7 +166,7 @@ class Sheet
      * Track cell width for column width sizing.
      *
      * @param mixed $value
-     * @param       $cellIndex
+     * @param int   $cellIndex
      * @param Style $style
      */
     private function updateColumnWidths($value, $cellIndex, Style $style)

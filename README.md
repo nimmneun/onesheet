@@ -1,18 +1,12 @@
 # OneSheet
 
-[![Build Status](https://travis-ci.org/nimmneun/OneSheet.svg?branch=master)](https://travis-ci.org/nimmneun/OneSheet)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/OneSheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/OneSheet/?branch=master)
+[![Build Status](https://travis-ci.org/nimmneun/onesheet.svg?branch=master)](https://travis-ci.org/nimmneun/onesheet)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 
 OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+.
 
-To control wheter a numeric value is generated as a string or number field,
-simply typecast integers and doubles before adding the row to the sheet.
-
 ![Resulting OneSheet File in Excel](./tests/generated_auto_column_sizing_sample.png)
-
-Since performance and memory usage were the main drivers, DOM and SimpleXml
-where out of the question. Same goes for cell or even row objects.
 
 This XLSX writer/generator is still WIP and was built to satisfy the following needs:
 - Write a single sheet with up to 2^20 rows fast and with a small
@@ -28,6 +22,11 @@ Current major drawback(s):
 - No calculated/formula cells.
 
 Please be aware that there might be several api breaking changes until version 1.0.0 is released!
+
+###Install
+Install via composer
+`composer require nimmneun/onesheet`
+
 ```php
 <?php require_once '../vendor/autoload.php';
 
@@ -43,6 +42,7 @@ $m = -memory_get_usage(1);
 
 // create new sheet & freeze everything above the 2nd row
 $oneSheet = new \OneSheet\Writer();
+$oneSheet->getSheet()->enableCellAutosizing();
 
 // add all data rows at once
 $oneSheet->addRows($dataRows);

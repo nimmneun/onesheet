@@ -47,6 +47,7 @@ class CellBuilder
      * @param int   $cellNumber
      * @param mixed $cellValue
      * @param int   $styleId
+     *
      * @return string
      */
     public function build($rowNumber, $cellNumber, $cellValue, $styleId = 0)
@@ -58,7 +59,8 @@ class CellBuilder
         } elseif (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
         } elseif (is_numeric($cellValue) || 1 != preg_match('~[^\w]~', $cellValue)) {
-            return sprintf(CellXml::STRING_XML, $cellId, $styleId, htmlspecialchars($cellValue, ENT_QUOTES));
+            return sprintf(CellXml::STRING_XML, $cellId, $styleId,
+                htmlspecialchars($cellValue, ENT_QUOTES));
         }
 
         return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escape($cellValue));
@@ -70,6 +72,7 @@ class CellBuilder
      *
      * @param int      $cellNumber
      * @param int|null $rowNumber
+     *
      * @return string
      */
     public function getCellId($cellNumber, $rowNumber = null)
@@ -85,11 +88,13 @@ class CellBuilder
      * Escape/replace control characters.
      *
      * @param string $value
+     *
      * @return string
      */
     private function escape($value)
     {
-        return str_replace($this->controlCharacters, $this->escapeCharacters, htmlspecialchars($value, ENT_QUOTES));
+        return str_replace($this->controlCharacters, $this->escapeCharacters,
+            htmlspecialchars($value, ENT_QUOTES));
     }
 }
 

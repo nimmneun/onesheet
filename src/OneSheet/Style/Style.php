@@ -28,38 +28,11 @@ class Style
 
     /**
      * Style constructor.
-     *
-     * @param int|null $id
      */
-    public function __construct($id = null)
+    public function __construct()
     {
-        $this->id = $id;
         $this->font = new Font($this);
         $this->fill = new Fill($this);
-    }
-
-    /**
-     * @return Font
-     */
-    public function font()
-    {
-        return $this->font;
-    }
-
-    /**
-     * @return Fill
-     */
-    public function fill()
-    {
-        return $this->fill;
-    }
-
-    /**
-     * @return string
-     */
-    public function asXml()
-    {
-        return sprintf(StyleXml::DEFAULT_XF_XML, $this->getId(), $this->getId());
     }
 
     /**
@@ -81,10 +54,34 @@ class Style
     }
 
     /**
+     * @return Font
+     */
+    public function font()
+    {
+        return $this->font;
+    }
+
+    /**
+     * @return Fill
+     */
+    public function fill()
+    {
+        return $this->fill;
+    }
+
+    /**
      * @return string
      */
     public function getHash()
     {
         return md5($this->font->asXml() . $this->fill->asXml());
+    }
+
+    /**
+     * @return string
+     */
+    public function asXml()
+    {
+        return sprintf(StyleXml::DEFAULT_XF_XML, $this->getId(), $this->getId());
     }
 }
