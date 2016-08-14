@@ -52,6 +52,8 @@ class WidthCollection
     {
         if (isset(self::$widths[$fontName][$fontSize])) {
             return self::$widths[$fontName][$fontSize];
+        } elseif (isset(self::$widths['Calibri'][$fontSize])) {
+            return self::$widths['Calibri'][$fontSize];
         }
 
         return self::$widths['Calibri'][11];

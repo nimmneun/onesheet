@@ -53,7 +53,7 @@ class Sheet
      *
      * @var array
      */
-    private $columnWidths;
+    private $columnWidths = array();
 
     /**
      * Sheet constructor.

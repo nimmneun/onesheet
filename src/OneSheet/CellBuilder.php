@@ -54,7 +54,7 @@ class CellBuilder
     {
         $cellId = $this->getCellId($cellNumber, $rowNumber);
 
-        if (is_int($cellValue)) {
+        if (is_int($cellValue) || is_float($cellValue)) {
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $cellValue);
         } elseif (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);

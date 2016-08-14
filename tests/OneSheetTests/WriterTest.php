@@ -20,4 +20,13 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($fileName);
         unlink($fileName);
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAddRowsException()
+    {
+        $writer = new Writer();
+        $writer->addRows(array(1,2,3,4,5));
+    }
 }

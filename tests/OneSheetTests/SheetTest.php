@@ -10,10 +10,21 @@ class SheetTest extends \PHPUnit_Framework_TestCase
     public function testAddRow()
     {
         $sheet = new Sheet();
-        $sheet->enableCellAutosizing();
         $expectedXml = '<row r="1" spans="1:3"><c r="A1" s="0" t="inlineStr"><is><t>Heinz</t></is></c><c r="B1" s="0" t="inlineStr"><is><t>Becker &amp; Decker</t></is></c><c r="C1" s="0" t="b"><v>1</v></c></row>';
         $xml = $sheet->addRow(array('Heinz', 'Becker & Decker', true), new Style());
         $this->assertEquals($expectedXml, $xml);
+    }
+
+    public function testEnableAutoSizing()
+    {
+        $sheet = new Sheet();
+        $this->assertCount(0, $sheet->getColumnWidths());
+
+        $sheet->enableCellAutosizing();
+        $sheet->addRow(array(1,2,3), new Style());
+        $sheet->disableCellAutosizing();
+        $sheet->addRow(array(1,2,3,4,5,6,7), new Style());
+        $this->assertCount(3, $sheet->getColumnWidths());
     }
 
     public function testGetFreezePaneXml()
@@ -24,5 +35,22 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $sheet->setFreezePaneId('A5');
         $expectedXml = '<pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/>';
         $this->assertEquals($expectedXml, $sheet->getFreezePaneXml());
+    }
+
+    public function testWidthCalculation()
+    {
+        $sheet = new Sheet();
+        $sheet->addRow(array(1,2,3), new Style());
+        $this->assertEmpty($sheet->getColumnWidths());
+
+        $sheet->enableCellAutosizing();
+        $sheet->addRow(array(1,2,3), new Style());
+        $this->assertNotEmpty($sheet->getColumnWidths());
+
+        $widthSum = array_sum($sheet->getColumnWidths());
+        $largerStyle = new Style();
+        $largerStyle->setFontName('Something')->setFontSize(15);
+        $sheet->addRow(array(1,2,3), $largerStyle);
+        $this->assertGreaterThan($widthSum, array_sum($sheet->getColumnWidths()));
     }
 }
