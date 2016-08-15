@@ -2,6 +2,7 @@
 
 namespace OneSheetTest;
 
+use OneSheet\Style\BorderStyle;
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
 
@@ -32,6 +33,28 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $style = new Style();
         $expectedXml = '<fill><patternFill patternType="none"/></fill>';
         $this->assertEquals($expectedXml, $style->getFill()->asXml());
+    }
+
+    public function testBorder()
+    {
+        $style = new Style();
+        $expectedXml = '<border/>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+
+        $style = new Style();
+        $style->setBorderLeft(BorderStyle::DOUBLE, 'FF0000');
+        $expectedXml = '<border><left style="double"><color rgb="FF0000"/></left><right/><top/><bottom/><diagonal/></border>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+
+        $style = new Style();
+        $style->setBorderRight(BorderStyle::THIN, 'FF0000')->setBorderTop(BorderStyle::DOUBLE, 'FF0000')->setBorderBottom(BorderStyle::DOUBLE, 'FF0000');
+        $expectedXml = '<border><left/><right style="thin"><color rgb="FF0000"/></right><top style="double"><color rgb="FF0000"/></top><bottom style="double"><color rgb="FF0000"/></bottom><diagonal/></border>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+
+        $style = new Style();
+        $style->setBorderDiagonal(BorderStyle::DOUBLE, 'FF0000');
+        $expectedXml = '<border diagonalUp="1"><left/><right/><top/><bottom/><diagonal style="double"><color rgb="FF0000"/></diagonal></border>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
     }
 
     public function testLock()

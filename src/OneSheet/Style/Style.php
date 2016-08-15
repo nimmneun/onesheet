@@ -210,7 +210,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderRightTop($style, $color)
+    public function setBorderTop($style, $color)
     {
         $this->getBorder()->set(BorderType::TOP, $style, $color);
         return $this;
