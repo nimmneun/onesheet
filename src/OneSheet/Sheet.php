@@ -177,7 +177,7 @@ class Sheet
      */
     private function updateColumnWidths($value, $cellIndex, Style $style)
     {
-        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont()->isBold());
+        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont());
 
         if (!isset($this->columnWidths[$cellIndex])
             || $this->columnWidths[$cellIndex] < $cellWidth

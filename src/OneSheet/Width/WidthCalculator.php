@@ -31,24 +31,24 @@ class WidthCalculator
     }
 
     /**
-     * Returns a approximate width of a cell value.
+     * Returns the estimated width of a cell value.
      *
      * @param mixed $value
-     * @param bool  $isBold
+     * @param Font  $font
      * @return float
      */
-    public function getCellWidth($value, $isBold)
+    public function getCellWidth($value, Font $font)
     {
-        $width = 1;
-        foreach (str_split($value) as $character) {
+        $width = 0.07 * $font->getSize();
+        foreach (preg_split('~~u', $value, -1, PREG_SPLIT_NO_EMPTY) as $character) {
             if (isset($this->characterWidths[$character])) {
                 $width += $this->characterWidths[$character];
-            } else {
-                $width += 0.66;
+            } elseif (strlen($character)) {
+                $width += 0.06 * $font->getSize();
             }
         }
 
-        return $isBold ? $width * 1.09 : $width;
+        return $font->isBold() ? $width * $this->characterWidths['bold'] : $width;
     }
 
     /**

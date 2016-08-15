@@ -1,8 +1,4 @@
 <?php
-/**
- * @author neun
- * @since  2016-08-13
- */
 
 namespace OneSheetTest;
 
