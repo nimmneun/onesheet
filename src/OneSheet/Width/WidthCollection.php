@@ -22,7 +22,6 @@ class WidthCollection
     public function __construct()
     {
         self::loadWidthsFromCsv(dirname(__FILE__) . '/widths.csv');
-//        self::loadAdditionalWidths();
     }
 
     /**
@@ -45,21 +44,6 @@ class WidthCollection
             }
         }
     }
-
-//    Testing additional character widths ... fixed types.
-//    private static function loadAdditionalWidths()
-//    {
-//        $hiragana = array('ぁ','あ','ぃ','い','ぅ','う','ぇ','え','ぉ','お','か','が','き','ぎ','く','ぐ','け','げ','こ','ご','さ','ざ','し','じ','す','ず','せ','ぜ','そ','ぞ','た','だ','ち','ぢ','っ','つ','づ','て','で','と','ど','な','に','ぬ','ね','の','は','ば','ぱ','ひ','び','ぴ','ふ','ぶ','ぷ','へ','べ','ぺ','ほ','ぼ','ぽ','ま','み','む','め','も','ゃ','や','ゅ','ゆ','ょ','よ','ら','り','る','れ','ろ','ゎ','わ','ゐ','ゑ','を','ん','ゔ','ゕ','ゖ');
-//        foreach (self::$widths as &$width) {
-//            $width[9] += array_combine($hiragana, array_fill(0, count($hiragana), 1.76));
-//            $width[10] += array_combine($hiragana, array_fill(0, count($hiragana), 2.06));
-//            $width[11] += array_combine($hiragana, array_fill(0, count($hiragana), 2.35));
-//            $width[12] += array_combine($hiragana, array_fill(0, count($hiragana), 2.35));
-//            $width[13] += array_combine($hiragana, array_fill(0, count($hiragana), 2.65));
-//            $width[14] += array_combine($hiragana, array_fill(0, count($hiragana), 2.94));
-//            $width[15] += array_combine($hiragana, array_fill(0, count($hiragana), 2.94));
-//        }
-//    }
 
     /**
      * Return character widths for given font name.

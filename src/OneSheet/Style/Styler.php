@@ -109,22 +109,10 @@ class Styler
      */
     public function getStyleSheetXml()
     {
-        $fontsXml = $fillsXml = $bordersXml = $cellXfsXml = '';
-        foreach ($this->styles as $style) {
-            $cellXfsXml .= $style->asXml();
-        }
-
-        foreach ($this->fonts as $font) {
-            $fontsXml .= $font->asXml();
-        }
-
-        foreach ($this->fills as $fill) {
-            $fillsXml .= $fill->asXml();
-        }
-
-        foreach ($this->borders as $border) {
-            $bordersXml .= $border->asXml();
-        }
+        $fontsXml = $this->getComponentXml($this->fonts);
+        $fillsXml = $this->getComponentXml($this->fills);
+        $bordersXml = $this->getComponentXml($this->borders);
+        $cellXfsXml = $this->getComponentXml($this->styles);
 
         return sprintf(StyleXml::STYLE_SHEET_XML,
             sprintf(StyleXml::FONTS_XML, count($this->fonts), $fontsXml),
@@ -132,5 +120,20 @@ class Styler
             sprintf(StyleXml::BORDERS_XML, count($this->borders), $bordersXml),
             sprintf(StyleXml::CELL_XFS_XML, count($this->styles), $cellXfsXml)
         );
+    }
+
+    /**
+     * Return fonts, fills, borders, xfs xml strings.
+     *
+     * @param Component[] $components
+     * @return string
+     */
+    private function getComponentXml(array &$components)
+    {
+        $componentXml = '';
+        foreach ($components as $component) {
+            $componentXml .= $component->asXml();
+        }
+        return $componentXml;
     }
 }
