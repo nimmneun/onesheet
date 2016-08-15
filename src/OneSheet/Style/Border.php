@@ -2,6 +2,8 @@
 
 namespace OneSheet\Style;
 
+use OneSheet\Xml\StyleXml;
+
 /**
  * Class Border for reusable border definitions.
  *
@@ -40,7 +42,7 @@ class Border implements Component
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -83,6 +85,9 @@ class Border implements Component
     }
 
     /**
+     * Return type specific border part xml string,
+     * e.g. <left><color rgb="FF9900"/></left>.
+     *
      * @param $type
      * @return string
      */
@@ -91,8 +96,8 @@ class Border implements Component
         if (!isset($this->styles[$type])) {
             return "<{$type}/>";
         }
-        return sprintf('<%s style="%s"><color rgb="%s"/></%s>',
-            $type, $this->styles[$type], $this->colors[$type], $type
-        );
+
+        return sprintf(StyleXml::BORDER_TYPE_XML,
+            $type, $this->styles[$type], $this->colors[$type], $type);
     }
 }

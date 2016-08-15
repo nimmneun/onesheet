@@ -155,21 +155,17 @@ class Sheet
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
-            if (0 == strlen($cellValue)) {
-                continue;
-            }
-            if ($this->useCellAutosizing) {
+            if (0 < strlen($cellValue)) {
                 $this->updateColumnWidths($cellValue, $cellIndex, $style);
+                $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue, $style->getId());
             }
-            $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue,
-                $style->getId());
         }
 
         return $cellXml;
     }
 
     /**
-     * Track cell width for column width sizing.
+     * Track cell width for column width sizing if its enabled.
      *
      * @param mixed $value
      * @param int   $cellIndex
@@ -177,12 +173,13 @@ class Sheet
      */
     private function updateColumnWidths($value, $cellIndex, Style $style)
     {
-        $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont());
-
-        if (!isset($this->columnWidths[$cellIndex])
-            || $this->columnWidths[$cellIndex] < $cellWidth
-        ) {
-            $this->columnWidths[$cellIndex] = $cellWidth;
+        if ($this->useCellAutosizing) {
+            $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont());
+            if (!isset($this->columnWidths[$cellIndex])
+                || $this->columnWidths[$cellIndex] < $cellWidth
+            ) {
+                $this->columnWidths[$cellIndex] = $cellWidth;
+            }
         }
     }
 

@@ -44,9 +44,14 @@ class StyleXml
     const PATTERN_FILL_XML = '<fill><patternFill patternType="%s"/></fill>';
 
     /**
+     * Constant for single border type element xml string.
+     */
+    const BORDER_TYPE_XML = '<%s style="%s"><color rgb="%s"/></%s>';
+
+    /**
      * Constant for cellXf style xml strings.
      */
-    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%d" fillId="%d" borderId="%d" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>';
+    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%d" fillId="%d" borderId="%d"/>';
 
     /**
      * Constant for the full style xml.
