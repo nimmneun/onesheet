@@ -8,26 +8,36 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 
 ![Resulting OneSheet File in Excel](./tests/generated_auto_column_sizing_sample.png)
 
-#### What it does & doesnt
-- Write a single sheet with up to 2^20 rows fast and with a small
-  memory footprint.
+### What it does
+- Write a single sheet with up to 2^20 rows fast and with a small memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
-- Option to use different fonts, styles, borders and background colors on
-  a row level.
-- Option to auto-size column widths to fit cell contents. Only Arial, Calibri and Segoe UI size 9-15 are reliably working for now.
-  This comes with a performance hit of ~30% and (much) more, depending on content length.
+- Use different fonts, styles, borders and background colors on a row level.
+- Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI size 9-15 are
+  reliably working for now. Everything else is just a wild guess =). 
+  Please note that this comes with a performance hit of ~30% or more, depending on cell content length.
 - PHP 5.3 compatibility. 
 
-Current major drawback(s):
+### Current major drawback(s)
 - No cell individualisation, everything is applied at a row level.
 - No calculated/formula cells.
 
 This library is still WIP, so please be aware that there might be api breaking changes in minor versions (0.*.0) until version 1.0.0 is released!
 
-####Install
-Install via composer `composer require nimmneun/onesheet`
+### Install
+- Install via composer `composer require nimmneun/onesheet`
 
-#####Example
+### Minmal example
+```php
+<?php
+
+require_once '../vendor/autoload.php';
+
+$onesheet = new \OneSheet\Writer();
+$onesheet->addRow(array('hello', 'world'));
+$onesheet->writeToFile('hello_world.xlsx');
+```
+
+### More detailed example
 ```php
 <?php
 
@@ -93,4 +103,34 @@ $onesheet->addRows($dummyData);
 
 // write everything to the specified file
 $onesheet->writeToFile(str_replace('.php', '_onesheet.xlsx', __FILE__));
+```
+
+### Playing with colors
+```php
+// initialize and enable cellsizing
+$onesheet = new \OneSheet\Writer();
+$onesheet->enableCellAutosizing();
+
+// generate dummy data
+$data = array_map(function ($x) {
+    return str_repeat($x, 10);
+}, range(chr(40), chr(120)));
+
+// write data while changing colors
+$t = -microtime(1);
+for ($i = 0; $i <= 255; $i++) {
+    $style = new OneSheet\Style\Style();
+    fadeColors($style, 33, 77, $i % 255);
+    $onesheet->addRow($data, $style);
+}
+echo $t + microtime(1) . PHP_EOL;
+
+$onesheet->writeToFile(str_replace('.php', '.xlsx', __FILE__));
+
+function fadeColors(\OneSheet\Style\Style $style, $r = 0, $g = 0, $b = 0) {
+    $decHexCss = function ($n) { return sprintf('%02s', dechex($n)); };
+    $fontColor = $decHexCss($r) . $decHexCss($g) . $decHexCss($b);
+    $fillColor = $decHexCss(255-$r) . $decHexCss(255-$g) . $decHexCss(255-$b);
+    $style->setFontColor($fontColor)->setFillColor($fillColor)->setFontSize(9);
+}
 ```
