@@ -128,7 +128,7 @@ class Styler
      * @param Component[] $components
      * @return string
      */
-    private function getComponentXml(array &$components)
+    private function getComponentXml(array $components)
     {
         $componentXml = '';
         foreach ($components as $component) {

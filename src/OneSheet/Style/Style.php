@@ -232,9 +232,20 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderDiagonal($style, $color)
+    public function setBorderDiagonalUp($style, $color)
     {
-        $this->getBorder()->set(BorderType::DIAGONAL, $style, $color);
+        $this->getBorder()->set(BorderType::DIAGONAL, $style, $color, BorderType::DIRECTION_UP);
+        return $this;
+    }
+
+    /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderDiagonalDown($style, $color)
+    {
+        $this->getBorder()->set(BorderType::DIAGONAL, $style, $color, BorderType::DIRECTION_DOWN);
         return $this;
     }
 

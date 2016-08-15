@@ -52,8 +52,13 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedXml, $style->getBorder()->asXml());
 
         $style = new Style();
-        $style->setBorderDiagonal(BorderStyle::DOUBLE, 'FF0000');
+        $style->setBorderDiagonalUp(BorderStyle::DOUBLE, 'FF0000');
         $expectedXml = '<border diagonalUp="1"><left/><right/><top/><bottom/><diagonal style="double"><color rgb="FF0000"/></diagonal></border>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+
+        $style = new Style();
+        $style->setBorderDiagonalDown(BorderStyle::DOUBLE, 'FF0000');
+        $expectedXml = '<border diagonalDown="1"><left/><right/><top/><bottom/><diagonal style="double"><color rgb="FF0000"/></diagonal></border>';
         $this->assertEquals($expectedXml, $style->getBorder()->asXml());
     }
 

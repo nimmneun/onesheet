@@ -18,4 +18,8 @@ class BorderType
     const BOTTOM = 'bottom';
 
     const DIAGONAL = 'diagonal';
+
+    const DIRECTION_UP = 'Up';
+
+    const DIRECTION_DOWN = 'Down';
 }

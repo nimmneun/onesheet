@@ -25,6 +25,13 @@ class Border implements Component
     private $colors = array();
 
     /**
+     * Direction of diagonal border (up/down).
+     *
+     * @var null
+     */
+    private $direction = null;
+
+    /**
      * @param mixed $id
      */
     public function setId($id)
@@ -41,15 +48,17 @@ class Border implements Component
     }
 
     /**
-     * @param string $type
-     * @param string $style
-     * @param string $color
+     * @param string      $type
+     * @param string      $style
+     * @param string      $color
+     * @param string|null $direction
      * @return Border
      */
-    public function set($type, $style, $color)
+    public function set($type, $style, $color, $direction = null)
     {
         $this->styles[$type] = $style;
         $this->colors[$type] = strtoupper($color);
+        $this->direction = $direction;
         return $this;
     }
 
@@ -58,14 +67,18 @@ class Border implements Component
      */
     public function asXml()
     {
-        if (!count($this->styles)) return '<border/>';
+        if (!count($this->styles)) {
+            return '<border/>';
+        }
 
         $borderXml = '';
         foreach (array('left', 'right', 'top', 'bottom', 'diagonal') as $type) {
             $borderXml .= $this->getTypeXml($type);
         }
 
-        $diagonal = isset($this->styles[BorderType::DIAGONAL]) ? ' diagonalUp="1"' : '';
+        $diagonal = isset($this->styles[BorderType::DIAGONAL])
+            ? sprintf(' diagonal%s="1"', $this->direction) : '';
+
         return sprintf('<border%s>%s</border>', $diagonal, $borderXml);
     }
 
