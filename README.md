@@ -26,7 +26,7 @@ This library is still WIP, so please be aware that there might be api breaking c
 ### Install
 - Install via composer `composer require nimmneun/onesheet`
 
-### Minmal example
+### Minimal example
 ```php
 <?php
 
@@ -100,6 +100,9 @@ $onesheet->addRow(array('no one cares about my size and I dont even have a speci
 
 // add the all the dummy rows once more, because we can =)
 $onesheet->addRows($dummyData);
+
+// Override column widths for columns 6, 7, 8 (column 0 ist the first!)
+$onesheet->setFixedColumnWidths(array(5 => 10, 6 => 10, 7 => 10));
 
 // write everything to the specified file
 $onesheet->writeToFile(str_replace('.php', '_onesheet.xlsx', __FILE__));

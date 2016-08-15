@@ -81,6 +81,23 @@ class Sheet
     }
 
     /**
+     * Set custom column widths with 0 beeing the the first.
+     *
+     * @param array $columnWidths
+     * @throws \InvalidArgumentException
+     */
+    public function setFixedColumnWidths(array $columnWidths)
+    {
+        if ($columnWidths !== array_filter($columnWidths, 'is_numeric')
+            || array_keys($columnWidths) !== array_filter(array_keys($columnWidths), 'is_int')
+        ) {
+            throw new \InvalidArgumentException('Array must contain integer keys and numeric values only!');
+        }
+
+        $this->columnWidths = $columnWidths + $this->columnWidths;
+    }
+
+    /**
      * Return array containing all column widths.
      *
      * @return array
@@ -184,7 +201,7 @@ class Sheet
     }
 
     /**
-     * Return freeze pane xml string for sheezview.
+     * Return freeze pane xml string for sheetView.
      *
      * @return string
      */

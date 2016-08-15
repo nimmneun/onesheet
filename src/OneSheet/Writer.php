@@ -28,18 +28,10 @@ class Writer
     private $sheet;
 
     /**
-     * @var string
-     */
-    private $encoding;
-
-    /**
      * Writer constructor.
-     *
-     * @param string $encoding
      */
-    public function __construct($encoding = 'utf-8')
+    public function __construct()
     {
-        $this->encoding = $encoding;
         $this->initialize();
     }
 
@@ -51,6 +43,20 @@ class Writer
     public function setfreezePaneCellId($cellId)
     {
         $this->sheet->setFreezePaneId($cellId);
+    }
+
+    /**
+     * Set fixed column widths per cell (no ranges) and array index
+     * 0 beeing the first column.
+     * If used alongside cell autosizing, these should be set
+     * after the last row has been added.
+     *
+     * @param array $columnWidths
+     * @throws \InvalidArgumentException
+     */
+    public function setFixedColumnWidths(array $columnWidths)
+    {
+        $this->sheet->setFixedColumnWidths($columnWidths);
     }
 
     /**
@@ -89,11 +95,12 @@ class Writer
     /**
      * @param array $rows
      * @param Style $style
+     * @throws \InvalidArgumentException
      */
     public function addRows(array $rows, Style $style = null)
     {
         if (count($rows) === count($rows, COUNT_RECURSIVE)) {
-            throw new \InvalidArgumentException("Array must contain arrays!");
+            throw new \InvalidArgumentException('Array must contain arrays!');
         }
 
         foreach ($rows as $row) {
@@ -119,7 +126,7 @@ class Writer
      */
     public function writeToFile($fileName = 'dummy.xlsx')
     {
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->encoding);
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
         $finalizer->finalize($fileName);
     }
 }

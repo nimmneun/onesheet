@@ -34,24 +34,17 @@ class Finalizer
     private $styler;
 
     /**
-     * @var string
-     */
-    private $encoding;
-
-    /**
      * Finalizer constructor.
      *
      * @param Sheet     $sheet
      * @param Styler    $styler
      * @param SheetFile $sheetFile
-     * @param string    $encoding
      */
-    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile, $encoding)
+    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile)
     {
         $this->sheet = $sheet;
         $this->styler = $styler;
         $this->sheetFile = $sheetFile;
-        $this->encoding = $encoding;
         $this->zip = new \ZipArchive();
     }
 
@@ -63,10 +56,14 @@ class Finalizer
     public function finalize($fileName)
     {
         $this->zip->open($fileName, \ZipArchive::CREATE);
+
         $this->finalizeSheet();
         $this->finalizeStyles();
         $this->finalizeDefaultXmls();
-        $this->zip->close();
+
+        if (!$this->zip->close()) {
+            throw new \RuntimeException('Failed to save xlsx file!');
+        }
     }
 
     /**

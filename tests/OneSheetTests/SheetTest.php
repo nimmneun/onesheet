@@ -53,4 +53,32 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $sheet->addRow(array(1,2,3), $largerStyle);
         $this->assertGreaterThan($widthSum, array_sum($sheet->getColumnWidths()));
     }
+
+    public function testSetFixedColumnWidths()
+    {
+        $sheet = new Sheet();
+        $sheet->setFixedColumnWidths(array(0 => 10, 3 => 20, 7 => 10));
+        $this->assertEquals(40, array_sum($sheet->getColumnWidths()));
+
+        $sheet->setFixedColumnWidths(array(3 => 10));
+        $this->assertEquals(30, array_sum($sheet->getColumnWidths()));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetFixedColumnWidthsWithInvalidValues()
+    {
+        $sheet = new Sheet();
+        $sheet->setFixedColumnWidths(array(1 => 'abc', 7 => 10));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSetFixedColumnWidthsWithInvalidKeys()
+    {
+        $sheet = new Sheet();
+        $sheet->setFixedColumnWidths(array('A1' => 10, 7 => 10));
+    }
 }
