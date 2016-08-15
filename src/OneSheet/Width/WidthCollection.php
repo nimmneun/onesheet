@@ -22,7 +22,7 @@ class WidthCollection
     public function __construct()
     {
         self::loadWidthsFromCsv(dirname(__FILE__) . '/widths.csv');
-        self::loadAdditionalWidths();
+//        self::loadAdditionalWidths();
     }
 
     /**

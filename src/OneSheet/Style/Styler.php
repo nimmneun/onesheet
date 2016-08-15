@@ -26,14 +26,14 @@ class Styler
     private $fonts = array();
 
     /**
-     * Holds uniqiue fills.
+     * Holds unique fills.
      *
      * @var Fill[]
      */
     private $fills = array();
 
     /**
-     * Holds uniqiue borders.
+     * Holds unique borders.
      *
      * @var Border[]
      */
