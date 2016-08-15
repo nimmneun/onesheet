@@ -15,7 +15,8 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - Option to use different fonts, styles, borders and background colors on
   a row level.
 - Option to auto-size column widths to fit cell contents. Only Arial, Calibri and Segoe UI size 9-15 are reliably working for now.
-- PHP 5.3 compatibility.
+  This comes with a performance hit of ~30% and (much) more, depending on content length.
+- PHP 5.3 compatibility. 
 
 Current major drawback(s):
 - No cell individualisation, everything is applied at a row level.
