@@ -88,7 +88,7 @@ class Border implements Component
      * Return type specific border part xml string,
      * e.g. <left><color rgb="FF9900"/></left>.
      *
-     * @param $type
+     * @param string $type
      * @return string
      */
     private function getTypeXml($type)
