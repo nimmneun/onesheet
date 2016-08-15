@@ -65,7 +65,8 @@ class Border implements Component
             $borderXml .= $this->getTypeXml($type);
         }
 
-        return sprintf('<border>%s</border>', $borderXml);
+        $diagonal = isset($this->styles[BorderType::DIAGONAL]) ? ' diagonalUp="1"' : '';
+        return sprintf('<border%s>%s</border>', $diagonal, $borderXml);
     }
 
     /**

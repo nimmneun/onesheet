@@ -228,6 +228,17 @@ class Style implements Component
     }
 
     /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderDiagonal($style, $color)
+    {
+        $this->getBorder()->set(BorderType::DIAGONAL, $style, $color);
+        return $this;
+    }
+
+    /**
      * Lock current style to prevent overwriting of existing styles.
      */
     public function lock()

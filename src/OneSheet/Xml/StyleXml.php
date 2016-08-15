@@ -46,7 +46,7 @@ class StyleXml
     /**
      * Constant for cellXf style xml strings.
      */
-    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%d" fillId="%d" borderId="%d" xfId="0" applyFont="1" applyBorder="1"/>';
+    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%d" fillId="%d" borderId="%d" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>';
 
     /**
      * Constant for the full style xml.
