@@ -20,6 +20,10 @@ class StyleXml
     const FILLS_XML = '<fills count="%d">%s</fills>';
 
     /**
+     * Constant for final borders xml string.
+     */
+    const BORDERS_XML = '<borders count="%d">%s</borders>';
+    /**
      * Constant for final cellXfs xml string.
      */
     const CELL_XFS_XML = '<cellXfs count="%d">%s</cellXfs>';
@@ -42,10 +46,10 @@ class StyleXml
     /**
      * Constant for cellXf style xml strings.
      */
-    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%s" fillId="%s" borderId="0" xfId="0" applyFont="1"/>';
+    const DEFAULT_XF_XML = '<xf numFmtId="0" fontId="%d" fillId="%d" borderId="%d" xfId="0" applyFont="1" applyBorder="1"/>';
 
     /**
      * Constant for the full style xml.
      */
-    const STYLE_SHEET_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">%s%s<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf borderId="0" fillId="0" fontId="0" numFmtId="0"/></cellStyleXfs>%s<cellStyles count="1"><cellStyle builtinId="0" name="Normal" xfId="0"/></cellStyles><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>';
+    const STYLE_SHEET_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">%s%s%s<cellStyleXfs count="1"><xf borderId="0" fillId="0" fontId="0" numFmtId="0"/></cellStyleXfs>%s<cellStyles count="1"><cellStyle builtinId="0" name="Normal" xfId="0"/></cellStyles><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>';
 }

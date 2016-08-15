@@ -12,27 +12,42 @@ use OneSheet\Xml\StyleXml;
 class Styler
 {
     /**
+     * Holds unique styles.
+     *
      * @var Style[]
      */
     private $styles = array();
 
     /**
+     * Holds unique fonts.
+     *
      * @var Font[]
      */
     private $fonts = array();
 
     /**
+     * Holds uniqiue fills.
+     *
      * @var Fill[]
      */
     private $fills = array();
 
     /**
+     * Holds uniqiue borders.
+     *
+     * @var Border[]
+     */
+    private $borders = array();
+
+    /**
+     * Holds (hash => component id) mappings.
+     *
      * @var array
      */
     private $hashes = array();
 
     /**
-     * Styler constructor.
+     * Styler constructor to initialize reserved default styles.
      */
     public function __construct()
     {
@@ -51,13 +66,14 @@ class Styler
         if (null === $style->getId()) {
             $this->register($style->getFont(), $this->fonts);
             $this->register($style->getFill(), $this->fills);
+            $this->register($style->getBorder(), $this->borders);
             $this->register($style, $this->styles);
             $style->lock();
         }
     }
 
     /**
-     * Register a new Style compoment its compoments to account
+     * Register a new style/font/fill component to account
      * for reusable styles, fills, fonts, ...
      *
      * @param Component $component
@@ -77,6 +93,8 @@ class Styler
     }
 
     /**
+     * Return default style (Calibri,11).
+     *
      * @return Style
      */
     public function getDefaultStyle()
@@ -91,7 +109,7 @@ class Styler
      */
     public function getStyleSheetXml()
     {
-        $fontsXml = $fillsXml = $cellXfsXml = '';
+        $fontsXml = $fillsXml = $bordersXml = $cellXfsXml = '';
         foreach ($this->styles as $style) {
             $cellXfsXml .= $style->asXml();
         }
@@ -104,9 +122,14 @@ class Styler
             $fillsXml .= $fill->asXml();
         }
 
+        foreach ($this->borders as $border) {
+            $bordersXml .= $border->asXml();
+        }
+
         return sprintf(StyleXml::STYLE_SHEET_XML,
             sprintf(StyleXml::FONTS_XML, count($this->fonts), $fontsXml),
             sprintf(StyleXml::FILLS_XML, count($this->fills), $fillsXml),
+            sprintf(StyleXml::BORDERS_XML, count($this->borders), $bordersXml),
             sprintf(StyleXml::CELL_XFS_XML, count($this->styles), $cellXfsXml)
         );
     }

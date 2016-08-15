@@ -27,6 +27,11 @@ class Style implements Component
     private $fill;
 
     /**
+     * @var Border
+     */
+    private $border;
+
+    /**
      * @var bool
      */
     private $isLocked = false;
@@ -38,6 +43,7 @@ class Style implements Component
     {
         $this->font = new Font();
         $this->fill = new Fill();
+        $this->border = new Border();
     }
 
     /**
@@ -78,6 +84,17 @@ class Style implements Component
             return clone $this->fill;
         }
         return $this->fill;
+    }
+
+    /**
+     * @return Border
+     */
+    public function getBorder()
+    {
+        if ($this->isLocked) {
+            return clone $this->border;
+        }
+        return $this->border;
     }
 
     /**
@@ -167,7 +184,51 @@ class Style implements Component
     }
 
     /**
-     * Lock current style.
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderLeft($style, $color)
+    {
+        $this->getBorder()->set(BorderType::LEFT, $style, $color);
+        return $this;
+    }
+
+    /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderRight($style, $color)
+    {
+        $this->getBorder()->set(BorderType::RIGHT, $style, $color);
+        return $this;
+    }
+
+    /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderRightTop($style, $color)
+    {
+        $this->getBorder()->set(BorderType::TOP, $style, $color);
+        return $this;
+    }
+
+    /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderBottom($style, $color)
+    {
+        $this->getBorder()->set(BorderType::BOTTOM, $style, $color);
+        return $this;
+    }
+
+    /**
+     * Lock current style to prevent overwriting of existing styles.
      */
     public function lock()
     {
@@ -175,10 +236,17 @@ class Style implements Component
     }
 
     /**
+     * Return single <xf> string for current style.
+     *
      * @return string
      */
     public function asXml()
     {
-        return sprintf(StyleXml::DEFAULT_XF_XML, $this->font->getId(), $this->fill->getId());
+        return sprintf(
+            StyleXml::DEFAULT_XF_XML,
+            $this->font->getId(),
+            $this->fill->getId(),
+            $this->border->getId()
+        );
     }
 }
