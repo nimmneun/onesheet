@@ -4,6 +4,8 @@ namespace OneSheet;
 
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
+use OneSheet\Width\WidthCalculator;
+use OneSheet\Width\WidthCollection;
 
 /**
  * Class Writer
@@ -89,7 +91,7 @@ class Writer
         $this->sheetFile = new SheetFile();
         $this->sheetFile->fwrite(str_repeat(' ', pow(2, 20)) . '<sheetData>');
         $this->styler = new Styler();
-        $this->sheet = new Sheet();
+        $this->sheet = new Sheet(new CellBuilder(), new WidthCalculator(new WidthCollection()));
     }
 
     /**

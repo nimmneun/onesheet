@@ -57,11 +57,14 @@ class Sheet
 
     /**
      * Sheet constructor.
+     *
+     * @param CellBuilder     $cellBuilder
+     * @param WidthCalculator $widthCalculator
      */
-    public function __construct()
+    public function __construct(CellBuilder $cellBuilder, WidthCalculator $widthCalculator)
     {
-        $this->cellBuilder = new CellBuilder();
-        $this->widthCalculator = new WidthCalculator();
+        $this->cellBuilder = $cellBuilder;
+        $this->widthCalculator = $widthCalculator;
     }
 
     /**

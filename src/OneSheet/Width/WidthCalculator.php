@@ -24,10 +24,12 @@ class WidthCalculator
 
     /**
      * Calculator constructor.
+     *
+     * @param WidthCollection $widthCollection
      */
-    public function __construct()
+    public function __construct(WidthCollection $widthCollection)
     {
-        $this->widthCollection = new WidthCollection();
+        $this->widthCollection = $widthCollection;
     }
 
     /**
