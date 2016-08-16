@@ -49,7 +49,7 @@ class Writer
 
     /**
      * Set fixed column widths per cell (no ranges) and array index
-     * 0 beeing the first column.
+     * 0 being the first column.
      * If used alongside cell autosizing, these should be set
      * after the last row has been added.
      *
