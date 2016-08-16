@@ -84,7 +84,15 @@ class Sheet
     }
 
     /**
-     * Set custom column widths with 0 beeing the the first.
+     * @param int $cellId
+     */
+    public function setFreezePaneId($cellId)
+    {
+        $this->freezePaneId = $cellId;
+    }
+
+    /**
+     * Set custom column widths with 0 beeing the first.
      *
      * @param array $columnWidths
      * @throws \InvalidArgumentException
@@ -142,14 +150,6 @@ class Sheet
 
         return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth,
             $style->getFont()->getSize() * 1.4, $cellXml);
-    }
-
-    /**
-     * @param int $cellId
-     */
-    public function setFreezePaneId($cellId)
-    {
-        $this->freezePaneId = $cellId;
     }
 
     /**

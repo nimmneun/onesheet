@@ -184,11 +184,27 @@ class Style implements Component
     }
 
     /**
+     * Convenience method to set all borders at once.
+     *
      * @param string $style
      * @param string $color
      * @return Style
      */
-    public function setBorderLeft($style, $color)
+    public function setSurroundingBorder($style = BorderStyle::THIN, $color = '000000')
+    {
+        $this->setBorderLeft($style, $color);
+        $this->setBorderRight($style, $color);
+        $this->setBorderTop($style, $color);
+        $this->setBorderBottom($style, $color);
+        return $this;
+    }
+    
+    /**
+     * @param string $style
+     * @param string $color
+     * @return Style
+     */
+    public function setBorderLeft($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::LEFT, $style, $color);
         return $this;
@@ -199,7 +215,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderRight($style, $color)
+    public function setBorderRight($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::RIGHT, $style, $color);
         return $this;
@@ -210,7 +226,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderTop($style, $color)
+    public function setBorderTop($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::TOP, $style, $color);
         return $this;
@@ -221,7 +237,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderBottom($style, $color)
+    public function setBorderBottom($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::BOTTOM, $style, $color);
         return $this;
@@ -232,7 +248,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderDiagonalUp($style, $color)
+    public function setBorderDiagonalUp($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::DIAGONAL, $style, $color, BorderType::DIRECTION_UP);
         return $this;
@@ -243,7 +259,7 @@ class Style implements Component
      * @param string $color
      * @return Style
      */
-    public function setBorderDiagonalDown($style, $color)
+    public function setBorderDiagonalDown($style = BorderStyle::THIN, $color = '000000')
     {
         $this->getBorder()->set(BorderType::DIAGONAL, $style, $color, BorderType::DIRECTION_DOWN);
         return $this;
@@ -251,10 +267,13 @@ class Style implements Component
 
     /**
      * Lock current style to prevent overwriting of existing styles.
+     *
+     * @return Style
      */
     public function lock()
     {
         $this->isLocked = true;
+        return $this;
     }
 
     /**

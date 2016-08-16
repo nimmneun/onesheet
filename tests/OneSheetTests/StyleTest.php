@@ -35,12 +35,15 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedXml, $style->getFill()->asXml());
     }
 
-    public function testBorder()
+    public function testNoBorderSet()
     {
         $style = new Style();
         $expectedXml = '<border/>';
         $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+    }
 
+    public function testBorder()
+    {
         $style = new Style();
         $style->setBorderLeft(BorderStyle::DOUBLE, 'FF0000');
         $expectedXml = '<border><left style="double"><color rgb="FF0000"/></left><right/><top/><bottom/><diagonal/></border>';
@@ -59,6 +62,11 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $style = new Style();
         $style->setBorderDiagonalDown(BorderStyle::DOUBLE, 'FF0000');
         $expectedXml = '<border diagonalDown="1"><left/><right/><top/><bottom/><diagonal style="double"><color rgb="FF0000"/></diagonal></border>';
+        $this->assertEquals($expectedXml, $style->getBorder()->asXml());
+
+        $style = new Style();
+        $style->setSurroundingBorder();
+        $expectedXml = '<border><left style="thin"><color rgb="000000"/></left><right style="thin"><color rgb="000000"/></right><top style="thin"><color rgb="000000"/></top><bottom style="thin"><color rgb="000000"/></bottom><diagonal/></border>';
         $this->assertEquals($expectedXml, $style->getBorder()->asXml());
     }
 
