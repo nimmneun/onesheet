@@ -77,6 +77,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
         $unlockedFont = $style->getFont();
         $unlockedFill = $style->getFill();
+        $unlockedBorder = $style->getBorder();
 
         $styler->addStyle($style);
 
@@ -87,5 +88,9 @@ class StyleTest extends \PHPUnit_Framework_TestCase
         $lockedFill = $style->setFillColor('abcdef');
         $this->assertEquals($unlockedFill, $style->getFill());
         $this->assertNotEquals($unlockedFill, $lockedFill);
+
+        $lockedBorder = $style->setSurroundingBorder();
+        $this->assertEquals($unlockedBorder, $style->getBorder());
+        $this->assertNotEquals($unlockedBorder, $lockedBorder);
     }
 }

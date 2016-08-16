@@ -137,3 +137,29 @@ function fadeColors(\OneSheet\Style\Style $style, $r = 0, $g = 0, $b = 0) {
     $style->setFontColor($fontColor)->setFillColor($fillColor)->setFontSize(9);
 }
 ```
+
+### Methods available for styling
+
+#### Fonts / Backgrounds (Fills)
+```
+Style::setFontName(name)
+Style::setFontSize(size)
+Style::setFontColor(color)
+Style::setFontBold()
+Style::setFontItalic()
+Style::setFontUnderline()
+Style::setFontStrikethrough()
+
+Style::setFillColor(color)
+```
+
+#### Borders
+```
+Style::setSurroundingBorder(style, color)
+Style::setBorderLeft(style, color)
+Style::setBorderRight(style, color)
+Style::setBorderTop(style, color)
+Style::setBorderBottom(style, color)
+Style::setBorderDiagonalUp(style, color)
+Style::setBorderDiagonalDown(style, color)
+```
