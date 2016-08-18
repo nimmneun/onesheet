@@ -33,10 +33,10 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     public function testSetFreezePaneCellId()
     {
         $writer = new Writer();
-        $writer->setfreezePaneCellId('A5');
+        $writer->setFreezePaneCellId('A5');
 
         $sheet = $this->getObjectProperty($writer, 'sheet');
-        $value = $this->getObjectProperty($sheet, 'freezePaneId');
+        $value = $this->getObjectProperty($sheet, 'freezePaneCellId');
 
         $this->assertEquals('A5', $value);
     }
