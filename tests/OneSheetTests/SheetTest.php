@@ -35,7 +35,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $sheet = new Sheet(new CellBuilder(), new WidthCalculator(new WidthCollection()));
         $this->assertEquals('', $sheet->getFreezePaneXml());
 
-        $sheet->setFreezePaneId('A5');
+        $sheet->setFreezePaneCellId('A5');
         $expectedXml = '<pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/>';
         $this->assertEquals($expectedXml, $sheet->getFreezePaneXml());
     }

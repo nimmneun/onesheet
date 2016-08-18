@@ -34,11 +34,12 @@ class SheetFile
 
     /**
      * @param $string
-     * @return bool
      */
     public function fwrite($string)
     {
-        return (bool)fwrite($this->filePointer, $string);
+        if (!fwrite($this->filePointer, $string)) {
+            throw new \RuntimeException("Failed to write to sheet file!");
+        }
     }
 
     /**
@@ -50,19 +51,20 @@ class SheetFile
     }
 
     /**
-     * Close and delete the file.
-     */
-    public function __destruct()
-    {
-        fclose($this->filePointer);
-        unlink($this->filePath);
-    }
-
-    /**
      * @return string
      */
     public function getFilePath()
     {
         return $this->filePath;
+    }
+
+    /**
+     * Close file pointer and delete sheet file.
+     */
+    public function __destruct()
+    {
+        if (!fclose($this->filePointer) || !unlink($this->filePath)) {
+            throw new \RuntimeException('Failed to close sheetfile!');
+        }
     }
 }

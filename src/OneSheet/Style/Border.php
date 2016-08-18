@@ -34,11 +34,13 @@ class Border implements Component
     private $direction = null;
 
     /**
-     * @param mixed $id
+     * @param int $id
+     * @return Border
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**

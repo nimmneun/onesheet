@@ -32,7 +32,7 @@ class Sheet
     /**
      * @var int
      */
-    private $freezePaneId;
+    private $freezePaneCellId;
 
     /**
      * Track next row index.
@@ -46,7 +46,7 @@ class Sheet
      *
      * @var int
      */
-    private $maxRowWidth;
+    private $maxColumnCount;
 
     /**
      * Holds widths of the widest cells for column sizing.
@@ -86,13 +86,13 @@ class Sheet
     /**
      * @param int $cellId
      */
-    public function setFreezePaneId($cellId)
+    public function setFreezePaneCellId($cellId)
     {
-        $this->freezePaneId = $cellId;
+        $this->freezePaneCellId = $cellId;
     }
 
     /**
-     * Set custom column widths with 0 beeing the first.
+     * Set custom column widths with 0 representing the first column.
      *
      * @param array $columnWidths
      * @throws \InvalidArgumentException
@@ -125,7 +125,7 @@ class Sheet
      */
     public function getDimensionUpperBound()
     {
-        return $this->cellBuilder->getCellId($this->maxRowWidth, $this->rowIndex - 1);
+        return $this->cellBuilder->getCellId($this->maxColumnCount, $this->rowIndex - 1);
     }
 
     /**
@@ -138,29 +138,29 @@ class Sheet
      */
     public function addRow(array $row, Style $style)
     {
-        $rowWidth = count($row);
-        $this->updateMaxRowWidth($rowWidth);
+        $columnCount = count($row);
+        $this->updateMaxColumnCount($columnCount);
 
         $this->widthCalculator->setFont($style->getFont());
         $cellXml = $this->getCellXml($row, $style);
 
         if (!$this->useCellAutosizing || $style->getFont()->getSize() < 14) {
-            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $rowWidth, $cellXml);
+            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
         }
 
-        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $rowWidth,
+        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $columnCount,
             $style->getFont()->getSize() * 1.4, $cellXml);
     }
 
     /**
-     * Track widest row for dimensions xml (e.g. A1:K123).
+     * Track column count for dimensions xml (e.g. A1:K123).
      *
-     * @param int $rowWidth
+     * @param int $columnCount
      */
-    private function updateMaxRowWidth($rowWidth)
+    private function updateMaxColumnCount($columnCount)
     {
-        if ($this->maxRowWidth < $rowWidth) {
-            $this->maxRowWidth = $rowWidth;
+        if ($this->maxColumnCount < $columnCount) {
+            $this->maxColumnCount = $columnCount;
         }
     }
 
@@ -210,11 +210,11 @@ class Sheet
      */
     public function getFreezePaneXml()
     {
-        if (!$this->freezePaneId
-            || 1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneId, $m)
+        if (!$this->freezePaneCellId
+            || 1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneCellId, $m)
         ) {
             return '';
         }
-        return sprintf(SheetXml::FREEZE_PANE_XML, array_pop($m) - 1, $this->freezePaneId);
+        return sprintf(SheetXml::FREEZE_PANE_XML, array_pop($m) - 1, $this->freezePaneCellId);
     }
 }

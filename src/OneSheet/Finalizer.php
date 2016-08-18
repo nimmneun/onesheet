@@ -52,6 +52,7 @@ class Finalizer
      * Finalize the xlsx file.
      *
      * @param string $fileName
+     * @throws \RuntimeException
      */
     public function finalize($fileName)
     {

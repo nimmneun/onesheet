@@ -38,13 +38,13 @@ class Writer
     }
 
     /**
-     * All cells _above_ this cell will be fozen/fixed.
+     * All cells _above_ this cell will be frozen/fixed.
      *
      * @param int $cellId
      */
-    public function setfreezePaneCellId($cellId)
+    public function setFreezePaneCellId($cellId)
     {
-        $this->sheet->setFreezePaneId($cellId);
+        $this->sheet->setFreezePaneCellId($cellId);
     }
 
     /**
