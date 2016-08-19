@@ -21,7 +21,7 @@ class WidthCollection
      */
     public function __construct()
     {
-        self::loadWidthsFromCsv(dirname(__FILE__) . '/widths.csv');
+        self::loadWidthsFromCsv(dirname(__FILE__) . '/width_collection.csv');
     }
 
     /**
@@ -32,16 +32,13 @@ class WidthCollection
      */
     public static function loadWidthsFromCsv($csvPath)
     {
-        foreach (file($csvPath) as $line) {
-            if ($line[0] == 'f') continue;
-            $widths = explode(',', trim($line));
-            if (count(range(33, 126)) + 3 == count($widths)) {
-                $fontName = array_shift($widths);
-                $fontSize = array_shift($widths);
-                $boldMulti = array_shift($widths);
-                self::$widths[$fontName][$fontSize] = array_combine(array_map('chr', range(33, 126)), $widths);
-                self::$widths[$fontName][$fontSize] += array('bold' => $boldMulti);
-            }
+        $fh = fopen($csvPath, 'r');
+        $head = fgetcsv($fh);
+        unset($head[0], $head[1]);
+        while ($row = fgetcsv($fh)) {
+            $fontName = array_shift($row);
+            $fontSize = array_shift($row);
+            self::$widths[$fontName][$fontSize] = array_combine($head, $row);
         }
     }
 

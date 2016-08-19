@@ -1,12 +1,8 @@
 <?php
-/**
- * @author neun
- * @since  2016-08-13
- */
 
 namespace OneSheet\Style;
 
-Interface Component
+interface Component
 {
     /**
      * @param int $id
