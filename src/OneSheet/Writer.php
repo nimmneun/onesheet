@@ -116,9 +116,11 @@ class Writer
      */
     public function addRow(array $row, Style $style = null)
     {
-        $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
-        $this->styler->addStyle($style);
-        $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
+        if (!empty($row)) {
+            $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
+            $this->styler->addStyle($style);
+            $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
+        }
     }
 
     /**
