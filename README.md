@@ -12,10 +12,8 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - Write a single sheet with up to 2^20 rows fast and with a small memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
-- Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI size 9-15 are
-  reliably working for now. Everything else is just a wild guess =). 
-  Please note that this comes with a performance hit of ~30% or more, depending on cell content length.
-- PHP 5.3 compatibility. 
+- Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI (size 8-20) are
+  reliably working for now. Everything else is mostly a wild guess =).
 
 ### Current major drawback(s)
 - No cell individualisation, everything is applied at a row level.
@@ -25,6 +23,13 @@ This library is still WIP, so please be aware that there might be api breaking c
 
 ### Install
 - Install via composer `composer require nimmneun/onesheet`
+
+### Cell autosizing is cool, but comes with serious performance impacts!
+| Impacts of autosizing    | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
+| ------------------------ | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
+| Autosizing DISABLED      | 22 seconds                    | 22 seconds                     | 23 seconds                     | 24 seconds                     |
+| Autosizing ENABLED       | 30 seconds                    | 34 seconds                     | 40 seconds                     | 53 seconds                     |
+| Performance loss in %    | + 36 %                        | + 54 %                         | + 73 %                         | + 112 %                        |
 
 ### Minimal example
 ```php
@@ -78,7 +83,7 @@ $onesheet = new \OneSheet\Writer();
 $onesheet->addRow($dummyHeader, $headerStyle);
 
 // freeze everything above cell A2 (the first row will be frozen)
-$onesheet->setfreezePaneCellId('A2');
+$onesheet->setFreezePaneCellId('A2');
 
 // enable autosizing of column widths and row heights
 $onesheet->enableCellAutosizing();
@@ -101,7 +106,7 @@ $onesheet->addRow(array('no one cares about my size and I dont even have a speci
 // add the all the dummy rows once more, because we can =)
 $onesheet->addRows($dummyData);
 
-// Override column widths for columns 6, 7, 8 (column 0 ist the first!)
+// Override column widths for columns 6, 7, 8 (column 0 is the first)
 $onesheet->setFixedColumnWidths(array(5 => 10, 6 => 10, 7 => 10));
 
 // write everything to the specified file
@@ -110,6 +115,10 @@ $onesheet->writeToFile(str_replace('.php', '_onesheet.xlsx', __FILE__));
 
 ### Playing with colors
 ```php
+<?php
+
+require_once '../vendor/autoload.php';
+
 // initialize and enable cellsizing
 $onesheet = new \OneSheet\Writer();
 $onesheet->enableCellAutosizing();

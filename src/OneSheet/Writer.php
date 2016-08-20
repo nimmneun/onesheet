@@ -62,6 +62,17 @@ class Writer
     }
 
     /**
+     * Set lower and/or upper limits for column widths.
+     *
+     * @param float|null $minWidth
+     * @param float|null $maxWidth
+     */
+    public function setColumnWidthBoundries($minWidth = null, $maxWidth = null)
+    {
+        $this->sheet->setColumnWidthBoundries($minWidth, $maxWidth);
+    }
+
+    /**
      * Start recording row specs for column autosizing.
      *
      *  @return Writer
