@@ -42,7 +42,8 @@ class WidthCalculator
     public function getCellWidth($value, Font $font)
     {
         $width = 0.07 * $font->getSize();
-        foreach (preg_split('~~u', $value, -1, PREG_SPLIT_NO_EMPTY) as $character) {
+
+        foreach ($this->getSingleCharacterArray($value) as $character) {
             if (isset($this->characterWidths[$character])) {
                 $width += $this->characterWidths[$character];
             } elseif (strlen($character)) {
@@ -61,5 +62,19 @@ class WidthCalculator
     public function setFont(Font $font)
     {
         $this->characterWidths = $this->widthCollection->get($font->getName(), $font->getSize());
+    }
+
+    /**
+     * Split value into individual characters.
+     *
+     * @param mixed $value
+     * @return array
+     */
+    private function getSingleCharacterArray($value)
+    {
+        if (mb_strlen($value) == strlen($value)) {
+            return str_split($value);
+        }
+        return preg_split('~~u', $value, -1, PREG_SPLIT_NO_EMPTY);
     }
 }

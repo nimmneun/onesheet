@@ -13,23 +13,21 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - Set your own custom column width per column.
 - Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI (sizes 8-20) are
   reliably working for now. Everything else is mostly a wild guess =).
-- Define mimimum and maximum column widths to keep exceptionally large or small cell contents in check.
+- Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
 ### Current drawbacks
 - No cell individualisation, everything is applied at a row level.
 - No calculated / formula cells.
 - No number formats.
 
-OneSheet is still work in progress, so please be aware that there might be api breaking changes in minor versions!
+OneSheet is still work in progress, so please be aware that there might be api breaking changes in minor versions before 1.0.0!
 
 ### Install
 ```
 composer require nimmneun/onesheet
 ```
 
-### Examples
-
-#### Minimal working example
+### Minimal working example
 ```php
 <?php
 
@@ -38,6 +36,18 @@ require_once '../vendor/autoload.php';
 $onesheet = new \OneSheet\Writer();
 $onesheet->addRow(array('hello', 'world'));
 $onesheet->writeToFile('hello_world.xlsx');
+```
+
+#### Available Writer operations
+```
+Writer::setFreezePaneCellId(cellId)
+Writer::setFixedColumnWidths(columnWidths)
+Writer::setColumnWidthLimits(minWidth, maxWidth)
+Writer::enableCellAutosizing()
+Writer::disableCellAutosizing()
+Writer::addRows(rows, style)
+Writer::addRow(row, style)
+Writer::writeToFile(fileName)
 ```
 
 #### Adding font styles
@@ -67,12 +77,13 @@ Style::setBorderDiagonalDown(style, color)
 ```
 
 ### Cell autosizing
-#### ... is cool, but comes with serious performance impacts!
-| Impacts of autosizing    | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
-| ------------------------ | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
-| Autosizing DISABLED      | 22 seconds                    | 22 seconds                     | 23 seconds                     | 24 seconds                     |
-| Autosizing ENABLED       | 30 seconds                    | 34 seconds                     | 40 seconds                     | 53 seconds                     |
-| Performance loss in %    | + 36 %                        | + 54 %                         | + 73 %                         | + 112 %                        |
+##### ... is cool, but comes with heavy performance impacts - especially when dealing with multibyte characters like ä, ß, Æ, ポ.
+| Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
+| ------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
+| Autosizing OFF (Single Byte Chars)    | 24 seconds                    | 24 seconds                     | 24 seconds                     | 26 seconds                     |
+| Autosizing ON  (Single Byte Chars)    | 30 seconds (+25%)             | 32 seconds (+33%)              | 35 seconds (+45%)              | 43 seconds (+65%)              |
+| Autosizing OFF (Multi Byte Chars)     | 27 seconds                    | 28 seconds                     | 30 seconds                     | 31 seconds                     |
+| Autosizing ON  (Multi Byte Chars)     | 36 seconds (+33%)             | 41 seconds (+46%)              | 49 seconds (+63%)              | 64 seconds (+106%)             |
 
 ### Additional examples
 ```php
@@ -178,3 +189,6 @@ function fadeColors(\OneSheet\Style\Style $style, $r = 0, $g = 0, $b = 0) {
     $style->setFontColor($fontColor)->setFillColor($fillColor)->setFontSize(9);
 }
 ```
+
+### Issues, bugs, features and ...
+Feel free to report any sightings =).
