@@ -6,32 +6,30 @@
 
 OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+.
 
-![Resulting OneSheet File in Excel](./tests/generated_auto_column_sizing_sample.png)
-
 ### What it does
-- Write a single sheet with up to 2^20 rows fast and with a small memory footprint.
+- Write a single sheet fast and with a small memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
-- Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI (size 8-20) are
+- Set your own custom column width per column.
+- Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI (sizes 8-20) are
   reliably working for now. Everything else is mostly a wild guess =).
+- Define mimimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
-### Current major drawback(s)
+### Current drawbacks
 - No cell individualisation, everything is applied at a row level.
-- No calculated/formula cells.
+- No calculated / formula cells.
+- No number formats.
 
-This library is still WIP, so please be aware that there might be api breaking changes in minor versions (0.*.0) until version 1.0.0 is released!
+OneSheet is still work in progress, so please be aware that there might be api breaking changes in minor versions!
 
 ### Install
-- Install via composer `composer require nimmneun/onesheet`
+```
+composer require nimmneun/onesheet
+```
 
-### Cell autosizing is cool, but comes with serious performance impacts!
-| Impacts of autosizing    | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
-| ------------------------ | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
-| Autosizing DISABLED      | 22 seconds                    | 22 seconds                     | 23 seconds                     | 24 seconds                     |
-| Autosizing ENABLED       | 30 seconds                    | 34 seconds                     | 40 seconds                     | 53 seconds                     |
-| Performance loss in %    | + 36 %                        | + 54 %                         | + 73 %                         | + 112 %                        |
+### Examples
 
-### Minimal example
+#### Minimal working example
 ```php
 <?php
 
@@ -42,7 +40,41 @@ $onesheet->addRow(array('hello', 'world'));
 $onesheet->writeToFile('hello_world.xlsx');
 ```
 
-### More detailed example
+#### Adding font styles
+```
+Style::setFontName(name)
+Style::setFontSize(size)
+Style::setFontColor(color)
+Style::setFontBold()
+Style::setFontItalic()
+Style::setFontUnderline()
+Style::setFontStrikethrough()
+```
+#### Adding background colors (fills)
+```
+Style::setFillColor(color)
+```
+
+#### Adding borders
+```
+Style::setSurroundingBorder(style, color)
+Style::setBorderLeft(style, color)
+Style::setBorderRight(style, color)
+Style::setBorderTop(style, color)
+Style::setBorderBottom(style, color)
+Style::setBorderDiagonalUp(style, color)
+Style::setBorderDiagonalDown(style, color)
+```
+
+### Cell autosizing
+#### ... is cool, but comes with serious performance impacts!
+| Impacts of autosizing    | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
+| ------------------------ | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
+| Autosizing DISABLED      | 22 seconds                    | 22 seconds                     | 23 seconds                     | 24 seconds                     |
+| Autosizing ENABLED       | 30 seconds                    | 34 seconds                     | 40 seconds                     | 53 seconds                     |
+| Performance loss in %    | + 36 %                        | + 54 %                         | + 73 %                         | + 112 %                        |
+
+### Additional examples
 ```php
 <?php
 
@@ -145,30 +177,4 @@ function fadeColors(\OneSheet\Style\Style $style, $r = 0, $g = 0, $b = 0) {
     $fillColor = $decHexCss(255-$r) . $decHexCss(255-$g) . $decHexCss(255-$b);
     $style->setFontColor($fontColor)->setFillColor($fillColor)->setFontSize(9);
 }
-```
-
-### Methods available for styling
-
-#### Fonts / Backgrounds (Fills)
-```
-Style::setFontName(name)
-Style::setFontSize(size)
-Style::setFontColor(color)
-Style::setFontBold()
-Style::setFontItalic()
-Style::setFontUnderline()
-Style::setFontStrikethrough()
-
-Style::setFillColor(color)
-```
-
-#### Borders
-```
-Style::setSurroundingBorder(style, color)
-Style::setBorderLeft(style, color)
-Style::setBorderRight(style, color)
-Style::setBorderTop(style, color)
-Style::setBorderBottom(style, color)
-Style::setBorderDiagonalUp(style, color)
-Style::setBorderDiagonalDown(style, color)
 ```
