@@ -58,15 +58,15 @@ class Sheet
     /**
      * Holds minimum allowed column width.
      *
-     * @var float
+     * @var float|int
      */
-    private $minColumnWidth = 1;
+    private $minColumnWidth = 0;
 
     /**
      * Holds maximum allowed column width. 254.86 appears
      * to be the default maximum width.
      *
-     * @var float
+     * @var float|int
      */
     private $maxColumnWidth = 254.86;
 
