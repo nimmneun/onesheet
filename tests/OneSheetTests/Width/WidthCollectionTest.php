@@ -1,6 +1,6 @@
 <?php
 
-namespace OneSheetTest;
+namespace OneSheetTest\Width;
 
 use OneSheet\Width\WidthCollection;
 

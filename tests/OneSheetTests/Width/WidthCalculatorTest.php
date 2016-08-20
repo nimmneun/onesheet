@@ -1,6 +1,6 @@
 <?php
 
-namespace OneSheetTest;
+namespace OneSheetTest\Width;
 
 use OneSheet\Style\Font;
 use OneSheet\Width\WidthCalculator;
