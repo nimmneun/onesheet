@@ -67,9 +67,9 @@ class Writer
      * @param float|null $minWidth
      * @param float|null $maxWidth
      */
-    public function setColumnWidthBoundries($minWidth = null, $maxWidth = null)
+    public function setColumnWidthLimits($minWidth = null, $maxWidth = null)
     {
-        $this->sheet->setColumnWidthBoundries($minWidth, $maxWidth);
+        $this->sheet->setColumnWidthLimits($minWidth, $maxWidth);
     }
 
     /**

@@ -78,6 +78,25 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(30, array_sum($value));
     }
 
+    public function testSetColumnWidth()
+    {
+        $writer = new Writer();
+        $writer->setColumnWidthLimits(3, 10);
+
+        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
+        $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
+
+        $this->assertEquals(3, $minWidth);
+        $this->assertEquals(10, $maxWidth);
+
+        $writer->setColumnWidthLimits(-5, 300);
+        $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
+        $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
+        $this->assertEquals(0, $minWidth);
+        $this->assertEquals(255.86, $maxWidth);
+    }
+
     private function getObjectProperty($object, $propertyName)
     {
         $reflection = new \ReflectionClass($object);

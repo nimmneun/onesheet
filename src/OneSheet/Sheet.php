@@ -58,16 +58,17 @@ class Sheet
     /**
      * Holds minimum allowed column width.
      *
-     * @var array
+     * @var float
      */
-    private $minColumnWidth;
+    private $minColumnWidth = 1;
 
     /**
-     * Holds maximum allowed column width.
+     * Holds maximum allowed column width. 254.86 appears
+     * to be the default maximum width.
      *
-     * @var array
+     * @var float
      */
-    private $maxColumnWidth;
+    private $maxColumnWidth = 254.86;
 
     /**
      * Sheet constructor.
@@ -128,10 +129,10 @@ class Sheet
      * @param float|null $minWidth
      * @param float|null $maxWidth
      */
-    public function setColumnWidthBoundries($minWidth = null, $maxWidth = null)
+    public function setColumnWidthLimits($minWidth = null, $maxWidth = null)
     {
-        $this->minColumnWidth = $minWidth ?: null;
-        $this->maxColumnWidth = $maxWidth ?: null;
+        $this->minColumnWidth = is_numeric($minWidth) && $minWidth >= 0 ? $minWidth : 0;
+        $this->maxColumnWidth = is_numeric($maxWidth) && $maxWidth < 255.86 ? $maxWidth : 255.86;
     }
 
     /**
@@ -142,13 +143,15 @@ class Sheet
      */
     public function getColumnWidths()
     {
-        return array_map(function ($width) {
-            if ($this->maxColumnWidth && $this->maxColumnWidth < $width) {
-                return $this->maxColumnWidth;
-            } elseif ($this->minColumnWidth && $this->minColumnWidth > $width) {
-                return $this->minColumnWidth;
-            } return $width;
-        }, $this->columnWidths);
+        foreach ($this->columnWidths as $column => $width) {
+            if ($this->maxColumnWidth && $width > $this->maxColumnWidth) {
+                $this->columnWidths[$column] = $this->maxColumnWidth;
+            } elseif ($this->minColumnWidth && $width < $this->minColumnWidth) {
+                $this->columnWidths[$column] = $this->minColumnWidth;
+            }
+        }
+
+        return $this->columnWidths;
     }
 
     /**
