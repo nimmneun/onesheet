@@ -13,23 +13,21 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - Set your own custom column width per column.
 - Autosize column widths to fit cell contents. Only Arial, Calibri and Segoe UI (sizes 8-20) are
   reliably working for now. Everything else is mostly a wild guess =).
-- Define mimimum and maximum column widths to keep exceptionally large or small cell contents in check.
+- Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
 ### Current drawbacks
 - No cell individualisation, everything is applied at a row level.
 - No calculated / formula cells.
 - No number formats.
 
-OneSheet is still work in progress, so please be aware that there might be api breaking changes in minor versions!
+OneSheet is still work in progress, so please be aware that there might be api breaking changes in minor versions before 1.0.0!
 
 ### Install
 ```
 composer require nimmneun/onesheet
 ```
 
-### Examples
-
-#### Minimal working example
+### Minimal working example
 ```php
 <?php
 
@@ -38,6 +36,18 @@ require_once '../vendor/autoload.php';
 $onesheet = new \OneSheet\Writer();
 $onesheet->addRow(array('hello', 'world'));
 $onesheet->writeToFile('hello_world.xlsx');
+```
+
+#### Available Writer operations
+```
+Writer::setFreezePaneCellId(cellId)
+Writer::setFixedColumnWidths(columnWidths)
+Writer::setColumnWidthLimits(minWidth, maxWidth)
+Writer::enableCellAutosizing()
+Writer::disableCellAutosizing()
+Writer::addRows(rows, style)
+Writer::addRow(row, style)
+Writer::writeToFile(fileName)
 ```
 
 #### Adding font styles
