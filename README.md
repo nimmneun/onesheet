@@ -78,6 +78,9 @@ Style::setBorderDiagonalDown(style, color)
 
 ### Cell autosizing
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cell-width-calculation-performance
 ##### ... is cool, but comes with heavy performance impacts - especially when dealing with multibyte characters like ä, ß, Æ, ポ.
 | Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
 | ------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
@@ -85,6 +88,7 @@ Style::setBorderDiagonalDown(style, color)
 | Autosizing ON  (Single Byte Chars)    | 30 seconds (+25%)             | 32 seconds (+33%)              | 35 seconds (+45%)              | 43 seconds (+65%)              |
 | Autosizing OFF (Multi Byte Chars)     | 27 seconds                    | 28 seconds                     | 30 seconds                     | 31 seconds                     |
 | Autosizing ON  (Multi Byte Chars)     | 36 seconds (+33%)             | 41 seconds (+46%)              | 49 seconds (+63%)              | 64 seconds (+106%)             |
+<<<<<<< HEAD
 =======
 #### ... is cool, but it comes with serious performance impacts, especially when dealing with multibyte characters (like ä, ß, Æ, ポ).
 | Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
@@ -94,6 +98,8 @@ Style::setBorderDiagonalDown(style, color)
 | Autosizing OFF (Multi Byte Chars)     | 27 seconds                    | 28 seconds                     | 30 seconds                     | 31 seconds                     |
 | Autosizing ON  (Multi Byte Chars)     | 36 seconds (+ 33 %)           | 41 seconds (+ 46 %)            | 49 seconds (+ 63 %)            | 64 seconds (+ 106 %)           |
 >>>>>>> master
+=======
+>>>>>>> cell-width-calculation-performance
 
 ### Additional examples
 ```php
