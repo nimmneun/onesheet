@@ -41,7 +41,7 @@ class WidthCalculator
      */
     public function getCellWidth($value, Font $font)
     {
-        $width = 0.07 * $font->getSize();
+        $width = 0.3 + (0.07 * $font->getSize());
 
         foreach ($this->getSingleCharacterArray($value) as $character) {
             if (isset($this->characterWidths[$character])) {

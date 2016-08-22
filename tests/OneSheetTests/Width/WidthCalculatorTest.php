@@ -15,21 +15,20 @@ class WidthCalculatorTest extends \PHPUnit_Framework_TestCase
         $calculator = new WidthCalculator(new WidthCollection());
         $calculator->setFont($font);
 
-        $string = 'Abcd 328 - 123 Äöü';
+        $string = 'Abcd 328 - 123 XY!!';
         $this->assertGreaterThanOrEqual(23, $calculator->getCellWidth($string, $font));
         $this->assertLessThanOrEqual(25, $calculator->getCellWidth($string, $font));
     }
 
-    public function testGetCellWidthForNonAsciiString()
+    public function testGetCellWidthMultiByte()
     {
         $font = new Font();
         $font->setName('Segoe UI')->setSize(12);
         $calculator = new WidthCalculator(new WidthCollection());
         $calculator->setFont($font);
 
-        $string = 'ナ ニヌ 123 ネノ абвг де ёж з';
-        $this->assertGreaterThanOrEqual(31, $calculator->getCellWidth($string, $font));
-        $this->assertLessThanOrEqual(34, $calculator->getCellWidth($string, $font));
+        $string = 'ä ö32 4eä18 4eä €äÜuköß ÄöÜÖö üfzp!';
+        $this->assertGreaterThanOrEqual(42, $calculator->getCellWidth($string, $font));
+        $this->assertLessThanOrEqual(45, $calculator->getCellWidth($string, $font));
     }
-
 }
