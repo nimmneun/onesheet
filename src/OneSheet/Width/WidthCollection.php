@@ -51,12 +51,16 @@ class WidthCollection
      */
     public function get($fontName, $fontSize)
     {
-        if (isset(self::$widths[$fontName][$fontSize])) {
-            return self::$widths[$fontName][$fontSize];
-        } elseif (isset(self::$widths['Calibri'][$fontSize])) {
-            return self::$widths['Calibri'][$fontSize];
+        $baseSize = 12;
+        $multiplier = $fontSize / $baseSize;
+        if (isset(self::$widths[$fontName])) {
+            $baseWidths = self::$widths[$fontName][$baseSize];
+        } else {
+            $baseWidths = self::$widths['Calibri'][$baseSize];
         }
 
-        return self::$widths['Calibri'][11];
+        return array_map(function ($value) use ($multiplier) {
+            return $value * $multiplier;
+        }, $baseWidths);
     }
 }

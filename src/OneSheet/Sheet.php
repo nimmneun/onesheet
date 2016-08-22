@@ -83,7 +83,7 @@ class Sheet
     }
 
     /**
-     * Enable cell autosizing (~30% performance hit!).
+     * Enable cell autosizing (~30-100% performance hit!).
      */
     public function enableCellAutosizing()
     {
@@ -185,7 +185,7 @@ class Sheet
         }
 
         return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $columnCount,
-            $style->getFont()->getSize() * 1.4, $cellXml);
+            $style->getFont()->getSize() * 1.35, $cellXml);
     }
 
     /**

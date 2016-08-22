@@ -11,16 +11,16 @@ class WidthCollectionTest extends \PHPUnit_Framework_TestCase
         $collection = new WidthCollection();
         $fontWidths = $collection->get('Arial', 15);
 
-        $this->assertGreaterThanOrEqual(1.8, $fontWidths['A']);
-        $this->assertLessThanOrEqual(2, $fontWidths['A']);
+        $this->assertGreaterThanOrEqual(1.9, $fontWidths['A']);
+        $this->assertLessThanOrEqual(2.1, $fontWidths['A']);
     }
 
     public function testGetNonExistantFontAndSize()
     {
         $collection = new WidthCollection();
         $fontWidths = $collection->get('Somefont', 25);
-        $defaultFontWidths = $collection->get('Calibri', 11);
+        $defaultFontWidths = $collection->get('Calibri', 13);
 
-        $this->assertEquals($defaultFontWidths['A'], $fontWidths['A']);
+        $this->assertLessThanOrEqual(array_sum($defaultFontWidths) * 2, array_sum($fontWidths));
     }
 }
