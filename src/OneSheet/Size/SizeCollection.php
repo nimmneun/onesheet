@@ -1,14 +1,19 @@
 <?php
 
-namespace OneSheet\Width;
+namespace OneSheet\Size;
 
 /**
  * Class WidthCollection
  *
  * @package OneSheet
  */
-class WidthCollection
+class SizeCollection
 {
+    /**
+     * Constant for default character size.
+     */
+    const BASE_SIZE = 12;
+
     /**
      * Array containing character widths for each font & size.
      *
@@ -21,7 +26,7 @@ class WidthCollection
      */
     public function __construct()
     {
-        self::loadWidthsFromCsv(dirname(__FILE__) . '/width_collection.csv');
+        self::loadWidthsFromCsv(dirname(__FILE__) . '/size_collection.csv');
     }
 
     /**
@@ -68,13 +73,13 @@ class WidthCollection
     private static function calculate($fontName, $fontSize)
     {
         if (isset(self::$widths[$fontName])) {
-            $baseWidths = self::$widths[$fontName][12];
+            $baseWidths = self::$widths[$fontName][self::BASE_SIZE];
         } else {
-            $baseWidths = self::$widths['Calibri'][12];
+            $baseWidths = self::$widths['Calibri'][self::BASE_SIZE];
         }
 
         foreach ($baseWidths as $character => $width) {
-            self::$widths[$fontName][$fontSize][$character] = $width / 12 * $fontSize;
+            self::$widths[$fontName][$fontSize][$character] = $width / self::BASE_SIZE * $fontSize;
         }
 
         return self::$widths[$fontName][$fontSize];
