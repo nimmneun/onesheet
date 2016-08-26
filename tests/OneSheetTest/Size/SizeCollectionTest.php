@@ -1,14 +1,14 @@
 <?php
 
-namespace OneSheetTest\Width;
+namespace OneSheetTest\Size;
 
-use OneSheet\Width\WidthCollection;
+use OneSheet\Size\SizeCollection;
 
-class WidthCollectionTest extends \PHPUnit_Framework_TestCase
+class SizeCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        $collection = new WidthCollection();
+        $collection = new SizeCollection();
         $fontWidths = $collection->get('Arial', 15);
 
         $this->assertGreaterThanOrEqual(1.9, $fontWidths['A']);
@@ -17,7 +17,7 @@ class WidthCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNonExistantFontAndSize()
     {
-        $collection = new WidthCollection();
+        $collection = new SizeCollection();
         $fontWidths = $collection->get('Somefont', 25);
         $defaultFontWidths = $collection->get('Calibri', 13);
 

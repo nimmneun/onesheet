@@ -5,7 +5,7 @@ namespace OneSheet;
 use OneSheet\Xml\RowXml;
 use OneSheet\Style\Style;
 use OneSheet\Xml\SheetXml;
-use OneSheet\Width\WidthCalculator;
+use OneSheet\Size\SizeCalculator;
 
 /**
  * Class Sheet
@@ -20,9 +20,9 @@ class Sheet
     private $cellBuilder;
 
     /**
-     * @var WidthCalculator
+     * @var SizeCalculator
      */
-    private $widthCalculator;
+    private $sizeCalculator;
 
     /**
      * @var bool
@@ -73,13 +73,13 @@ class Sheet
     /**
      * Sheet constructor.
      *
-     * @param CellBuilder     $cellBuilder
-     * @param WidthCalculator $widthCalculator
+     * @param CellBuilder    $cellBuilder
+     * @param SizeCalculator $sizeCalculator
      */
-    public function __construct(CellBuilder $cellBuilder, WidthCalculator $widthCalculator)
+    public function __construct(CellBuilder $cellBuilder, SizeCalculator $sizeCalculator)
     {
         $this->cellBuilder = $cellBuilder;
-        $this->widthCalculator = $widthCalculator;
+        $this->sizeCalculator = $sizeCalculator;
     }
 
     /**
@@ -177,15 +177,10 @@ class Sheet
         $columnCount = count($row);
         $this->updateMaxColumnCount($columnCount);
 
-        $this->widthCalculator->setFont($style->getFont());
+        $this->sizeCalculator->setFont($style->getFont());
         $cellXml = $this->getCellXml($row, $style);
 
-        if (!$this->useCellAutosizing || $style->getFont()->getSize() < 14) {
-            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
-        }
-
-        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $columnCount,
-            $style->getFont()->getSize() * 1.35, $cellXml);
+        return $this->getRowXml($style, $columnCount, $cellXml);
     }
 
     /**
@@ -201,7 +196,25 @@ class Sheet
     }
 
     /**
-     * Get xml string for single cell and update cell widths.
+     * Build and return xml string for single row.
+     *
+     * @param Style  $style
+     * @param int    $columnCount
+     * @param string $cellXml
+     * @return string
+     */
+    private function getRowXml(Style $style, $columnCount, $cellXml)
+    {
+        if ($style->getFont()->getSize() < 14) {
+            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
+        }
+
+        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $columnCount,
+            $this->sizeCalculator->getRowHeight(), $cellXml);
+    }
+
+    /**
+     * Build and return xml string for single cell and update cell widths.
      *
      * @param array $row
      * @param Style $style
@@ -213,7 +226,9 @@ class Sheet
         foreach (array_values($row) as $cellIndex => $cellValue) {
             if (0 < strlen($cellValue)) {
                 $this->updateColumnWidths($cellValue, $cellIndex, $style);
-                $cellXml .= $this->cellBuilder->build($this->rowIndex, $cellIndex, $cellValue, $style->getId());
+                $cellXml .= $this->cellBuilder->build(
+                    $this->rowIndex, $cellIndex, $cellValue, $style->getId()
+                );
             }
         }
 
@@ -230,7 +245,7 @@ class Sheet
     private function updateColumnWidths($value, $cellIndex, Style $style)
     {
         if ($this->useCellAutosizing) {
-            $cellWidth = $this->widthCalculator->getCellWidth($value, $style->getFont());
+            $cellWidth = $this->sizeCalculator->getCellWidth($value, $style->getFont());
             if (!isset($this->columnWidths[$cellIndex])
                 || $this->columnWidths[$cellIndex] < $cellWidth
             ) {
