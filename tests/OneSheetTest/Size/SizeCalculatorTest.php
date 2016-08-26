@@ -1,6 +1,6 @@
 <?php
 
-namespace OneSheetTest\Width;
+namespace OneSheetTest\Size;
 
 use OneSheet\Size\SizeCalculator;
 use OneSheet\Size\SizeCollection;
