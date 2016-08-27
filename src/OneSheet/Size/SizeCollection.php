@@ -72,16 +72,27 @@ class SizeCollection
      */
     private static function calculate($fontName, $fontSize)
     {
-        if (isset(self::$widths[$fontName])) {
-            $baseWidths = self::$widths[$fontName][self::BASE_SIZE];
-        } else {
-            $baseWidths = self::$widths['Calibri'][self::BASE_SIZE];
-        }
-
-        foreach ($baseWidths as $character => $width) {
-            self::$widths[$fontName][$fontSize][$character] = $width / self::BASE_SIZE * $fontSize;
+        foreach (self::getBaseWidths($fontName) as $character => $width) {
+            if ('bold' !== $character) {
+                $width = round($width / self::BASE_SIZE * $fontSize, 3);
+            }
+            self::$widths[$fontName][$fontSize][$character] = $width;
         }
 
         return self::$widths[$fontName][$fontSize];
+    }
+
+    /**
+     * Get character base widths by font name or default.
+     *
+     * @param string $fontName
+     * @return array
+     */
+    private static function getBaseWidths($fontName)
+    {
+        if (isset(self::$widths[$fontName])) {
+            return self::$widths[$fontName][self::BASE_SIZE];
+        }
+        return self::$widths['Calibri'][self::BASE_SIZE];
     }
 }
