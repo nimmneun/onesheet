@@ -6,6 +6,4 @@ php:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --no-interaction
-  - composer global remove phpunit/phpunit 5.*
-  - composer require phpunit/phpunit 4.8.*
-  - composer global require phpunit/phpunit 4.8.*
+
