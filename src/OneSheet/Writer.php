@@ -75,7 +75,7 @@ class Writer
     /**
      * Start recording row specs for column autosizing.
      *
-     *  @return Writer
+     * @return Writer
      */
     public function enableCellAutosizing()
     {
@@ -86,7 +86,7 @@ class Writer
     /**
      * Stop recording row specs for column autosizing.
      *
-     *  @return Writer
+     * @return Writer
      */
     public function disableCellAutosizing()
     {
@@ -135,13 +135,42 @@ class Writer
     }
 
     /**
-     * Wrap things up and write/output xlsx.
+     * Send xlsx to browser and unlink file.
      *
      * @param string $fileName
      */
-    public function writeToFile($fileName = 'dummy.xlsx')
+    public function writeToBrowser($fileName = 'report.xlsx')
+    {
+        $this->writeToFile($fileName);
+        if (is_readable($fileName)) {
+            $this->sendToBrowserAndUnlink($fileName);
+        }
+    }
+
+    /**
+     * Wrap things up and write xlsx.
+     *
+     * @param string $fileName
+     */
+    public function writeToFile($fileName = 'report.xlsx')
     {
         $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
         $finalizer->finalize($fileName);
+    }
+
+    /**
+     * Output headers & content and unlink the xlsx file eventually.
+     *
+     * @param string $fileName
+     */
+    private function sendToBrowserAndUnlink($fileName)
+    {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Length: ' . filesize($fileName));
+        header('Cache-Control: max-age=0');
+        header('Pragma: public');
+        echo readfile($fileName);
+        unlink($fileName);
     }
 }
