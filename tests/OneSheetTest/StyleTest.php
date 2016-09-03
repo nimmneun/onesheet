@@ -18,7 +18,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
             ->setFontItalic()
             ->setFontUnderline()
             ->setFontStrikethrough();
-        $expectedXml = '<font><sz val="13"/><color rgb="FFFFFF"/><name val="Arial"/><b/><i/><u/><s/></font>';
+        $expectedXml = '<font><sz val="13"/><color rgb="FFFFFF"/><name val="Arial"/><b/><i/><u/><strike/></font>';
         $this->assertEquals($expectedXml, $style->getFont()->asXml());
     }
 
