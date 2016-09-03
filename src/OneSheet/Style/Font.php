@@ -109,7 +109,8 @@ class Font implements Component
      */
     public function setStrikethrough()
     {
-        $this->strikethrough = '<s/>';
+        $this->strikethrough = '<strike/>';
+        return $this;
     }
 
     /**

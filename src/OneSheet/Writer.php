@@ -2,10 +2,10 @@
 
 namespace OneSheet;
 
-use OneSheet\Style\Style;
-use OneSheet\Style\Styler;
 use OneSheet\Size\SizeCalculator;
 use OneSheet\Size\SizeCollection;
+use OneSheet\Style\Style;
+use OneSheet\Style\Styler;
 
 /**
  * Class Writer
@@ -100,7 +100,7 @@ class Writer
     private function initialize()
     {
         $this->sheetFile = new SheetFile();
-        $this->sheetFile->fwrite(str_repeat(' ', pow(2, 20)) . '<sheetData>');
+        $this->sheetFile->fwrite(str_repeat(' ', 3 * 1024 * 1024) . '<sheetData>');
         $this->styler = new Styler();
         $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator(new SizeCollection()));
     }
