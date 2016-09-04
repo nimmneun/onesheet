@@ -19,32 +19,14 @@ class SizeCollection
      *
      * @var array
      */
-    private static $widths = array();
+    private $widths = array();
 
     /**
-     * Create character width map for each font.
+     * SizeCollection constructor.
      */
     public function __construct()
     {
-        self::loadWidthsFromCsv(dirname(__FILE__) . '/size_collection.csv');
-    }
-
-    /**
-     * Dirty way to allow developers to load character widths that
-     * are not yet included.
-     *
-     * @param string $csvPath
-     */
-    public static function loadWidthsFromCsv($csvPath)
-    {
-        $fh = fopen($csvPath, 'r');
-        $head = fgetcsv($fh);
-        unset($head[0], $head[1]);
-        while ($row = fgetcsv($fh)) {
-            $fontName = array_shift($row);
-            $fontSize = array_shift($row);
-            self::$widths[$fontName][$fontSize] = array_combine($head, $row);
-        }
+        $this->loadWidthsFromCsv();
     }
 
     /**
@@ -56,11 +38,11 @@ class SizeCollection
      */
     public function get($fontName, $fontSize)
     {
-        if (isset(self::$widths[$fontName][$fontSize])) {
-            return self::$widths[$fontName][$fontSize];
+        if (isset($this->widths[$fontName][$fontSize])) {
+            return $this->widths[$fontName][$fontSize];
         }
 
-        return self::calculate($fontName, $fontSize);
+        return $this->calculate($fontName, $fontSize);
     }
 
     /**
@@ -70,16 +52,16 @@ class SizeCollection
      * @param int    $fontSize
      * @return array
      */
-    private static function calculate($fontName, $fontSize)
+    private function calculate($fontName, $fontSize)
     {
-        foreach (self::getBaseWidths($fontName) as $character => $width) {
+        foreach ($this->getBaseWidths($fontName) as $character => $width) {
             if ('bold' !== $character) {
                 $width = round($width / self::BASE_SIZE * $fontSize, 3);
             }
-            self::$widths[$fontName][$fontSize][$character] = $width;
+            $this->widths[$fontName][$fontSize][$character] = $width;
         }
 
-        return self::$widths[$fontName][$fontSize];
+        return $this->widths[$fontName][$fontSize];
     }
 
     /**
@@ -88,11 +70,38 @@ class SizeCollection
      * @param string $fontName
      * @return array
      */
-    private static function getBaseWidths($fontName)
+    private function getBaseWidths($fontName)
     {
-        if (isset(self::$widths[$fontName])) {
-            return self::$widths[$fontName][self::BASE_SIZE];
+        if (isset($this->widths[$fontName])) {
+            return $this->widths[$fontName][self::BASE_SIZE];
         }
-        return self::$widths['Calibri'][self::BASE_SIZE];
+        return $this->widths['Calibri'][self::BASE_SIZE];
+    }
+
+    /**
+     * Initialize collection from csv file.
+     */
+    public function loadWidthsFromCsv()
+    {
+        $fh = fopen(dirname(__FILE__) . '/size_collection.csv', 'r');
+        $head = fgetcsv($fh);
+        unset($head[0], $head[1]);
+
+        while ($row = fgetcsv($fh)) {
+            $this->addSizesToCollection($head, $row);
+        }
+    }
+
+    /**
+     * Add character widths for a single font.
+     *
+     * @param array $head
+     * @param array$row
+     */
+    private function addSizesToCollection(array $head, array $row)
+    {
+        $fontName = array_shift($row);
+        $fontSize = array_shift($row);
+        $this->widths[$fontName][$fontSize] = array_combine($head, $row);
     }
 }
