@@ -5,7 +5,7 @@ namespace OneSheet;
 use OneSheet\Xml\CellXml;
 
 /**
- * Class DefaultCellBuilder to build xml cell strings.
+ * Class CellBuilder to build xml cell strings.
  * Wheter a numeric value is written as a number or string type cell
  * is simply determined by type, to allow for some control by typecasting.
  *
@@ -28,6 +28,13 @@ class CellBuilder
     private $escapeCharacters = array();
 
     /**
+     * Regex pattern containing control characters.
+     *
+     * @var string
+     */
+    private $escapeCharacterPattern;
+
+    /**
      * CellBuilder constructor to create escaping arrays.
      */
     public function __construct()
@@ -38,6 +45,8 @@ class CellBuilder
                 $this->escapeCharacters[] = sprintf('_x%04s_', strtoupper(dechex($key)));
             }
         }
+
+        $this->escapeCharacterPattern = implode($this->controlCharacters);
     }
 
     /**
@@ -58,9 +67,6 @@ class CellBuilder
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $cellValue);
         } elseif (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
-        } elseif (is_numeric($cellValue) || 1 != preg_match('~[^\w]~', $cellValue)) {
-            return sprintf(CellXml::STRING_XML, $cellId, $styleId,
-                htmlspecialchars($cellValue, ENT_QUOTES));
         }
 
         return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escape($cellValue));
@@ -93,8 +99,13 @@ class CellBuilder
      */
     private function escape($value)
     {
-        return str_replace($this->controlCharacters, $this->escapeCharacters,
-            htmlspecialchars($value, ENT_QUOTES));
+        if (1 !== preg_match('~[' . preg_quote($this->escapeCharacterPattern) . ']~', $value)) {
+            return htmlspecialchars($value, ENT_QUOTES);
+        }
+
+        return str_replace(
+            $this->controlCharacters, $this->escapeCharacters, htmlspecialchars($value, ENT_QUOTES)
+        );
     }
 }
 
