@@ -75,10 +75,8 @@ class Finalizer
         $this->sheetFile->fwrite('</sheetData></worksheet>');
         $this->sheetFile->rewind();
         $this->sheetFile->fwrite(SheetXml::HEADER_XML);
-        $this->sheetFile->fwrite(sprintf(SheetXml::DIMENSION_XML,
-            $this->sheet->getDimensionUpperBound()));
-        $this->sheetFile->fwrite(sprintf(SheetXml::SHEETVIEWS_XML,
-                $this->sheet->getFreezePaneXml()));
+        $this->sheetFile->fwrite($this->sheet->getDimensionXml());
+        $this->sheetFile->fwrite($this->sheet->getSheetViewsXml());
         $this->writeColumnWidths();
         $this->zip->addFile($this->sheetFile->getFilePath(), 'xl/worksheets/sheet1.xml');
     }

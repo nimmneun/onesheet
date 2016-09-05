@@ -155,16 +155,6 @@ class Sheet
     }
 
     /**
-     * Return cellId for dimensions.
-     *
-     * @return string
-     */
-    public function getDimensionUpperBound()
-    {
-        return $this->cellBuilder->getCellId($this->maxColumnCount, $this->rowIndex - 1);
-    }
-
-    /**
      * Add single row and style to sheet.
      *
      * @param array $row
@@ -255,17 +245,29 @@ class Sheet
     }
 
     /**
-     * Return freeze pane xml string for sheetView.
+     * Return xml string for dimension.
      *
      * @return string
      */
-    public function getFreezePaneXml()
+    public function getDimensionXml()
     {
-        if (!$this->freezePaneCellId
-            || 1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneCellId, $m)
-        ) {
+        return sprintf(SheetXml::DIMENSION_XML,
+            $this->cellBuilder->getCellId($this->maxColumnCount - 1, $this->rowIndex - 1)
+        );
+    }
+
+    /**
+     * Return sheetViews xml containing the freeze pane.
+     * <sheetViews> Currently leads to random excel crashes :-/
+     *
+     * @return string
+     */
+    public function getSheetViewsXml()
+    {
+        if (1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneCellId, $m)) {
             return '';
         }
-        return sprintf(SheetXml::FREEZE_PANE_XML, array_pop($m) - 1, $this->freezePaneCellId);
+
+        return sprintf(SheetXml::SHEETVIEWS_XML, array_pop($m) - 1, $this->freezePaneCellId);
     }
 }
