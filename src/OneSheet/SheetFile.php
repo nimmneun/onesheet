@@ -3,7 +3,7 @@
 namespace OneSheet;
 
 /**
- * Class SheetFile
+ * Class SheetFile, just to abstract file operations awayyy.
  *
  * @package OneSheet
  */
@@ -28,27 +28,35 @@ class SheetFile
     {
         $this->filePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid(null, 1) . '.xml';
         if (!$this->filePointer = fopen($this->filePath, 'wb+')) {
-            throw new \RuntimeException("Failed to create temporary file {$this->filePath}!");
+            throw new \RuntimeException("Failed to create temporary sheet file {$this->filePath}!");
         }
     }
 
     /**
+     * Write a single string.
+     *
      * @param $string
      */
     public function fwrite($string)
     {
-        fwrite($this->filePointer, $string);
+        if (false === fwrite($this->filePointer, $string)) {
+            throw new \RuntimeException("Failed to write to sheet file!");
+        }
     }
 
     /**
-     * @return bool
+     * Rewind file (to write header and column widths).
      */
     public function rewind()
     {
-        return rewind($this->filePointer);
+        if (false === rewind($this->filePointer)) {
+            throw new \RuntimeException("Failed to rewind sheet file!");
+        }
     }
 
     /**
+     * Return full path of the file.
+     *
      * @return string
      */
     public function getFilePath()
@@ -57,12 +65,12 @@ class SheetFile
     }
 
     /**
-     * Close file pointer and delete sheet file.
+     * Close file pointer and delete file.
      */
     public function __destruct()
     {
         if (!fclose($this->filePointer) || !unlink($this->filePath)) {
-            throw new \RuntimeException('Failed to close sheetfile!');
+            throw new \RuntimeException('Failed to close sheet file!');
         }
     }
 }
