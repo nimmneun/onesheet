@@ -37,9 +37,7 @@ class SheetFile
      */
     public function fwrite($string)
     {
-        if (!fwrite($this->filePointer, $string)) {
-            throw new \RuntimeException("Failed to write to sheet file!");
-        }
+        fwrite($this->filePointer, $string);
     }
 
     /**
