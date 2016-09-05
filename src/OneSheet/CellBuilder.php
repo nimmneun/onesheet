@@ -46,7 +46,7 @@ class CellBuilder
             }
         }
 
-        $this->escapeCharacterPattern = implode($this->controlCharacters);
+        $this->escapeCharacterPattern = '~[' . preg_quote(implode($this->controlCharacters)) . ']~';
     }
 
     /**
@@ -99,7 +99,7 @@ class CellBuilder
      */
     private function escape($value)
     {
-        if (1 !== preg_match('~[' . preg_quote($this->escapeCharacterPattern) . ']~', $value)) {
+        if (1 !== preg_match($this->escapeCharacterPattern, $value)) {
             return htmlspecialchars($value, ENT_QUOTES);
         }
 
