@@ -3,7 +3,8 @@
 namespace OneSheet\Size;
 
 /**
- * Class WidthCollection
+ * Class SizeCollection to build and hold widths & heights
+ * of individual characters.
  *
  * @package OneSheet
  */
@@ -15,22 +16,22 @@ class SizeCollection
     const BASE_SIZE = 12;
 
     /**
-     * Array containing character widths for each font & size.
+     * Array containing character widths/heights for each font & size.
      *
      * @var array
      */
-    private $widths = array();
+    private $sizes = array();
 
     /**
      * SizeCollection constructor.
      */
     public function __construct()
     {
-        $this->loadWidthsFromCsv();
+        $this->loadSizesFromCsv();
     }
 
     /**
-     * Return character widths for given font name.
+     * Return character sizes for given font name.
      *
      * @param string $fontName
      * @param int    $fontSize
@@ -38,8 +39,8 @@ class SizeCollection
      */
     public function get($fontName, $fontSize)
     {
-        if (isset($this->widths[$fontName][$fontSize])) {
-            return $this->widths[$fontName][$fontSize];
+        if (isset($this->sizes[$fontName][$fontSize])) {
+            return $this->sizes[$fontName][$fontSize];
         }
 
         return $this->calculate($fontName, $fontSize);
@@ -54,14 +55,14 @@ class SizeCollection
      */
     private function calculate($fontName, $fontSize)
     {
-        foreach ($this->getBaseWidths($fontName) as $character => $width) {
+        foreach ($this->getBaseSizes($fontName) as $character => $size) {
             if ('bold' !== $character) {
-                $width = round($width / self::BASE_SIZE * $fontSize, 3);
+                $size = round($size / self::BASE_SIZE * $fontSize, 3);
             }
-            $this->widths[$fontName][$fontSize][$character] = $width;
+            $this->sizes[$fontName][$fontSize][$character] = $size;
         }
 
-        return $this->widths[$fontName][$fontSize];
+        return $this->sizes[$fontName][$fontSize];
     }
 
     /**
@@ -70,18 +71,19 @@ class SizeCollection
      * @param string $fontName
      * @return array
      */
-    private function getBaseWidths($fontName)
+    private function getBaseSizes($fontName)
     {
-        if (isset($this->widths[$fontName])) {
-            return $this->widths[$fontName][self::BASE_SIZE];
+        if (isset($this->sizes[$fontName])) {
+            return $this->sizes[$fontName][self::BASE_SIZE];
         }
-        return $this->widths['Calibri'][self::BASE_SIZE];
+
+        return $this->sizes['Calibri'][self::BASE_SIZE];
     }
 
     /**
      * Initialize collection from csv file.
      */
-    public function loadWidthsFromCsv()
+    public function loadSizesFromCsv()
     {
         $fh = fopen(dirname(__FILE__) . '/size_collection.csv', 'r');
         $head = fgetcsv($fh);
@@ -102,6 +104,6 @@ class SizeCollection
     {
         $fontName = array_shift($row);
         $fontSize = array_shift($row);
-        $this->widths[$fontName][$fontSize] = array_combine($head, $row);
+        $this->sizes[$fontName][$fontSize] = array_combine($head, $row);
     }
 }
