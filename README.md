@@ -28,7 +28,7 @@ $ composer require nimmneun/onesheet
 
 ### Manual installation
 If you can't or don't want to use composer for some reason,
-[download](https://github.com/nimmneun/onesheet/releases/latest.zip) & extract onsheet and require the file autoload.php from the releases root folder.
+[download](https://github.com/nimmneun/onesheet/releases/latest) & extract onsheet and require the file autoload.php from the releases root folder.
 ```php
 <?php
 // path to onesheet autoload file on your server / webspace e.g.:
