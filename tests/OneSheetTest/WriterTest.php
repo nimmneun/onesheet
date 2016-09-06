@@ -13,8 +13,8 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 
         $writer = new Writer();
         $writer->enableCellAutosizing();
-        $writer->addRows(array(range(1,3), range('a', 'z')), new Style());
-        $writer->addRows(array(range(1,3), range('a', 'z')));
+        $writer->addRows(array(range(1, 3), range('a', 'z')), new Style());
+        $writer->addRows(array(range(1, 3), range('a', 'z')));
         $writer->writeToFile($fileName);
 
         $this->assertFileExists($fileName);
@@ -27,7 +27,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     public function testAddRowsException()
     {
         $writer = new Writer();
-        $writer->addRows(array(1,2,3,4,5));
+        $writer->addRows(array(1, 2, 3, 4, 5));
     }
 
     public function testSetFreezePaneCellId()
@@ -95,28 +95,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
         $this->assertEquals(0, $minWidth);
         $this->assertEquals(255.86, $maxWidth);
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testSendToBrowser()
-    {
-        $fileName = 'onesheet_writer.xlsx';
-
-        ob_start();
-        $writer = new Writer();
-        $writer->addRow(array(1,2,3,4,5));
-        $writer->writeToBrowser($fileName);
-        $browserContent = substr(ob_get_clean(), 0, -4);
-
-        $writer = new Writer();
-        $writer->addRow(array(1,2,3,4,5));
-        $writer->writeToFile($fileName);
-        $fileContent = file_get_contents($fileName, FILE_BINARY);
-        unlink($fileName);
-
-        $this->assertEquals($fileContent, $browserContent);
     }
 
     private function getObjectProperty($object, $propertyName)

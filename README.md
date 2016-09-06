@@ -8,7 +8,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 
 ### What it does
 - Write a single sheet fast and with a small memory footprint.
-- <del>Freeze the first [n] rows to have a fixed table header/headline.</del> buggy
+- Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
 - Set your own custom column width per column.
 - Autosize column widths to fit cell contents. See OneSheet\Style\FontName() for supported fonts (~100).
@@ -39,7 +39,7 @@ $onesheet->writeToFile('hello_world.xlsx');
 
 #### Available Writer operations
 ```
-// Writer::setFreezePaneCellId(cellId) buggy
+Writer::setFreezePaneCellId(cellId)
 Writer::setFixedColumnWidths(columnWidths)
 Writer::setColumnWidthLimits(minWidth, maxWidth)
 Writer::enableCellAutosizing()
