@@ -84,4 +84,14 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         $sheet = new Sheet(new CellBuilder(), new SizeCalculator(new SizeCollection()));
         $sheet->setFixedColumnWidths(array('A1' => 10, 7 => 10));
     }
+
+    public function testGetColumnWidths()
+    {
+        $sheet = new Sheet(new CellBuilder(), new SizeCalculator(new SizeCollection()));
+        $sheet->enableCellAutosizing();
+        $sheet->setColumnWidthLimits(5, 50);
+        $sheet->addRow(array('A', str_repeat('XYZ', 100)), new Style());
+
+        $this->assertEquals(55, array_sum($sheet->getColumnWidths()));
+    }
 }
