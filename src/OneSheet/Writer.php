@@ -100,7 +100,7 @@ class Writer
     private function initialize()
     {
         $this->sheetFile = new SheetFile();
-        $this->sheetFile->fwrite(str_repeat(' ', 3 * 1024 * 1024) . '<sheetData>');
+        $this->sheetFile->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
         $this->styler = new Styler();
         $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator(new SizeCollection()));
     }
