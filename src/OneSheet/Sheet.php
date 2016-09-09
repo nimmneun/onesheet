@@ -144,9 +144,9 @@ class Sheet
     public function getColumnWidths()
     {
         foreach ($this->columnWidths as $column => $width) {
-            if ($this->maxColumnWidth && $width > $this->maxColumnWidth) {
+            if ($width > $this->maxColumnWidth) {
                 $this->columnWidths[$column] = $this->maxColumnWidth;
-            } elseif ($this->minColumnWidth && $width < $this->minColumnWidth) {
+            } elseif ($width < $this->minColumnWidth) {
                 $this->columnWidths[$column] = $this->minColumnWidth;
             }
         }
@@ -214,12 +214,10 @@ class Sheet
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
-            if (0 < strlen($cellValue)) {
-                $this->updateColumnWidths($cellValue, $cellIndex, $style);
-                $cellXml .= $this->cellBuilder->build(
-                    $this->rowIndex, $cellIndex, $cellValue, $style->getId()
-                );
-            }
+            $this->updateColumnWidths($cellValue, $cellIndex, $style);
+            $cellXml .= $this->cellBuilder->build(
+                $this->rowIndex, $cellIndex, $cellValue, $style->getId()
+            );
         }
 
         return $cellXml;
