@@ -51,20 +51,31 @@ class Finalizer
     /**
      * Finalize the xlsx file.
      *
-     * @param string $fileName
-     * @throws \RuntimeException
+     * @param resource $output
      */
-    public function finalize($fileName)
+    public function finalize($output)
     {
-        $this->zip->open($fileName, \ZipArchive::CREATE);
+        $zipFileUrl = sys_get_temp_dir() . '/' . uniqid();
 
+        $this->fillZipWithFileContents($zipFileUrl);
+        if (!$this->zip->close()) {
+            throw new \RuntimeException('Failed to close zip file!');
+        }
+
+        $this->copyToOutputAndCleanup($output, $zipFileUrl);
+    }
+
+    /**
+     * Add all file and string contents to zip file.
+     *
+     * @param string $zipFileUrl
+     */
+    private function fillZipWithFileContents($zipFileUrl)
+    {
+        $this->zip->open($zipFileUrl, \ZipArchive::CREATE);
         $this->finalizeSheet();
         $this->finalizeStyles();
         $this->finalizeDefaultXmls();
-
-        if (!$this->zip->close()) {
-            throw new \RuntimeException('Failed to save xlsx file!');
-        }
     }
 
     /**
@@ -77,25 +88,8 @@ class Finalizer
         $this->sheetFile->fwrite(SheetXml::HEADER_XML);
         $this->sheetFile->fwrite($this->sheet->getDimensionXml());
         $this->sheetFile->fwrite($this->sheet->getSheetViewsXml());
-        $this->writeColumnWidths();
+        $this->sheetFile->fwrite($this->sheet->getColsXml());
         $this->zip->addFile($this->sheetFile->getFilePath(), 'xl/worksheets/sheet1.xml');
-    }
-
-    /**
-     * Write column widths xml string.
-     */
-    private function writeColumnWidths()
-    {
-        if (0 < count($this->sheet->getColumnWidths())) {
-            $this->sheetFile->fwrite('<cols>');
-            foreach ($this->sheet->getColumnWidths() as $columnNumber => $columnWidth) {
-                $this->sheetFile->fwrite(
-                    sprintf(SheetXml::COLUMN_XML, ($columnNumber + 1), ($columnNumber + 1),
-                        $columnWidth)
-                );
-            }
-            $this->sheetFile->fwrite('</cols>');
-        }
     }
 
     /**
@@ -118,5 +112,24 @@ class Finalizer
         $this->zip->addFromString('_rels/.rels', DefaultXml::RELS_RELS);
         $this->zip->addFromString('xl/_rels/workbook.xml.rels', DefaultXml::XL_RELS_WORKBOOK);
         $this->zip->addFromString('xl/workbook.xml', DefaultXml::XL_WORKBOOK);
+    }
+
+    /**
+     * Write zip/xlsx contents to specified output
+     * and unlink/delete files.
+     *
+     * @param resource $output
+     * @param string   $zipFileUrl
+     */
+    private function copyToOutputAndCleanup($output, $zipFileUrl)
+    {
+        $zipFilePointer = fopen($zipFileUrl, 'r');
+        if (!stream_copy_to_stream($zipFilePointer, $output)
+            || !fclose($zipFilePointer)
+            || !fclose($output)
+            || !unlink($zipFileUrl)
+        ) {
+            throw new \RuntimeException("Failed to copy stream and clean up!");
+        }
     }
 }

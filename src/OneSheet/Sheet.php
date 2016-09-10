@@ -243,7 +243,7 @@ class Sheet
     }
 
     /**
-     * Return xml string for dimension.
+     * Return <dimension> xml string.
      *
      * @return string
      */
@@ -255,8 +255,7 @@ class Sheet
     }
 
     /**
-     * Return sheetViews xml containing the freeze pane.
-     * <sheetViews> Currently leads to random excel crashes :-/
+     * Return <sheetViews> xml containing the freeze pane.
      *
      * @return string
      */
@@ -267,5 +266,26 @@ class Sheet
         }
 
         return sprintf(SheetXml::SHEETVIEWS_XML, array_pop($m) - 1, $this->freezePaneCellId);
+    }
+
+    /**
+     * Return <cols> xml for column widths or an empty string,
+     * if there are no column widths.
+     *
+     * @return string
+     */
+    public function getColsXml()
+    {
+        $colsXml = '';
+
+        if (0 !== count($this->getColumnWidths())) {
+            foreach ($this->getColumnWidths() as $columnIndex => $columnWidth) {
+                $columnNumber = $columnIndex + 1;
+                $colsXml .= sprintf(SheetXml::COLUMN_XML, $columnNumber, $columnNumber, $columnWidth);
+            }
+            $colsXml = sprintf('<cols>%s</cols>', $colsXml);
+        }
+
+        return $colsXml;
     }
 }

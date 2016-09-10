@@ -30,6 +30,11 @@ class Writer
     private $sheet;
 
     /**
+     * @var
+     */
+    private $output;
+
+    /**
      * Writer constructor.
      */
     public function __construct()
@@ -135,16 +140,16 @@ class Writer
     }
 
     /**
-     * Send xlsx to browser and unlink file.
+     * Wrap things up and send xlsx to browser.
      *
      * @param string $fileName
      */
     public function writeToBrowser($fileName = 'report.xlsx')
     {
-        $this->writeToFile($fileName);
-        if (is_readable($fileName)) {
-            $this->sendToBrowserAndUnlink($fileName);
-        }
+        $this->output = fopen('php://output', 'w');
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
+        $this->sendHeaders($fileName);
+        $finalizer->finalize($this->output);
     }
 
     /**
@@ -154,8 +159,9 @@ class Writer
      */
     public function writeToFile($fileName = 'report.xlsx')
     {
+        $this->output = fopen($fileName, 'w');
         $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
-        $finalizer->finalize($fileName);
+        $finalizer->finalize($this->output);
     }
 
     /**
@@ -163,14 +169,11 @@ class Writer
      *
      * @param string $fileName
      */
-    private function sendToBrowserAndUnlink($fileName)
+    private function sendHeaders($fileName)
     {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
-        header('Content-Length: ' . filesize($fileName));
         header('Cache-Control: max-age=0');
         header('Pragma: public');
-        echo readfile($fileName);
-        unlink($fileName);
     }
 }
