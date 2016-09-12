@@ -14,6 +14,15 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - Autosize column widths to fit cell contents. See OneSheet\Style\FontName() for supported fonts (~100).
 - Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
+### Generate some samples ...
+... using http://openstreetmap.org data.
+```https://code.uaibe.com/report/{fontsize}/{autosize}/{limit}```
+1. [fontsize 12 / autosizing disabled / 1,000 results](https://code.uaibe.com/report/12/0/1000)
+2. [fontsize 12 / autosizing enabled / 1,000 results](https://code.uaibe.com/report/12/1/1000)
+3. [fontsize 16 / autosizing disabled / 10,000 results](https://code.uaibe.com/report/16/0/10000)
+4. [fontsize 16 / autosizing enabled / 10,000 results](https://code.uaibe.com/report/16/1/10000)
+5. [fontsize 10 / autosizing enabled / 50,000 results](https://code.uaibe.com/report/10/1/50000) (might take ~20-30s)
+
 ### What it doesnt
 - No cell individualisation, everything is applied at a row level.
 - No calculated / formula cells.
