@@ -282,7 +282,7 @@ class Sheet
             foreach ($this->getColumnWidths() as $columnIndex => $columnWidth) {
                 $columnNumber = $columnIndex + 1;
                 $colsXml .= sprintf(
-                    SheetXml::COLUMN_XML, $columnNumber, $columnNumber, number_format($columnWidth, 3, '.')
+                    SheetXml::COLUMN_XML, $columnNumber, $columnNumber, number_format($columnWidth, 3, '.', '')
                 );
             }
             $colsXml = sprintf('<cols>%s</cols>', $colsXml);
