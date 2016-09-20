@@ -271,17 +271,19 @@ class Sheet
     /**
      * Return <cols> xml for column widths or an empty string,
      * if there are no column widths.
+     * Format widths to account for locales with comma as decimal point.
      *
      * @return string
      */
     public function getColsXml()
     {
         $colsXml = '';
-
         if (0 !== count($this->getColumnWidths())) {
             foreach ($this->getColumnWidths() as $columnIndex => $columnWidth) {
                 $columnNumber = $columnIndex + 1;
-                $colsXml .= sprintf(SheetXml::COLUMN_XML, $columnNumber, $columnNumber, $columnWidth);
+                $colsXml .= sprintf(
+                    SheetXml::COLUMN_XML, $columnNumber, $columnNumber, number_format($columnWidth, 3, '.', '')
+                );
             }
             $colsXml = sprintf('<cols>%s</cols>', $colsXml);
         }
