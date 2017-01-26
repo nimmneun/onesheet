@@ -89,7 +89,7 @@ class CellBuilder
             return chr(65 + $cellNumber) . $rowNumber;
         }
 
-        return $this->getCellId(floor($cellNumber / 26) - 1) . chr(65 + $cellNumber % 26) . $rowNumber;
+        return $this->getCellId((int)($cellNumber / 26) - 1) . chr(65 + $cellNumber % 26) . $rowNumber;
     }
 
     /**
