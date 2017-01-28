@@ -30,7 +30,7 @@ class Writer
     private $sheet;
 
     /**
-     * @var
+     * @var resource
      */
     private $output;
 
@@ -45,7 +45,7 @@ class Writer
     /**
      * All cells _above_ this cell will be frozen/fixed.
      *
-     * @param int $cellId
+     * @param string $cellId
      */
     public function setFreezePaneCellId($cellId)
     {
