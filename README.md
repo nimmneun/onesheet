@@ -4,7 +4,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+.
+OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ and 7.0+ with cell auto-sizing and styling support.
+
+![alt text](autosizing_excel_screencap.png "OneSheet excel output example")
 
 ### What it does
 - Write a single sheet fast and with a small memory footprint.
@@ -21,18 +23,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ / 7.0+
 - No number formats.
 - No charts.
 
-### Generate some samples ...
-... using http://openstreetmap.org data.
-```
-https://code.uaibe.com/report/{fontsize}/{autosize}/{limit}
-```
-1. [fontsize 12 / autosizing disabled / 1,000 results](https://code.uaibe.com/report/12/0/1000)
-2. [fontsize 12 / autosizing enabled / 1,000 results](https://code.uaibe.com/report/12/1/1000)
-3. [fontsize 16 / autosizing disabled / 10,000 results](https://code.uaibe.com/report/16/0/10000)
-4. [fontsize 16 / autosizing enabled / 10,000 results](https://code.uaibe.com/report/16/1/10000)
-5. [fontsize 10 / autosizing enabled / 50,000 results](https://code.uaibe.com/report/10/1/50000) (might take ~20-30s)
-
-### Install
+### Install via composer
 ```
 $ composer require nimmneun/onesheet
 ```
@@ -59,22 +50,22 @@ $onesheet->writeToFile('hello_world.xlsx');
 
 #### Available Writer operations
 ```
-Writer::setFreezePaneCellId(cellId)
-Writer::setFixedColumnWidths(columnWidths)
-Writer::setColumnWidthLimits(minWidth, maxWidth)
+Writer::setFreezePaneCellId(string cellId)
+Writer::setFixedColumnWidths(array columnWidths)
+Writer::setColumnWidthLimits(float minWidth, float maxWidth)
 Writer::enableCellAutosizing()
 Writer::disableCellAutosizing()
-Writer::addRows(rows, style)
-Writer::addRow(row, style)
-Writer::writeToFile(fileName)
-Writer::writeToBrowser(fileName)
+Writer::addRows(array rows, style)
+Writer::addRow(array row, style)
+Writer::writeToFile(string fileName)
+Writer::writeToBrowser(string fileName)
 ```
 
 #### Adding font styles
 ```
-Style::setFontName(name)
-Style::setFontSize(size)
-Style::setFontColor(color)
+Style::setFontName(string name)
+Style::setFontSize(int size)
+Style::setFontColor(string color)
 Style::setFontBold()
 Style::setFontItalic()
 Style::setFontUnderline()
@@ -82,7 +73,7 @@ Style::setFontStrikethrough()
 ```
 #### Adding background colors (fills)
 ```
-Style::setFillColor(color)
+Style::setFillColor(string color)
 ```
 
 #### Adding borders
@@ -98,6 +89,8 @@ Style::setBorderDiagonalDown(style, color)
 
 ### Cell autosizing
 ##### ... is cool, but comes with heavy performance impacts - especially when dealing with multibyte characters like ä, ß, Æ, ポ.
+Keep in mind though ... you can improve runtimes for larger datasets by disabling it after adding a decent number of rows.
+
 | Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
 | ------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
 | Autosizing OFF (Single Byte Chars)    | 24 seconds                    | 24 seconds                     | 24 seconds                     | 26 seconds                     |

@@ -99,7 +99,7 @@ class Sheet
     }
 
     /**
-     * @param int $cellId
+     * @param string $cellId
      */
     public function setFreezePaneCellId($cellId)
     {
