@@ -21,8 +21,8 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCellWidth()
     {
-        $fontName = 'Calibri';
         $calculator = new SizeCalculator(null);
+        $fontName = 'Calibri';
         $string = 'Abcd 328 - 123 XY!!';
 
         $expectedValues = array(8 => 12.5, 11 => 16.5, 12 => 18.5, 13 => 20.5);
@@ -34,8 +34,8 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCellWidthMultiByte()
     {
-        $fontName = 'Segoe UI';
         $calculator = new SizeCalculator(null);
+        $fontName = 'Segoe UI';
         $string = 'ä ö22 4eä18 åæçè €äÜuköß ÄöÜÖö üfzp!';
 
         $expectedValues = array(8 => 30, 11 => 40, 12 => 42, 13 => 46);

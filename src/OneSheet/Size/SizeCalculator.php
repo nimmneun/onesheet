@@ -117,7 +117,7 @@ class SizeCalculator
     private function determineFontsPattern($fontsDirectory)
     {
         if (!isset($fontsDirectory) || !is_dir($fontsDirectory)) {
-            $fontsDirectory = '/usr/share/fonts';
+            $fontsDirectory = '/usr/share/fonts/truetype';
             if (false !== stripos(php_uname(), 'win')) {
                 $fontsDirectory = 'C:/Windows/Fonts';
             }
