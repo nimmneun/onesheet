@@ -2,79 +2,121 @@
 
 namespace OneSheet\Size;
 
-use OneSheet\Style\Font;
-
 /**
  * Class SizeCalculator to calculate the approximate width
- * and height of cells based on the font and content.
+ * of cells based on the current font, size and content.
  *
  * @package OneSheet\Size
  */
 class SizeCalculator
 {
     /**
-     * @var SizeCollection
+     * @var array
      */
-    private $sizeCollection;
+    private $fonts;
 
     /**
      * @var array
      */
-    private $characterSizes;
+    private $sizes;
 
     /**
-     * SizeCalculator constructor.
-     *
-     * @param SizeCollection $sizeCollection
+     * @param string|null $fontsDirectory
      */
-    public function __construct(SizeCollection $sizeCollection)
+    public function __construct($fontsDirectory)
     {
-        $this->sizeCollection = $sizeCollection;
+        $this->findFonts($this->determineFontsDir($fontsDirectory));
     }
 
     /**
-     * Return the estimated width of a cell value.
+     * Find fonts/paths in a given directory recursively.
      *
-     * @param mixed $value
-     * @param Font  $font
-     * @return float
+     * @param string|null $path
+     * @return string|null
      */
-    public function getCellWidth($value, Font $font)
+    public function findFonts($path = null)
     {
-        $width = 0.3 + (0.05 * $font->getSize());
-
-        foreach ($this->getSingleCharacterArray($value) as $character) {
-            if (isset($this->characterSizes[$character])) {
-                $width += $this->characterSizes[$character];
-            } elseif (strlen($character)) {
-                $width += 0.06 * $font->getSize();
+        foreach (glob($path . DIRECTORY_SEPARATOR . '*') as $path) {
+            if (is_dir($path)) {
+                $path = $this->findFonts($path);
+            } elseif (preg_match('~(.+\..tf)$~i', $path, $m)) {
+                $meta = new FontMeta($path);
+                if (strlen($meta->getFontName())) {
+                    $this->fonts[$meta->getFontName()] = $path;
+                }
             }
         }
 
-        return $font->isBold() ? $width * $this->characterSizes['bold'] : $width;
+        return $path;
     }
 
     /**
-     * Return the font height, but no smaller than 14pt.
+     * Return array of available font names and paths.
      *
-     * @return number
+     * @return array
      */
-    public function getRowHeight()
+    public function getFonts()
     {
-        if (14 > $this->characterSizes['height']) {
-            return 14;
+        return $this->fonts;
+    }
+
+    /**
+     * Get the calculated cell width for a given value.
+     *
+     * @param string $fontName
+     * @param int    $fontSize
+     * @param mixed  $value
+     *
+     * @return float|int
+     */
+    public function getCellWidth($fontName, $fontSize, $value)
+    {
+        $width = 1;
+        foreach ($this->getSingleCharacterArray($value) as $char) {
+            $width += $this->getCharacterWidth($fontName, $fontSize, $char);
         }
-        return floor($this->characterSizes['height']);
+
+        return $width;
     }
 
     /**
-     * Set proper font sizes by font.
+     * Get width of a single character. Calculate & cache if necessary.
      *
-     * @param Font $font
+     * @param string $fontName
+     * @param int    $fontSize
+     * @param string $char
+     *
+     * @return float
      */
-    public function setFont(Font $font)
+    private function getCharacterWidth($fontName, $fontSize, $char)
     {
-        $this->characterSizes = $this->sizeCollection->get($font->getName(), $font->getSize());
+        if (!isset($this->sizes[$fontName][$fontSize][$char])) {
+            $this->sizes[$fontName][$fontSize][$char] =
+                $this->calculateCharacterWith($fontName, $fontSize, $char);
+        }
+
+        return $this->sizes[$fontName][$fontSize][$char];
+    }
+
+    /**
+     * Calculate the width of a single character for the given fontname and size.
+     * Create image that contains the character 100 times to get more accurate results.
+     *
+     * @param string $fontName
+     * @param int    $fontSize
+     * @param string $char
+     *
+     * @return float
+     */
+    private function calculateCharacterWith($fontName, $fontSize, $char)
+    {
+        if (isset($this->fonts[$fontName])) {
+            $box = imageftbbox($fontSize, 0, $this->fonts[$fontName], str_repeat($char, 100));
+            $width = abs($box[4] - $box[0]) / 6.73 / 100;
+            return round($width, 3);
+        }
+
+        return 0.1 * $fontSize;
     }
 
     /**
@@ -88,6 +130,25 @@ class SizeCalculator
         if (mb_strlen($value) == strlen($value)) {
             return str_split($value);
         }
+
         return preg_split('~~u', $value, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * Determine the fonts directory.
+     *
+     * @param string $fontsDirectory
+     * @return string
+     */
+    private function determineFontsDir($fontsDirectory)
+    {
+        if (!isset($fontsDirectory) || !is_dir($fontsDirectory)) {
+            $fontsDirectory = '/usr/share/fonts';
+            if (false !== stripos(php_uname(), 'win')) {
+                $fontsDirectory = 'C:/Windows/Fonts';
+            }
+        }
+
+        return rtrim($fontsDirectory, DIRECTORY_SEPARATOR);
     }
 }

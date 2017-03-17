@@ -14,7 +14,7 @@ class CellBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ALL9', $cellBuilder->getCellId(999, 9));
     }
 
-    public function testBuild()
+    public function testBuildContentCell()
     {
         $cellBuilder = new CellBuilder();
 
@@ -23,5 +23,16 @@ class CellBuilderTest extends \PHPUnit_Framework_TestCase
 
         $expectedXml = '<c r="D1" s="0" t="inlineStr"><is><t>_x0003_</t></is></c>';
         $this->assertEquals($expectedXml, $cellBuilder->build(1, 3, chr(3)));
+    }
+
+    public function testBuildEmptyCell()
+    {
+        $cellBuilder = new CellBuilder();
+
+        $expectedXml = '';
+        $this->assertEquals($expectedXml, $cellBuilder->build(1, 3, ''));
+
+        $expectedXml = '<c r="D1" s="1"/>';
+        $this->assertEquals($expectedXml, $cellBuilder->build(1, 3, '', 1));
     }
 }

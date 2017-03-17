@@ -31,12 +31,12 @@ class StyleXml
     /**
      * Constant for single font xml string.
      */
-    const FONT_DEFAULT_XML = '<font><sz val="%d"/><color rgb="%s"/><name val="%s"/>%s%s%s%s</font>';
+    const FONT_DEFAULT_XML = '<font><sz val="%d"/><color rgb="FF%s"/><name val="%s"/>%s%s%s%s</font>';
 
     /**
      * Constant for single solid colored fill (background) xml string.
      */
-    const COLORED_FILL_XML = '<fill><patternFill patternType="solid"><fgColor rgb="%s"/></patternFill></fill>';
+    const COLORED_FILL_XML = '<fill><patternFill patternType="solid"><fgColor rgb="FF%s"/></patternFill></fill>';
 
     /**
      * Constant for single uncolored fill (background) xml string.
@@ -46,7 +46,7 @@ class StyleXml
     /**
      * Constant for single border type element xml string.
      */
-    const BORDER_TYPE_XML = '<%s style="%s"><color rgb="%s"/></%s>';
+    const BORDER_TYPE_XML = '<%s style="%s"><color rgb="FF%s"/></%s>';
 
     /**
      * Constant for cellXf style xml strings.

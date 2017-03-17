@@ -88,14 +88,6 @@ class Font implements Component
     }
 
     /**
-     * @return bool
-     */
-    public function isBold()
-    {
-        return null !== $this->bold;
-    }
-
-    /**
      * @return Font
      */
     public function setBold()

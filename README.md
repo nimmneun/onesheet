@@ -13,7 +13,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ and 7.
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
 - Set your own custom column width per column.
-- Autosize column widths to fit cell contents. See OneSheet\Style\FontName() for supported fonts (~100).
+- Autosize column widths to fit cell contents. If no fonts are found, rough estimates are used.
 - Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
 ### What it doesnt
@@ -43,7 +43,7 @@ require_once '/srv/fancydomain.com/libs/onesheet/autoload.php';
 
 require_once '../vendor/autoload.php';
 
-$onesheet = new \OneSheet\Writer();
+$onesheet = new \OneSheet\Writer('/optional/fonts/directory');
 $onesheet->addRow(array('hello', 'world'));
 $onesheet->writeToFile('hello_world.xlsx');
 ```
@@ -93,10 +93,10 @@ Keep in mind though ... you can improve runtimes for larger datasets by disablin
 
 | Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
 | ------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
-| Autosizing OFF (Single Byte Chars)    | 24 seconds                    | 24 seconds                     | 24 seconds                     | 26 seconds                     |
-| Autosizing ON  (Single Byte Chars)    | 30 seconds (+25%)             | 32 seconds (+33%)              | 35 seconds (+45%)              | 43 seconds (+65%)              |
-| Autosizing OFF (Multi Byte Chars)     | 27 seconds                    | 28 seconds                     | 30 seconds                     | 31 seconds                     |
-| Autosizing ON  (Multi Byte Chars)     | 36 seconds (+33%)             | 41 seconds (+46%)              | 49 seconds (+63%)              | 64 seconds (+106%)             |
+| Autosizing OFF (Single Byte Chars)    | 18 seconds                    | 18 seconds                     | 19 seconds                     | 20 seconds                     |
+| Autosizing ON  (Single Byte Chars)    | 23 seconds (+27%)             | 27 seconds (+50%)              | 34 seconds (+78%)              | 49 seconds (+145%)             |
+| Autosizing OFF (Multi Byte Chars)     | 20 seconds                    | 21 seconds                     | 23 seconds                     | 26 seconds                     |
+| Autosizing ON  (Multi Byte Chars)     | 29 seconds (+45%)             | 36 seconds (+71%)              | 47 seconds (+104%)             | 69 seconds (+126%)             |
 
 ### Additional examples
 ```php
