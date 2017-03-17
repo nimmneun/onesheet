@@ -135,15 +135,15 @@ class SizeCalculator
     }
 
     /**
-     * Determine glob pattern by fonts directory.
+     * Determine the fonts directory.
      *
-     * @param $fontsDirectory
+     * @param string $fontsDirectory
      * @return string
      */
     private function determineFontsDir($fontsDirectory)
     {
         if (!isset($fontsDirectory) || !is_dir($fontsDirectory)) {
-            $fontsDirectory = '/usr/share/fonts/truetype';
+            $fontsDirectory = '/usr/share/fonts';
             if (false !== stripos(php_uname(), 'win')) {
                 $fontsDirectory = 'C:/Windows/Fonts';
             }
