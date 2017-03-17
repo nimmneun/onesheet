@@ -3,7 +3,6 @@
 namespace OneSheet;
 
 use OneSheet\Size\SizeCalculator;
-use OneSheet\Size\SizeCollection;
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
 
@@ -35,11 +34,17 @@ class Writer
     private $output;
 
     /**
-     * Writer constructor.
+     * If no $fontsDirectory is supplied, the operating systems default
+     * will be used (e.g. /usr/share/fonts or C:/Windows/Fonts).
+     *
+     * @param string|null $fontsDirectory
      */
-    public function __construct()
+    public function __construct($fontsDirectory = null)
     {
-        $this->initialize();
+        $this->sheetFile = new SheetFile();
+        $this->sheetFile->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
+        $this->styler = new Styler();
+        $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
     }
 
     /**
@@ -100,17 +105,8 @@ class Writer
     }
 
     /**
-     * Initialize writer defaults.
-     */
-    private function initialize()
-    {
-        $this->sheetFile = new SheetFile();
-        $this->sheetFile->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
-        $this->styler = new Styler();
-        $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator(new SizeCollection()));
-    }
-
-    /**
+     * Add multiple rows at once.
+     *
      * @param array $rows
      * @param Style $style
      * @throws \InvalidArgumentException
@@ -127,6 +123,8 @@ class Writer
     }
 
     /**
+     * Add a single new row to the sheet and supply an optional style.
+     *
      * @param array $row
      * @param Style $style
      */
@@ -137,6 +135,18 @@ class Writer
             $this->styler->addStyle($style);
             $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
         }
+    }
+
+    /**
+     * Wrap things up and write xlsx.
+     *
+     * @param string $fileName
+     */
+    public function writeToFile($fileName = 'report.xlsx')
+    {
+        $this->output = fopen($fileName, 'w');
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
+        $finalizer->finalize($this->output);
     }
 
     /**
@@ -153,19 +163,7 @@ class Writer
     }
 
     /**
-     * Wrap things up and write xlsx.
-     *
-     * @param string $fileName
-     */
-    public function writeToFile($fileName = 'report.xlsx')
-    {
-        $this->output = fopen($fileName, 'w');
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
-        $finalizer->finalize($this->output);
-    }
-
-    /**
-     * Output headers & content and unlink the xlsx file eventually.
+     * Send headers for browser output.
      *
      * @param string $fileName
      */

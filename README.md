@@ -13,7 +13,7 @@ OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.3+ and 7.
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
 - Set your own custom column width per column.
-- Autosize column widths to fit cell contents. See OneSheet\Style\FontName() for supported fonts (~100).
+- Autosize column widths to fit cell contents.
 - Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
 ### What it doesnt

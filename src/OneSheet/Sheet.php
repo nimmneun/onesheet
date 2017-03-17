@@ -2,6 +2,7 @@
 
 namespace OneSheet;
 
+use OneSheet\Style\Font;
 use OneSheet\Xml\RowXml;
 use OneSheet\Style\Style;
 use OneSheet\Xml\SheetXml;
@@ -166,11 +167,9 @@ class Sheet
     {
         $columnCount = count($row);
         $this->updateMaxColumnCount($columnCount);
-
-        $this->sizeCalculator->setFont($style->getFont());
         $cellXml = $this->getCellXml($row, $style);
 
-        return $this->getRowXml($style, $columnCount, $cellXml);
+        return $this->getRowXml($columnCount, $cellXml);
     }
 
     /**
@@ -188,19 +187,13 @@ class Sheet
     /**
      * Build and return xml string for single row.
      *
-     * @param Style  $style
      * @param int    $columnCount
      * @param string $cellXml
      * @return string
      */
-    private function getRowXml(Style $style, $columnCount, $cellXml)
+    private function getRowXml($columnCount, $cellXml)
     {
-        if ($style->getFont()->getSize() < 14) {
-            return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
-        }
-
-        return sprintf(RowXml::HEIGHT_XML, $this->rowIndex++, $columnCount,
-            $this->sizeCalculator->getRowHeight(), $cellXml);
+        return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
     }
 
     /**
@@ -214,7 +207,7 @@ class Sheet
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
-            $this->updateColumnWidths($cellValue, $cellIndex, $style);
+            $this->updateColumnWidths($cellValue, $cellIndex, $style->getFont());
             $cellXml .= $this->cellBuilder->build(
                 $this->rowIndex, $cellIndex, $cellValue, $style->getId()
             );
@@ -228,12 +221,12 @@ class Sheet
      *
      * @param mixed $value
      * @param int   $cellIndex
-     * @param Style $style
+     * @param Font  $font
      */
-    private function updateColumnWidths($value, $cellIndex, Style $style)
+    private function updateColumnWidths($value, $cellIndex, Font $font)
     {
         if ($this->useCellAutosizing) {
-            $cellWidth = $this->sizeCalculator->getCellWidth($value, $style->getFont());
+            $cellWidth = $this->sizeCalculator->getCellWidth($font->getName(), $font->getSize(), $value);
             if (!isset($this->columnWidths[$cellIndex])
                 || $this->columnWidths[$cellIndex] < $cellWidth
             ) {

@@ -3,8 +3,6 @@
 namespace OneSheetTest\Size;
 
 use OneSheet\Size\SizeCalculator;
-use OneSheet\Size\SizeCollection;
-use OneSheet\Style\Font;
 
 class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,34 +21,27 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCellWidth()
     {
-        $font = new Font();
-        $font->setName('Calibri');
-        $calculator = new SizeCalculator(new SizeCollection());
+        $fontName = 'Calibri';
+        $calculator = new SizeCalculator(null);
         $string = 'Abcd 328 - 123 XY!!';
 
-        $expectedValues = array(8 => 12, 11 => 17, 12 => 19, 13 => 20);
+        $expectedValues = array(8 => 12.5, 11 => 16.5, 12 => 18.5, 13 => 20.5);
         foreach ($expectedValues as $fontSize => $minWidth) {
-            $calculator->setFont($font->setSize($fontSize));
-
-            $this->assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($string, $font));
-            $this->assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($string, $font));
+            $this->assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($fontName, $fontSize, $string));
+            $this->assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($fontName, $fontSize, $string));
         }
     }
 
     public function testGetCellWidthMultiByte()
     {
+        $fontName = 'Segoe UI';
+        $calculator = new SizeCalculator(null);
+        $string = 'ä ö22 4eä18 åæçè €äÜuköß ÄöÜÖö üfzp!';
 
-        $font = new Font();
-        $font->setName('Segoe UI');
-        $calculator = new SizeCalculator(new SizeCollection());
-        $string = 'ä ö32 4eä18 åæçè €äÜuköß ÄöÜÖö üfzp!';
-
-        $expectedValues = array(8 => 29, 11 => 39, 12 => 42.5, 13 => 46);
+        $expectedValues = array(8 => 30, 11 => 40, 12 => 42, 13 => 46);
         foreach ($expectedValues as $fontSize => $minWidth) {
-            $calculator->setFont($font->setSize($fontSize));
-
-            $this->assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($string, $font));
-            $this->assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($string, $font));
+            $this->assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($fontName, $fontSize, $string));
+            $this->assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($fontName, $fontSize, $string));
         }
     }
 }
