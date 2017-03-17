@@ -43,7 +43,7 @@ require_once '/srv/fancydomain.com/libs/onesheet/autoload.php';
 
 require_once '../vendor/autoload.php';
 
-$onesheet = new \OneSheet\Writer();
+$onesheet = new \OneSheet\Writer('/optional/fonts/directory');
 $onesheet->addRow(array('hello', 'world'));
 $onesheet->writeToFile('hello_world.xlsx');
 ```

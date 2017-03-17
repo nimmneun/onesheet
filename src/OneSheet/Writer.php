@@ -174,4 +174,14 @@ class Writer
         header('Cache-Control: max-age=0');
         header('Pragma: public');
     }
+
+    /**
+     * Return array of available fonts & paths as key value pairs.
+     *
+     * @return array
+     */
+    public function getFonts()
+    {
+        return $this->sheet->getFonts();
+    }
 }

@@ -283,4 +283,14 @@ class Sheet
 
         return $colsXml;
     }
+
+    /**
+     * Return array of available font names and paths.
+     *
+     * @return array
+     */
+    public function getFonts()
+    {
+        return $this->sizeCalculator->getFonts();
+    }
 }

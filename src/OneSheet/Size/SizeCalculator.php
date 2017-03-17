@@ -25,13 +25,39 @@ class SizeCalculator
      */
     public function __construct($fontsDirectory)
     {
-        $fontsPattern = $this->determineFontsPattern($fontsDirectory);
-        foreach (glob($fontsPattern) as $path) {
-            $meta = new FontMeta($path);
-            if (strlen($meta->getFontName())) {
-                $this->fonts[$meta->getFontName()] = $path;
+        $this->findFonts($this->determineFontsDir($fontsDirectory));
+    }
+
+    /**
+     * Find fonts/paths in a given directory recursively.
+     *
+     * @param string|null $path
+     * @return string|null
+     */
+    public function findFonts($path = null)
+    {
+        foreach (glob($path . DIRECTORY_SEPARATOR . '*') as $path) {
+            if (is_dir($path)) {
+                $path = $this->findFonts($path);
+            } elseif (preg_match('~(.+\..tf)$~i', $path, $m)) {
+                $meta = new FontMeta($path);
+                if (strlen($meta->getFontName())) {
+                    $this->fonts[$meta->getFontName()] = $path;
+                }
             }
         }
+
+        return $path;
+    }
+
+    /**
+     * Return array of available font names and paths.
+     *
+     * @return array
+     */
+    public function getFonts()
+    {
+        return $this->fonts;
     }
 
     /**
@@ -114,7 +140,7 @@ class SizeCalculator
      * @param $fontsDirectory
      * @return string
      */
-    private function determineFontsPattern($fontsDirectory)
+    private function determineFontsDir($fontsDirectory)
     {
         if (!isset($fontsDirectory) || !is_dir($fontsDirectory)) {
             $fontsDirectory = '/usr/share/fonts/truetype';
@@ -123,6 +149,6 @@ class SizeCalculator
             }
         }
 
-        return rtrim($fontsDirectory, DIRECTORY_SEPARATOR) . '/*.ttf';
+        return rtrim($fontsDirectory, DIRECTORY_SEPARATOR);
     }
 }
