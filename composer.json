@@ -7,7 +7,8 @@
     "keywords":          [
         "excel",
         "xlsx",
-        "excel2007"
+        "excel2007",
+        "excel writer"
     ],
     "authors": [
         {
@@ -21,10 +22,13 @@
         }
     },
     "require": {
-        "php": "^5.3.3 || ^7.0",
+        "php": ">5.3.3 <8.0",
         "ext-zip": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.* || 4.*"
+    },
+    "suggest": {
+        "ext-gd": "Required for accurate cell width sizing only."
     }
 }
