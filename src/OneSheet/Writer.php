@@ -34,10 +34,12 @@ class Writer
     private $output;
 
     /**
-     * If no $fontsDirectory is supplied, the operating systems default
-     * will be used (e.g. /usr/share/fonts or C:/Windows/Fonts).
+     * If a $fontsDirectory is supplied it will be scanned for usable ttf/otf fonts
+     * to be used for cell auto-sizing. Keep in mind though - viewers of an excel
+     * file have to have that font on their machine. XLSX does not embed fonts!
      *
      * @param string|null $fontsDirectory
+     * @throws \Exception
      */
     public function __construct($fontsDirectory = null)
     {
@@ -169,10 +171,12 @@ class Writer
      */
     private function sendHeaders($fileName)
     {
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
-        header('Cache-Control: max-age=0');
-        header('Pragma: public');
+        if (!headers_sent()) {
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            header('Cache-Control: max-age=0');
+            header('Pragma: public');
+        }
     }
 
     /**
