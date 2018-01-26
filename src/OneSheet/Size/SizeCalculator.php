@@ -13,12 +13,12 @@ class SizeCalculator
     /**
      * @var array
      */
-    private $fonts = [];
+    private $fonts = array();
 
     /**
      * @var array
      */
-    private $sizes = [];
+    private $sizes = array();
 
     /**
      * @param string|null $fontsDirectory
