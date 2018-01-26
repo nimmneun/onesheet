@@ -67,7 +67,7 @@ class FontMeta
      */
     function __construct($fileName)
     {
-        if (!$fileName || !is_readable($fileName)) {
+        if (!is_readable($fileName)) {
             throw new \Exception('File ' . $fileName . ' is not readable');
         }
 

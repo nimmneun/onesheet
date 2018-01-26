@@ -21,20 +21,20 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCellWidthForUnknownFont()
     {
-        $calculator = new SizeCalculator(null);
+        $calculator = new SizeCalculator();
         $fontName = 'IAmAnUnknownFont';
         $string = 'Abcd 328 - 123 XY!!!';
 
         $expectedValues = array(8 => 16, 9 => 18, 12 => 24, 13 => 26);
         foreach ($expectedValues as $fontSize => $minWidth) {
-            $this->assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($fontName, $fontSize, $string));
-            $this->assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($fontName, $fontSize, $string));
+            self::assertGreaterThanOrEqual($minWidth, $calculator->getCellWidth($fontName, $fontSize, $string));
+            self::assertLessThanOrEqual($minWidth + 2, $calculator->getCellWidth($fontName, $fontSize, $string));
         }
     }
 
     public function testGetCellWidthForKnownFontReturnsLargerValueForLargerFontSize()
     {
-        $calculator = new SizeCalculator(null);
+        $calculator = new SizeCalculator($this->getFontsDirectory());
         $availableFonts = array_keys($calculator->getFonts());
 
         if (0 === count($availableFonts)) {
@@ -47,6 +47,13 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
         $cellWidth1 = $calculator->getCellWidth($fontName, 12, $string);
         $cellWidth2 = $calculator->getCellWidth($fontName, 16, $string);
 
-        $this->assertGreaterThan($cellWidth1, $cellWidth2);
+        self::assertGreaterThan($cellWidth1, $cellWidth2);
+    }
+
+    private function getFontsDirectory()
+    {
+        return false !== stripos(php_uname('s'), 'win')
+            ? 'C:/Windows/Fonts/'
+            : '/usr/share/fonts';
     }
 }

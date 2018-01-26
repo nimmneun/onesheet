@@ -17,7 +17,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer->addRows(array(range(1, 3), range('a', 'z')));
         $writer->writeToFile($fileName);
 
-        $this->assertFileExists($fileName);
+        self::assertFileExists($fileName);
         unlink($fileName);
     }
 
@@ -38,7 +38,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $sheet = $this->getObjectProperty($writer, 'sheet');
         $value = $this->getObjectProperty($sheet, 'freezePaneCellId');
 
-        $this->assertEquals('A5', $value);
+        self::assertEquals('A5', $value);
     }
 
     public function testEnableCellAutosizing()
@@ -49,7 +49,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $sheet = $this->getObjectProperty($writer, 'sheet');
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
-        $this->assertEquals(true, $value);
+        self::assertEquals(true, $value);
     }
 
     public function testDisableCellAutosizing()
@@ -61,7 +61,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $sheet = $this->getObjectProperty($writer, 'sheet');
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
-        $this->assertEquals(false, $value);
+        self::assertEquals(false, $value);
     }
 
     public function testSetFixedColumnWidths()
@@ -74,8 +74,8 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $sheet = $this->getObjectProperty($writer, 'sheet');
         $value = $this->getObjectProperty($sheet, 'columnWidths');
 
-        $this->assertEquals($widths, $value);
-        $this->assertEquals(30, array_sum($value));
+        self::assertEquals($widths, $value);
+        self::assertEquals(30, array_sum($value));
     }
 
     public function testSetColumnWidth()
@@ -87,14 +87,32 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
         $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
 
-        $this->assertEquals(3, $minWidth);
-        $this->assertEquals(10, $maxWidth);
+        self::assertEquals(3, $minWidth);
+        self::assertEquals(10, $maxWidth);
 
         $writer->setColumnWidthLimits(-5, 300);
         $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
         $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
-        $this->assertEquals(0, $minWidth);
-        $this->assertEquals(255.86, $maxWidth);
+        self::assertEquals(0, $minWidth);
+        self::assertEquals(255.86, $maxWidth);
+    }
+
+    public function testGetFonts()
+    {
+        $writer = new Writer();
+        self::assertTrue(is_array($writer->getFonts()));
+    }
+
+    public function testWriteToBrowser()
+    {
+        $writer = new Writer();
+        $writer->addRow([123,123]);
+
+        ob_start();
+        $writer->writeToBrowser();
+        $output = ob_get_clean();
+
+        self::assertGreaterThan(100, strlen($output));
     }
 
     private function getObjectProperty($object, $propertyName)

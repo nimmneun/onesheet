@@ -13,19 +13,22 @@ class SizeCalculator
     /**
      * @var array
      */
-    private $fonts;
+    private $fonts = array();
 
     /**
      * @var array
      */
-    private $sizes;
+    private $sizes = array();
 
     /**
      * @param string|null $fontsDirectory
+     * @throws \Exception
      */
-    public function __construct($fontsDirectory)
+    public function __construct($fontsDirectory = null)
     {
-        $this->findFonts($this->determineFontsDir($fontsDirectory));
+        if (is_dir($fontsDirectory)) {
+            $this->findFonts($fontsDirectory);
+        }
     }
 
     /**
@@ -33,6 +36,7 @@ class SizeCalculator
      *
      * @param string|null $path
      * @return string|null
+     * @throws \Exception
      */
     public function findFonts($path = null)
     {
@@ -132,23 +136,5 @@ class SizeCalculator
         }
 
         return preg_split('~~u', $value, -1, PREG_SPLIT_NO_EMPTY);
-    }
-
-    /**
-     * Determine the fonts directory.
-     *
-     * @param string $fontsDirectory
-     * @return string
-     */
-    private function determineFontsDir($fontsDirectory)
-    {
-        if (!isset($fontsDirectory) || !is_dir($fontsDirectory)) {
-            $fontsDirectory = '/usr/share/fonts';
-            if (false !== stripos(php_uname(), 'win')) {
-                $fontsDirectory = 'C:/Windows/Fonts';
-            }
-        }
-
-        return rtrim($fontsDirectory, DIRECTORY_SEPARATOR);
     }
 }

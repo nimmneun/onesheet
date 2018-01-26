@@ -13,14 +13,14 @@ class StylerTest extends \PHPUnit_Framework_TestCase
         $initialXml = $styler->getStyleSheetXml();
         $styler->addStyle(new Style());
 
-        $this->assertEquals($initialXml, $styler->getStyleSheetXml());
+        self::assertEquals($initialXml, $styler->getStyleSheetXml());
 
         $style = new Style();
         $styler->addStyle($style->setFontBold());
         $oneNewStyleXml = $styler->getStyleSheetXml();
-        $this->assertNotEquals($initialXml, $oneNewStyleXml);
+        self::assertNotEquals($initialXml, $oneNewStyleXml);
 
         $styler->addStyle($style->setFontBold());
-        $this->assertEquals($oneNewStyleXml, $styler->getStyleSheetXml());
+        self::assertEquals($oneNewStyleXml, $styler->getStyleSheetXml());
     }
 }
