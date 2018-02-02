@@ -109,14 +109,14 @@ class Writer
     /**
      * Add multiple rows at once.
      *
-     * @param array $rows
+     * @param array|\Traversable $rows
      * @param Style $style
      * @throws \InvalidArgumentException
      */
-    public function addRows(array $rows, Style $style = null)
+    public function addRows($rows, Style $style = null)
     {
-        if (count($rows) === count($rows, COUNT_RECURSIVE)) {
-            throw new \InvalidArgumentException('Array must contain arrays!');
+        if (!(is_array($rows) || is_object($rows) && $rows instanceof \Traversable)) {
+            throw new \InvalidArgumentException('Expected array or traversable object as rows', 1517564833);
         }
 
         foreach ($rows as $row) {

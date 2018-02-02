@@ -7,14 +7,13 @@ use OneSheet\Writer;
 
 class WriterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAddRows()
+    public function testAddRowsWithStyle()
     {
         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'onesheet_test.xlsx';
 
         $writer = new Writer();
         $writer->enableCellAutosizing();
         $writer->addRows(array(range(1, 3), range('a', 'z')), new Style());
-        $writer->addRows(array(range(1, 3), range('a', 'z')));
         $writer->writeToFile($fileName);
 
         self::assertFileExists($fileName);
@@ -22,12 +21,42 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider rows
+     */
+    public function testAddRows($rows)
+    {
+        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'onesheet_test.xlsx';
+
+        $writer = new Writer();
+        $writer->addRows($rows);
+        $writer->writeToFile($fileName);
+
+        self::assertFileExists($fileName);
+        unlink($fileName);
+    }
+
+    /**
+     * @return array
+     */
+    public function rows()
+    {
+        return [
+            'array' => [
+                [range(1, 3), range('a', 'z')],
+            ],
+            'traversable object' => [
+                new \ArrayObject([range(1, 3), range('a', 'z')]),
+            ],
+        ];
+    }
+
+    /**
      * @expectedException \InvalidArgumentException
      */
-    public function testAddRowsException()
+    public function testAddRowsExceptionOnNonArrayOrTraversableObject()
     {
         $writer = new Writer();
-        $writer->addRows(array(1, 2, 3, 4, 5));
+        $writer->addRows(new \stdClass());
     }
 
     public function testSetFreezePaneCellId()
