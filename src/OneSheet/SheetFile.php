@@ -2,11 +2,6 @@
 
 namespace OneSheet;
 
-/**
- * Class SheetFile, just to abstract file operations awayyy.
- *
- * @package OneSheet
- */
 class SheetFile
 {
     /**

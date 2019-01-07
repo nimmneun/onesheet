@@ -6,11 +6,6 @@ use OneSheet\Style\Styler;
 use OneSheet\Xml\DefaultXml;
 use OneSheet\Xml\SheetXml;
 
-/**
- * Class Finalizer, a rather quick and dirty solution for now.
- *
- * @package OneSheet
- */
 class Finalizer
 {
     /**

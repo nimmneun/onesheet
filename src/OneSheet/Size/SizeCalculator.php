@@ -5,8 +5,6 @@ namespace OneSheet\Size;
 /**
  * Class SizeCalculator to calculate the approximate width
  * of cells based on the current font, size and content.
- *
- * @package OneSheet\Size
  */
 class SizeCalculator
 {

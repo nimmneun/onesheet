@@ -4,11 +4,6 @@ namespace OneSheet\Style;
 
 use OneSheet\Xml\StyleXml;
 
-/**
- * Class Font
- *
- * @package OneSheet
- */
 class Font implements Component
 {
     /**

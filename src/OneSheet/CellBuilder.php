@@ -6,10 +6,8 @@ use OneSheet\Xml\CellXml;
 
 /**
  * Class CellBuilder to build xml cell strings.
- * Wheter a numeric value is written as a number or string type cell
+ * Whether a numeric value is written as a number or string type cell
  * is simply determined by type, to allow for some control by typecasting.
- *
- * @package OneSheet
  */
 class CellBuilder
 {

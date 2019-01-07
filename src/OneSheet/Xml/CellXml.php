@@ -2,11 +2,6 @@
 
 namespace OneSheet\Xml;
 
-/**
- * Class CellXml
- *
- * @package OneSheet
- */
 class CellXml
 {
     /**

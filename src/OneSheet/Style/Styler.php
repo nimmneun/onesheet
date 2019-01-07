@@ -6,8 +6,6 @@ use OneSheet\Xml\StyleXml;
 
 /**
  * Class Styler to keep track of registered styles.
- *
- * @package OneSheet
  */
 class Styler
 {
