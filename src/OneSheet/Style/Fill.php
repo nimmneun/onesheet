@@ -4,11 +4,6 @@ namespace OneSheet\Style;
 
 use OneSheet\Xml\StyleXml;
 
-/**
- * Class Fill
- *
- * @package OneSheet
- */
 class Fill implements Component
 {
     /**

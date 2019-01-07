@@ -4,11 +4,6 @@ namespace OneSheet\Style;
 
 use OneSheet\Xml\StyleXml;
 
-/**
- * Class Border for reusable border definitions.
- *
- * @package OneSheet
- */
 class Border implements Component
 {
     /**

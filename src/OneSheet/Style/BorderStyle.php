@@ -2,11 +2,6 @@
 
 namespace OneSheet\Style;
 
-/**
- * Class BorderStyle with basic border style constants.
- *
- * @package OneSheet
- */
 class BorderStyle
 {
     const THIN = 'thin';

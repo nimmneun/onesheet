@@ -2,11 +2,6 @@
 
 namespace OneSheet\Style;
 
-/**
- * Class Type with border type constants.
- *
- * @package OneSheet
- */
 class BorderType
 {
     const LEFT = 'left';

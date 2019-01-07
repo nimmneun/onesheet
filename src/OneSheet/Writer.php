@@ -6,11 +6,6 @@ use OneSheet\Size\SizeCalculator;
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
 
-/**
- * Class Writer
- *
- * @package OneSheet
- */
 class Writer
 {
     /**
@@ -50,7 +45,7 @@ class Writer
     }
 
     /**
-     * All cells _above_ this cell will be frozen/fixed.
+     * All cells _above_ this cell (e.g. A2) will be frozen/fixed.
      *
      * @param string $cellId
      */
@@ -110,13 +105,13 @@ class Writer
      * Add multiple rows at once.
      *
      * @param array|\Traversable $rows
-     * @param Style $style
+     * @param Style              $style
      * @throws \InvalidArgumentException
      */
     public function addRows($rows, Style $style = null)
     {
-        if (!(is_array($rows) || is_object($rows) && $rows instanceof \Traversable)) {
-            throw new \InvalidArgumentException('Expected array or traversable object as rows', 1517564833);
+        if (!is_array($rows) && false === $rows instanceof \Traversable) {
+            throw new \InvalidArgumentException('Expected array or traversable object as rows');
         }
 
         foreach ($rows as $row) {

@@ -4,11 +4,6 @@ namespace OneSheet\Style;
 
 use OneSheet\Xml\StyleXml;
 
-/**
- * Class Style
- *
- * @package OneSheet
- */
 class Style implements Component
 {
     /**

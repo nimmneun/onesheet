@@ -2,11 +2,6 @@
 
 namespace OneSheet\Xml;
 
-/**
- * Class RowXml
- *
- * @package OneSheet
- */
 class RowXml
 {
     /**

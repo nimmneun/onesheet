@@ -2,17 +2,12 @@
 
 namespace OneSheet;
 
-use OneSheet\Style\Font;
-use OneSheet\Xml\RowXml;
-use OneSheet\Style\Style;
-use OneSheet\Xml\SheetXml;
 use OneSheet\Size\SizeCalculator;
+use OneSheet\Style\Font;
+use OneSheet\Style\Style;
+use OneSheet\Xml\RowXml;
+use OneSheet\Xml\SheetXml;
 
-/**
- * Class Sheet
- *
- * @package OneSheet
- */
 class Sheet
 {
     /**

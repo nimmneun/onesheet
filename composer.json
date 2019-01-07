@@ -29,6 +29,7 @@
         "phpunit/phpunit": "^4"
     },
     "suggest": {
+        "ext-mbstring": "Required for cell with auto sizing",
         "ext-gd": "Required for accurate cell width sizing only."
     }
 }

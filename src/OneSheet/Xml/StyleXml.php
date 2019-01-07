@@ -2,11 +2,6 @@
 
 namespace OneSheet\Xml;
 
-/**
- * Class StyleXml
- *
- * @package OneSheet
- */
 class StyleXml
 {
     /**
