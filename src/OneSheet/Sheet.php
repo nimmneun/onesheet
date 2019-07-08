@@ -67,8 +67,6 @@ class Sheet
     private $maxColumnWidth = 254.86;
 
     /**
-     * Sheet constructor.
-     *
      * @param CellBuilder    $cellBuilder
      * @param SizeCalculator $sizeCalculator
      */

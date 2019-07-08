@@ -4,12 +4,12 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5.4.4 - 5.6.* and 7.* with cell auto-sizing and styling support.
+OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5 and PHP 7 with cell auto-sizing and styling support.
 
 ![alt text](autosizing_excel_screencap.png "OneSheet excel output example")
 
 ### What it does
-- Write a single sheet fast and with a small memory footprint.
+- Write a single spreadsheet fast and with a small memory footprint.
 - Freeze the first [n] rows to have a fixed table header/headline.
 - Use different fonts, styles, borders and background colors on a row level.
 - Set your own custom column width per column.
@@ -50,22 +50,23 @@ $onesheet->writeToFile('hello_world.xlsx');
 
 #### Available Writer operations
 ```
-Writer::setFreezePaneCellId(string cellId)
-Writer::setFixedColumnWidths(array columnWidths)
-Writer::setColumnWidthLimits(float minWidth, float maxWidth)
+Writer::setFreezePaneCellId(string $cellId)
+Writer::setPrintTitleRange(int $startRow, int $endRow)
+Writer::setFixedColumnWidths(array $columnWidths)
+Writer::setColumnWidthLimits(float $minWidth, float $maxWidth)
 Writer::enableCellAutosizing()
 Writer::disableCellAutosizing()
-Writer::addRows(array rows, style)
-Writer::addRow(array row, style)
-Writer::writeToFile(string fileName)
-Writer::writeToBrowser(string fileName)
+Writer::addRows(array $rows, Style $style)
+Writer::addRow(array $row, Style $style)
+Writer::writeToFile(string $fileName)
+Writer::writeToBrowser(string $fileName)
 ```
 
 #### Adding font styles
 ```
-Style::setFontName(string name)
-Style::setFontSize(int size)
-Style::setFontColor(string color)
+Style::setFontName(string $name)
+Style::setFontSize(int $size)
+Style::setFontColor(string $color)
 Style::setFontBold()
 Style::setFontItalic()
 Style::setFontUnderline()
@@ -73,18 +74,18 @@ Style::setFontStrikethrough()
 ```
 #### Adding background colors (fills)
 ```
-Style::setFillColor(string color)
+Style::setFillColor(string $color)
 ```
 
 #### Adding borders
 ```
-Style::setSurroundingBorder(style, color)
-Style::setBorderLeft(style, color)
-Style::setBorderRight(style, color)
-Style::setBorderTop(style, color)
-Style::setBorderBottom(style, color)
-Style::setBorderDiagonalUp(style, color)
-Style::setBorderDiagonalDown(style, color)
+Style::setSurroundingBorder(string $style, string $color)
+Style::setBorderLeft(string $style, string $color)
+Style::setBorderRight(string $style, string $color)
+Style::setBorderTop(string $style, string $color)
+Style::setBorderBottom(string $style, string $color)
+Style::setBorderDiagonalUp(string $style, string $color)
+Style::setBorderDiagonalDown(string $style, string $color)
 ```
 
 ### Cell autosizing
@@ -105,16 +106,21 @@ Keep in mind though ... you can improve runtimes for larger datasets by disablin
 require_once '../vendor/autoload.php';
 
 // create a header style
-$headerStyle = new \OneSheet\Style\Style();
-$headerStyle->setFontSize(13)->setFontBold()->setFontColor('FFFFFF')->setFillColor('777777');
+$headerStyle = (new \OneSheet\Style\Style())
+    ->setFontSize(13)
+    ->setFontBold()
+    ->setFontColor('FFFFFF')
+    ->setFillColor('777777');
 
 // create a data style
-$dataStyle1 = new \OneSheet\Style\Style();
-$dataStyle1->setFontName('Segoe UI')->setFontSize(10);
+$dataStyle1 = (new \OneSheet\Style\Style());
+    ->setFontName('Segoe UI')
+    ->setFontSize(10);
 
 // create a second data style
-$dataStyle2 = new \OneSheet\Style\Style();
-$dataStyle2->setFontName('Arial')->setFillColor('F7F7F7');
+$dataStyle2 = (new \OneSheet\Style\Style());
+    ->setFontName('Arial')
+    ->setFillColor('F7F7F7');
 
 // prepare some dummy header data
 $dummyHeader = array('Strings', 'Ints', 'Floats', 'Dates', 'Times', 'Uids');
@@ -167,40 +173,6 @@ $onesheet->setFixedColumnWidths(array(5 => 10, 6 => 10, 7 => 10));
 
 // write everything to the specified file
 $onesheet->writeToFile(str_replace('.php', '_onesheet.xlsx', __FILE__));
-```
-
-### Playing with colors
-```php
-<?php
-
-require_once '../vendor/autoload.php';
-
-// initialize and enable cellsizing
-$onesheet = new \OneSheet\Writer();
-$onesheet->enableCellAutosizing();
-
-// generate dummy data
-$data = array_map(function ($x) {
-    return str_repeat($x, 10);
-}, range(chr(40), chr(120)));
-
-// write data while changing colors
-$t = -microtime(1);
-for ($i = 0; $i <= 255; $i++) {
-    $style = new OneSheet\Style\Style();
-    fadeColors($style, 33, 77, $i % 255);
-    $onesheet->addRow($data, $style);
-}
-echo $t + microtime(1) . PHP_EOL;
-
-$onesheet->writeToFile(str_replace('.php', '.xlsx', __FILE__));
-
-function fadeColors(\OneSheet\Style\Style $style, $r = 0, $g = 0, $b = 0) {
-    $decHexCss = function ($n) { return sprintf('%02s', dechex($n)); };
-    $fontColor = $decHexCss($r) . $decHexCss($g) . $decHexCss($b);
-    $fillColor = $decHexCss(255-$r) . $decHexCss(255-$g) . $decHexCss(255-$b);
-    $style->setFontColor($fontColor)->setFillColor($fillColor)->setFontSize(9);
-}
 ```
 
 ### Issues, bugs, features and ...

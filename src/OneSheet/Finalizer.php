@@ -29,17 +29,24 @@ class Finalizer
     private $styler;
 
     /**
+     * @var Workbook
+     */
+    private $workbook;
+
+    /**
      * Finalizer constructor.
      *
-     * @param Sheet     $sheet
-     * @param Styler    $styler
-     * @param SheetFile $sheetFile
+     * @param Workbook $workbook
+     * @param Sheet              $sheet
+     * @param Styler             $styler
+     * @param SheetFile          $sheetFile
      */
-    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile)
+    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile, Workbook $workbook)
     {
         $this->sheet = $sheet;
         $this->styler = $styler;
         $this->sheetFile = $sheetFile;
+        $this->workbook = $workbook;
         $this->zip = new \ZipArchive();
     }
 
@@ -70,6 +77,7 @@ class Finalizer
         $this->zip->open($zipFileUrl, \ZipArchive::CREATE);
         $this->finalizeSheet();
         $this->finalizeStyles();
+        $this->finalizeWorkbook();
         $this->finalizeDefaultXmls();
     }
 
@@ -96,6 +104,14 @@ class Finalizer
     }
 
     /**
+     * Write workbook file.
+     */
+    private function finalizeWorkbook()
+    {
+        $this->zip->addFromString('xl/workbook.xml', $this->workbook->getWorkbookXml());
+    }
+
+    /**
      * Add default xmls to zip archive.
      */
     private function finalizeDefaultXmls()
@@ -106,7 +122,6 @@ class Finalizer
         $this->zip->addFromString('docProps/app.xml', DefaultXml::DOCPROPS_APP);
         $this->zip->addFromString('_rels/.rels', DefaultXml::RELS_RELS);
         $this->zip->addFromString('xl/_rels/workbook.xml.rels', DefaultXml::XL_RELS_WORKBOOK);
-        $this->zip->addFromString('xl/workbook.xml', DefaultXml::XL_WORKBOOK);
     }
 
     /**

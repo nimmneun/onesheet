@@ -24,6 +24,11 @@ class Writer
     private $sheet;
 
     /**
+     * @var Workbook
+     */
+    private $workbook;
+
+    /**
      * @var resource
      */
     private $output;
@@ -42,6 +47,7 @@ class Writer
         $this->sheetFile->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
         $this->styler = new Styler();
         $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
+        $this->workbook = new Workbook();
     }
 
     /**
@@ -52,6 +58,18 @@ class Writer
     public function setFreezePaneCellId($cellId)
     {
         $this->sheet->setFreezePaneCellId($cellId);
+    }
+
+    /**
+     * Set the range of rows to repeat at the top of each page when printing the
+     * excel file. $startRow=1 and $endRow=1 will repeat the first row only.
+     *
+     * @param int $startRow
+     * @param int $endRow
+     */
+    public function setPrintTitleRange($startRow, $endRow)
+    {
+        $this->workbook->setPrintTitleRange($startRow, $endRow);
     }
 
     /**
@@ -80,7 +98,7 @@ class Writer
     }
 
     /**
-     * Start recording row specs for column autosizing.
+     * Start recording row specs for column auto-sizing.
      *
      * @return Writer
      */
@@ -142,7 +160,7 @@ class Writer
     public function writeToFile($fileName = 'report.xlsx')
     {
         $this->output = fopen($fileName, 'w');
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->workbook);
         $finalizer->finalize($this->output);
     }
 
@@ -154,7 +172,7 @@ class Writer
     public function writeToBrowser($fileName = 'report.xlsx')
     {
         $this->output = fopen('php://output', 'w');
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile);
+        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->workbook);
         $this->sendHeaders($fileName);
         $finalizer->finalize($this->output);
     }
