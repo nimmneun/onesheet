@@ -118,7 +118,7 @@ class Finalizer
     {
         $this->zip->addFromString('[Content_Types].xml', DefaultXml::CONTENT_TYPES);
         $this->zip->addFromString('docProps/core.xml',
-            sprintf(DefaultXml::DOCPROPS_CORE, date(DATE_ISO8601), date(DATE_ISO8601)));
+            sprintf(DefaultXml::DOCPROPS_CORE, date(DATE_W3C), date(DATE_W3C)));
         $this->zip->addFromString('docProps/app.xml', DefaultXml::DOCPROPS_APP);
         $this->zip->addFromString('_rels/.rels', DefaultXml::RELS_RELS);
         $this->zip->addFromString('xl/_rels/workbook.xml.rels', DefaultXml::XL_RELS_WORKBOOK);
