@@ -61,11 +61,15 @@ class CellBuilder
     {
         $cellId = $this->getCellId($cellNumber, $rowNumber);
 
-        if (is_int($cellValue) || is_float($cellValue)) {
+        if (is_numeric($cellValue)) {
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $cellValue);
-        } elseif (is_bool($cellValue)) {
+        }
+
+        if (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
-        } elseif (0 === strlen($cellValue)) {
+        }
+
+        if ('' === $cellValue) {
             return 0 === $styleId ? '' : sprintf(CellXml::EMPTY_XML, $cellId, $styleId);
         }
 
