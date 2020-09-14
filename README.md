@@ -3,8 +3,10 @@
 [![Build Status](https://travis-ci.org/nimmneun/onesheet.svg?branch=master)](https://travis-ci.org/nimmneun/onesheet)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nimmneun/onesheet/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nimmneun/onesheet/?branch=master)
+[![Downloads](https://img.shields.io/packagist/dm/nimmneun/onesheet)](https://img.shields.io/packagist/dm/nimmneun/onesheet)
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5 and PHP 7 with cell auto-sizing and styling support.
+
+OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5, PHP 7 & PHP 8 with cell auto-sizing and styling support.
 
 ![alt text](autosizing_excel_screencap.png "OneSheet excel output example")
 
@@ -88,16 +90,17 @@ Style::setBorderDiagonalUp(string $style, string $color)
 Style::setBorderDiagonalDown(string $style, string $color)
 ```
 
-### Cell autosizing
+### Cell auto-sizing
 ##### ... is cool, but comes with heavy performance impacts - especially when dealing with multibyte characters like ä, ß, Æ, ポ.
 Keep in mind though ... you can improve runtimes for larger datasets by disabling it after adding a decent number of rows.
 
 | Impacts of autosizing                 | 100k rows * 10 cols * 5 chars | 100k rows * 10 cols * 10 chars | 100k rows * 10 cols * 20 chars | 100k rows * 10 cols * 40 chars |
 | ------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
-| Autosizing OFF (Single Byte Chars)    | 18 seconds                    | 18 seconds                     | 19 seconds                     | 20 seconds                     |
-| Autosizing ON  (Single Byte Chars)    | 23 seconds (+27%)             | 27 seconds (+50%)              | 34 seconds (+78%)              | 49 seconds (+145%)             |
-| Autosizing OFF (Multi Byte Chars)     | 20 seconds                    | 21 seconds                     | 23 seconds                     | 26 seconds                     |
-| Autosizing ON  (Multi Byte Chars)     | 29 seconds (+45%)             | 36 seconds (+71%)              | 47 seconds (+104%)             | 69 seconds (+126%)             |
+| Autosizing OFF (Single Byte Chars)    | 7.6 seconds                   | 7.6 seconds                    | 7.7 seconds                    | 7.7 seconds                    |
+| Autosizing ON  (Single Byte Chars)    | 9.4 seconds (+23%)            | 10.3 seconds (+35%)            | 12.4 seconds (+61%)            | 16.5 seconds (+114%)           |
+| Autosizing OFF (Multi Byte Chars)     | 7.9 seconds                   | 8.4 seconds                    | 9.1 seconds                    | 9.8 seconds                    |
+| Autosizing ON  (Multi Byte Chars)     | 10.7 seconds (+35%)           | 13.0 seconds (+54%)            | 17.1 seconds (+87%)            | 23.3 seconds (+137%)           |
+*Intel Xeon E3-1220, Debian GNU/Linux 9.13, PHP 7.2.27-1+0~20200123.34+debian9~1.gbp63c0bc* 
 
 ### Additional examples
 ```php
@@ -113,12 +116,12 @@ $headerStyle = (new \OneSheet\Style\Style())
     ->setFillColor('777777');
 
 // create a data style
-$dataStyle1 = (new \OneSheet\Style\Style());
+$dataStyle1 = (new \OneSheet\Style\Style())
     ->setFontName('Segoe UI')
     ->setFontSize(10);
 
 // create a second data style
-$dataStyle2 = (new \OneSheet\Style\Style());
+$dataStyle2 = (new \OneSheet\Style\Style())
     ->setFontName('Arial')
     ->setFillColor('F7F7F7');
 
