@@ -94,7 +94,7 @@ class SizeCalculator
     {
         if (!isset($this->sizes[$fontName][$fontSize][$char])) {
             $this->sizes[$fontName][$fontSize][$char] =
-                $this->calculateCharacterWith($fontName, $fontSize, $char);
+                $this->calculateCharacterWidth($fontName, $fontSize, $char);
         }
 
         return $this->sizes[$fontName][$fontSize][$char];
@@ -110,7 +110,7 @@ class SizeCalculator
      *
      * @return float
      */
-    private function calculateCharacterWith($fontName, $fontSize, $char)
+    private function calculateCharacterWidth($fontName, $fontSize, $char)
     {
         if (isset($this->fonts[$fontName])) {
             $box = imageftbbox($fontSize, 0, $this->fonts[$fontName], str_repeat($char, 100));
