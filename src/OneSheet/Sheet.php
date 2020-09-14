@@ -26,7 +26,7 @@ class Sheet
     private $useCellAutosizing = false;
 
     /**
-     * @var int
+     * @var string
      */
     private $freezePaneCellId;
 
@@ -120,8 +120,8 @@ class Sheet
     /**
      * Set lower and/or upper limits for column widths.
      *
-     * @param float|null $minWidth
-     * @param float|null $maxWidth
+     * @param int|float|null $minWidth
+     * @param int|float|null $maxWidth
      */
     public function setColumnWidthLimits($minWidth = null, $maxWidth = null)
     {
