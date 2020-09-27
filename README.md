@@ -100,6 +100,7 @@ Keep in mind though ... you can improve runtimes for larger datasets by disablin
 | Autosizing ON  (Single Byte Chars)    | 9.4 seconds (+23%)            | 10.3 seconds (+35%)            | 12.4 seconds (+61%)            | 16.5 seconds (+114%)           |
 | Autosizing OFF (Multi Byte Chars)     | 7.9 seconds                   | 8.4 seconds                    | 9.1 seconds                    | 9.8 seconds                    |
 | Autosizing ON  (Multi Byte Chars)     | 10.7 seconds (+35%)           | 13.0 seconds (+54%)            | 17.1 seconds (+87%)            | 23.3 seconds (+137%)           |
+
 *Intel Xeon E3-1220, Debian GNU/Linux 9.13, PHP 7.2.27-1+0~20200123.34+debian9~1.gbp63c0bc* 
 
 ### Additional examples
