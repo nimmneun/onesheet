@@ -108,7 +108,7 @@ class Finalizer
 
     /**
      * Write workbook file.
-     * @param array $sheetNames
+     * @param string[] $sheetNames
      */
     private function finalizeWorkbook(array $sheetNames)
     {

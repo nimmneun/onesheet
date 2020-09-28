@@ -82,7 +82,7 @@ class Writer
      * If used alongside cell autosizing, these should be set
      * after the last row has been added.
      *
-     * @param array $columnWidths
+     * @param int[]|float[] $columnWidths
      * @throws \InvalidArgumentException
      */
     public function setFixedColumnWidths(array $columnWidths)

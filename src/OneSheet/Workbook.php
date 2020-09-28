@@ -33,36 +33,42 @@ class Workbook
     }
 
     /**
+     * Get final/combined XML for workbook.xml file.
+     *
      * @param string[] $sheetNames
      * @return string
      */
     public function getWorkbookXml(array $sheetNames)
     {
-        $sheets = $this->getSheetsXml($sheetNames);
+        $sheets = $this->getWorkbookSheetsXml($sheetNames);
         $definedNames = $this->getDefinedNamesXml($sheetNames);
 
         return sprintf(WorkbookXml::WORKBOOK_XML, $sheets, $definedNames);
     }
 
     /**
+     * Get XML for sheet relations of the workbook.
+     *
      * @param string[] $sheetNames
      * @return string
      */
     public function getWorkbookRelsXml($sheetNames)
     {
-        $sheets = '';
+        $relations = '';
         foreach ($sheetNames as $key => $sheetName) {
-            $sheets .= sprintf(WorkbookXml::WORKBOOK_REL_XML, $key + 1, $sheetName);
+            $relations .= sprintf(WorkbookXml::WORKBOOK_REL_XML, $key + 1, $sheetName);
         }
 
-        return sprintf(WorkbookXml::WORKBOOK_RELS_XML, $sheets);
+        return sprintf(WorkbookXml::WORKBOOK_RELS_XML, $relations);
     }
 
     /**
+     * Generate xml with all sheet names that should be linked to the workbook.
+     *
      * @param string[] $sheetNames
      * @return string
      */
-    private function getSheetsXml($sheetNames)
+    private function getWorkbookSheetsXml($sheetNames)
     {
         $sheets = '';
         foreach ($sheetNames as $key => $sheetName) {
@@ -73,6 +79,9 @@ class Workbook
     }
 
     /**
+     * Generate xml used for repeatable headers when printing of exporting to PDF,
+     * or empty string if none are set.
+     *
      * @param string[] $sheetNames
      * @return string
      */
