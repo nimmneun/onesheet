@@ -7,6 +7,8 @@ use OneSheet\Xml\WorkbookXml;
 
 class WorkbookTest extends \PHPUnit_Framework_TestCase
 {
+    const SHEET_ID = 'Sheet1';
+
     public function testWorkbookWithPrintTitles()
     {
         $workbook = new Workbook();
@@ -14,10 +16,10 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
 
         $expectedXml = sprintf(
             WorkbookXml::WORKBOOK_XML,
-            sprintf(WorkbookXml::WORKBOOK_SHEETS_XML, 'Sheet1', 1, 1),
-            sprintf(WorkbookXml::DEFINED_NAMES_XML, 1, 1)
+            sprintf(WorkbookXml::WORKBOOK_SHEETS_XML, self::SHEET_ID, 1, 1),
+            sprintf(WorkbookXml::DEFINED_NAMES_XML, self::SHEET_ID, 1, 1)
         );
-        $this->assertEquals($workbook->getWorkbookXml(['Sheet1']), $expectedXml);
+        $this->assertEquals($workbook->getWorkbookXml([self::SHEET_ID]), $expectedXml);
     }
 
     public function testWorkbookWithoutPrintTitles()
@@ -25,9 +27,9 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
         $workbook = new Workbook();
         $expectedXml = sprintf(
             WorkbookXml::WORKBOOK_XML,
-            sprintf(WorkbookXml::WORKBOOK_SHEETS_XML, 'Sheet1', 1, 1),
+            sprintf(WorkbookXml::WORKBOOK_SHEETS_XML, self::SHEET_ID, 1, 1),
             ''
         );
-        $this->assertEquals($workbook->getWorkbookXml(['Sheet1']), $expectedXml);
+        $this->assertEquals($workbook->getWorkbookXml([self::SHEET_ID]), $expectedXml);
     }
 }
