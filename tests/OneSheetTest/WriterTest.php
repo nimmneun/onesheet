@@ -64,7 +64,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setFreezePaneCellId('A5');
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getObjectProperty($writer, 'sheets');
         $value = $this->getObjectProperty($sheet, 'freezePaneCellId');
 
         self::assertEquals('A5', $value);
@@ -75,7 +75,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->enableCellAutosizing();
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getObjectProperty($writer, 'sheets');
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
         self::assertEquals(true, $value);
@@ -87,7 +87,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer->enableCellAutosizing();
         $writer->disableCellAutosizing();
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getObjectProperty($writer, 'sheets');
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
         self::assertEquals(false, $value);
@@ -100,7 +100,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setFixedColumnWidths($widths);
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getObjectProperty($writer, 'sheets');
         $value = $this->getObjectProperty($sheet, 'columnWidths');
 
         self::assertEquals($widths, $value);
@@ -112,7 +112,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setColumnWidthLimits(3, 10);
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getObjectProperty($writer, 'sheets');
         $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
         $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
 

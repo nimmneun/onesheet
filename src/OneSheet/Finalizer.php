@@ -9,14 +9,14 @@ use OneSheet\Xml\SheetXml;
 class Finalizer
 {
     /**
-     * @var Sheet
+     * @var Sheet[]
      */
-    private $sheet;
+    private $sheets;
 
     /**
-     * @var SheetFile
+     * @var SheetFile[]
      */
-    private $sheetFile;
+    private $sheetFiles;
 
     /**
      * @var \ZipArchive
@@ -34,18 +34,16 @@ class Finalizer
     private $workbook;
 
     /**
-     * Finalizer constructor.
-     *
-     * @param Workbook $workbook
-     * @param Sheet              $sheet
-     * @param Styler             $styler
-     * @param SheetFile          $sheetFile
+     * @param Workbook    $workbook
+     * @param Sheet[]     $sheets
+     * @param Styler      $styler
+     * @param SheetFile[] $sheetFiles
      */
-    public function __construct(Sheet $sheet, Styler $styler, SheetFile $sheetFile, Workbook $workbook)
+    public function __construct(array $sheets, Styler $styler, array $sheetFiles, Workbook $workbook)
     {
-        $this->sheet = $sheet;
+        $this->sheets = $sheets;
         $this->styler = $styler;
-        $this->sheetFile = $sheetFile;
+        $this->sheetFiles = $sheetFiles;
         $this->workbook = $workbook;
         $this->zip = new \ZipArchive();
     }
@@ -75,24 +73,28 @@ class Finalizer
     private function fillZipWithFileContents($zipFileUrl)
     {
         $this->zip->open($zipFileUrl, \ZipArchive::CREATE);
-        $this->finalizeSheet();
+        foreach ($this->sheets as $sheetId => $sheet) {
+            $this->finalizeSheet($this->sheetFiles[$sheetId], $sheet, $sheetId);
+        }
+        $this->finalizeWorkbook(array_keys($this->sheets));
         $this->finalizeStyles();
-        $this->finalizeWorkbook();
         $this->finalizeDefaultXmls();
     }
 
     /**
-     * Wrap up the sheet (write header, column xmls).
+     * @param SheetFile $sheetFile
+     * @param Sheet     $sheet
+     * @param int       $sheetId
      */
-    private function finalizeSheet()
+    private function finalizeSheet($sheetFile, $sheet, $sheetId)
     {
-        $this->sheetFile->fwrite('</sheetData></worksheet>');
-        $this->sheetFile->rewind();
-        $this->sheetFile->fwrite(SheetXml::HEADER_XML);
-        $this->sheetFile->fwrite($this->sheet->getDimensionXml());
-        $this->sheetFile->fwrite($this->sheet->getSheetViewsXml());
-        $this->sheetFile->fwrite($this->sheet->getColsXml());
-        $this->zip->addFile($this->sheetFile->getFilePath(), 'xl/worksheets/sheet1.xml');
+        $sheetFile->fwrite('</sheetData></worksheet>');
+        $sheetFile->rewind();
+        $sheetFile->fwrite(SheetXml::HEADER_XML);
+        $sheetFile->fwrite($sheet->getDimensionXml());
+        $sheetFile->fwrite($sheet->getSheetViewsXml());
+        $sheetFile->fwrite($sheet->getColsXml());
+        $this->zip->addFile($sheetFile->getFilePath(), "xl/worksheets/{$sheetId}.xml");
     }
 
     /**
@@ -105,10 +107,12 @@ class Finalizer
 
     /**
      * Write workbook file.
+     * @param array $sheetIds
      */
-    private function finalizeWorkbook()
+    private function finalizeWorkbook(array $sheetIds)
     {
-        $this->zip->addFromString('xl/workbook.xml', $this->workbook->getWorkbookXml());
+        $this->zip->addFromString('xl/workbook.xml', $this->workbook->getWorkbookXml($sheetIds));
+        $this->zip->addFromString('xl/_rels/workbook.xml.rels', $this->workbook->getWorkbookRelsXml($sheetIds));
     }
 
     /**
@@ -121,7 +125,6 @@ class Finalizer
             sprintf(DefaultXml::DOCPROPS_CORE, date(DATE_W3C), date(DATE_W3C)));
         $this->zip->addFromString('docProps/app.xml', DefaultXml::DOCPROPS_APP);
         $this->zip->addFromString('_rels/.rels', DefaultXml::RELS_RELS);
-        $this->zip->addFromString('xl/_rels/workbook.xml.rels', DefaultXml::XL_RELS_WORKBOOK);
     }
 
     /**

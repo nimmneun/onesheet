@@ -2,6 +2,7 @@
 
 namespace OneSheet;
 
+use OneSheet\Xml\DefaultXml;
 use OneSheet\Xml\WorkbookXml;
 
 class Workbook
@@ -32,9 +33,49 @@ class Workbook
     }
 
     /**
+     * @param array $sheetIds
      * @return string
      */
-    public function getWorkbookXml()
+    public function getWorkbookXml(array $sheetIds)
+    {
+        $sheets = $this->getSheetsXml($sheetIds);
+        $definedNames = $this->getDefinedNamesXml();
+
+        return sprintf(WorkbookXml::WORKBOOK_XML, $sheets, $definedNames);
+    }
+
+    /**
+     * @param array $sheetIds
+     * @return string
+     */
+    public function getWorkbookRelsXml($sheetIds)
+    {
+        $sheets = '';
+        foreach ($sheetIds as $key => $sheetId) {
+            $sheets .= sprintf(WorkbookXml::WORKBOOK_REL_XML, $key + 1, $sheetId);
+        }
+
+        return sprintf(WorkbookXml::WORKBOOK_RELS_XML, $sheets);
+    }
+
+    /**
+     * @param array $sheetIds
+     * @return string
+     */
+    private function getSheetsXml($sheetIds)
+    {
+        $sheets = '';
+        foreach ($sheetIds as $key => $sheetId) {
+            $sheets .= sprintf(WorkbookXml::WORKBOOK_SHEETS_XML, $sheetId, $key + 1, $key + 1);
+        }
+
+        return $sheets;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDefinedNamesXml()
     {
         $definedNames = '';
         if ($this->printTitleStart && $this->printTitleEnd) {
@@ -45,6 +86,6 @@ class Workbook
             );
         }
 
-        return sprintf(WorkbookXml::WORKBOOK_XML, $definedNames);
+        return $definedNames;
     }
 }
