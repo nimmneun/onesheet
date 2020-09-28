@@ -34,7 +34,9 @@ class SheetFile
      */
     public function fwrite($string)
     {
-        if (false === fwrite($this->filePointer, $string)) {
+        if (!is_resource($this->filePointer) ||
+            false === fwrite($this->filePointer, $string)
+        ) {
             throw new \RuntimeException("Failed to write to sheet file!");
         }
     }
@@ -44,7 +46,9 @@ class SheetFile
      */
     public function rewind()
     {
-        if (false === rewind($this->filePointer)) {
+        if (!is_resource($this->filePointer) ||
+            false === rewind($this->filePointer)
+        ) {
             throw new \RuntimeException("Failed to rewind sheet file!");
         }
     }
@@ -64,7 +68,10 @@ class SheetFile
      */
     public function __destruct()
     {
-        if (!fclose($this->filePointer) || !unlink($this->filePath)) {
+        if (!is_resource($this->filePointer) ||
+            !fclose($this->filePointer) ||
+            !unlink($this->filePath)
+        ) {
             throw new \RuntimeException('Failed to close sheet file!');
         }
     }

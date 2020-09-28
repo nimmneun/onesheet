@@ -126,6 +126,18 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(255.86, $maxWidth);
     }
 
+    public function testSetPrintTitleRange()
+    {
+        $writer = new Writer();
+        $writer->setPrintTitleRange(1, 2);
+        $workbook = $this->getObjectProperty($writer, 'workbook');
+        $startRanges = $this->getObjectProperty($workbook, 'printTitleStarts');
+        $endRanges = $this->getObjectProperty($workbook, 'printTitleEnds');
+
+        self::assertCount(1, $startRanges);
+        self::assertCount(1, $endRanges);
+    }
+
     public function testGetFonts()
     {
         $writer = new Writer();
@@ -135,7 +147,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     public function testWriteToBrowser()
     {
         $writer = new Writer();
-        $writer->addRow([123,123]);
+        $writer->addRow([123, 123]);
 
         ob_start();
         $writer->writeToBrowser();

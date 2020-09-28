@@ -44,13 +44,13 @@ class Writer
      * file have to have that font on their machine. XLSX does not embed fonts!
      *
      * @param string|null $fontsDirectory
-     * @param string|int  $sheetId
+     * @param string|int  $sheetName
      * @throws \Exception
      */
-    public function __construct($fontsDirectory = null, $sheetId = 1)
+    public function __construct($fontsDirectory = null, $sheetName = 'Sheet1')
     {
         $this->styler = new Styler();
-        $this->switchSheet($sheetId, $fontsDirectory);
+        $this->switchSheet($sheetName, $fontsDirectory);
         $this->workbook = new Workbook();
     }
 
@@ -159,15 +159,15 @@ class Writer
     }
 
     /**
-     * @param string|int  $sheetId
+     * @param string|int  $sheetName
      * @param string|null $fontsDirectory
      * @throws \Exception
      */
-    public function switchSheet($sheetId, $fontsDirectory = null)
+    public function switchSheet($sheetName, $fontsDirectory = null)
     {
-        $sheetId = is_int($sheetId) ? "Sheet{$sheetId}" : $sheetId;
-        isset($this->sheets[$sheetId]) || $this->createNewSheet($fontsDirectory, $sheetId);
-        $this->currentSheet = $sheetId;
+        $sheetName = is_int($sheetName) ? sprintf('Sheet%s', $sheetName) : $sheetName;
+        isset($this->sheets[$sheetName]) || $this->createNewSheet($fontsDirectory, $sheetName);
+        $this->currentSheet = $sheetName;
     }
 
     /**
@@ -212,14 +212,14 @@ class Writer
 
     /**
      * @param string $fontsDirectory
-     * @param string $sheetId
+     * @param string $sheetName
      * @throws \Exception
      */
-    private function createNewSheet($fontsDirectory, $sheetId)
+    private function createNewSheet($fontsDirectory, $sheetName)
     {
-        $this->sheetFiles[$sheetId] = new SheetFile();
-        $this->sheetFiles[$sheetId]->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
-        $this->sheets[$sheetId] = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
+        $this->sheetFiles[$sheetName] = new SheetFile();
+        $this->sheetFiles[$sheetName]->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
+        $this->sheets[$sheetName] = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
     }
 
     /**

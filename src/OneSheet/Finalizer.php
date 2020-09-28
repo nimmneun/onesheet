@@ -73,8 +73,8 @@ class Finalizer
     private function fillZipWithFileContents($zipFileUrl)
     {
         $this->zip->open($zipFileUrl, \ZipArchive::CREATE);
-        foreach ($this->sheets as $sheetId => $sheet) {
-            $this->finalizeSheet($this->sheetFiles[$sheetId], $sheet, $sheetId);
+        foreach ($this->sheets as $sheetName => $sheet) {
+            $this->finalizeSheet($this->sheetFiles[$sheetName], $sheet, $sheetName);
         }
         $this->finalizeWorkbook(array_keys($this->sheets));
         $this->finalizeStyles();
@@ -84,9 +84,9 @@ class Finalizer
     /**
      * @param SheetFile $sheetFile
      * @param Sheet     $sheet
-     * @param string    $sheetId
+     * @param string    $sheetName
      */
-    private function finalizeSheet($sheetFile, $sheet, $sheetId)
+    private function finalizeSheet($sheetFile, $sheet, $sheetName)
     {
         $sheetFile->fwrite('</sheetData></worksheet>');
         $sheetFile->rewind();
@@ -94,7 +94,8 @@ class Finalizer
         $sheetFile->fwrite($sheet->getDimensionXml());
         $sheetFile->fwrite($sheet->getSheetViewsXml());
         $sheetFile->fwrite($sheet->getColsXml());
-        $this->zip->addFile($sheetFile->getFilePath(), "xl/worksheets/{$sheetId}.xml");
+        $this->zip->addFile($sheetFile->getFilePath(),
+            sprintf("xl/worksheets/%s.xml", $sheetName));
     }
 
     /**
@@ -107,12 +108,12 @@ class Finalizer
 
     /**
      * Write workbook file.
-     * @param array $sheetIds
+     * @param array $sheetNames
      */
-    private function finalizeWorkbook(array $sheetIds)
+    private function finalizeWorkbook(array $sheetNames)
     {
-        $this->zip->addFromString('xl/workbook.xml', $this->workbook->getWorkbookXml($sheetIds));
-        $this->zip->addFromString('xl/_rels/workbook.xml.rels', $this->workbook->getWorkbookRelsXml($sheetIds));
+        $this->zip->addFromString('xl/workbook.xml', $this->workbook->getWorkbookXml($sheetNames));
+        $this->zip->addFromString('xl/_rels/workbook.xml.rels', $this->workbook->getWorkbookRelsXml($sheetNames));
     }
 
     /**

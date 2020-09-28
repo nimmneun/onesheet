@@ -17,7 +17,12 @@ class WorkbookXml
     /**
      * Optional XML for repeatable print headers / titles
      */
-    const DEFINED_NAMES_XML = '<definedNames><definedName name="_xlnm.Print_Titles" localSheetId="%d">%s!$%d:$%d</definedName></definedNames>';
+    const DEFINED_NAMES_XML = '<definedNames>%s</definedNames>';
+
+    /**
+     * Required definedName fo repeatable print headers
+     */
+    const DEFINED_NAME_XML = '<definedName name="_xlnm.Print_Titles" localSheetId="%d">%s!$%d:$%d</definedName>';
 
     /**
      * A workbooks sheet file relations.
