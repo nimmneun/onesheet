@@ -47,7 +47,7 @@ class Writer
      * @param string|int  $sheetName
      * @throws \Exception
      */
-    public function __construct($fontsDirectory = null, $sheetName = 'Sheet1')
+    public function __construct($fontsDirectory = null, $sheetName = 'sheet1')
     {
         $this->styler = new Styler();
         $this->switchSheet($sheetName, $fontsDirectory);
@@ -165,7 +165,7 @@ class Writer
      */
     public function switchSheet($sheetName, $fontsDirectory = null)
     {
-        $sheetName = is_int($sheetName) ? sprintf('Sheet%s', $sheetName) : $sheetName;
+        $sheetName = is_int($sheetName) ? sprintf('sheet%s', $sheetName) : $sheetName;
         isset($this->sheets[$sheetName]) || $this->createNewSheet($fontsDirectory, $sheetName);
         $this->currentSheet = $sheetName;
     }
@@ -213,10 +213,16 @@ class Writer
     /**
      * @param string $fontsDirectory
      * @param string $sheetName
-     * @throws \Exception
+     * @throws \Exception|\InvalidArgumentException
      */
     private function createNewSheet($fontsDirectory, $sheetName)
     {
+        $pattern = '\/*?:\[\]';
+        if (strlen($sheetName) === 0 || 1 === preg_match('~[' . $pattern . ']~', $sheetName)) {
+            throw new \InvalidArgumentException(
+                sprintf('sheet name must not be empty and not contain %s', $pattern)
+            );
+        }
         $this->sheetFiles[$sheetName] = new SheetFile();
         $this->sheetFiles[$sheetName]->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
         $this->sheets[$sheetName] = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));

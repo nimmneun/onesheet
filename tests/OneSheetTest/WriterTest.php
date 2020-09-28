@@ -126,6 +126,22 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(255.86, $maxWidth);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowOnInvalidSheetName()
+    {
+        new Writer(null, '[invalid]');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowOnEmptySheetName()
+    {
+        new Writer(null, '');
+    }
+
     public function testSetPrintTitleRange()
     {
         $writer = new Writer();
@@ -158,7 +174,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
 
     private function getFirstSheet($writer)
     {
-        return $this->getObjectProperty($writer, 'sheets')['Sheet1'];
+        return $this->getObjectProperty($writer, 'sheets')['sheet1'];
     }
 
     private function getObjectProperty($object, $propertyName)
