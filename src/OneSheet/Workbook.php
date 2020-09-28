@@ -7,27 +7,28 @@ use OneSheet\Xml\WorkbookXml;
 class Workbook
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $printTitleStart;
+    private $printTitleStarts;
 
     /**
-     * @var int
+     * @var int[]
      */
-    private $printTitleEnd;
+    private $printTitleEnds;
 
     /**
      * Set the range of rows to repeat when printing the excel file.
      * $startRow=1 and $endRow=1 will repeat the first row only.
      *
-     * @param int $startRow
-     * @param int $endRow
+     * @param int    $startRow
+     * @param int    $endRow
+     * @param string $sheetId
      */
-    public function setPrintTitleRange($startRow, $endRow)
+    public function setPrintTitleRange($startRow, $endRow, $sheetId)
     {
         if ($startRow <= $endRow && is_numeric($startRow) && is_numeric($endRow)) {
-            $this->printTitleStart = (int)$startRow;
-            $this->printTitleEnd = (int)$endRow;
+            $this->printTitleStarts[$sheetId] = (int)$startRow;
+            $this->printTitleEnds[$sheetId] = (int)$endRow;
         }
     }
 
@@ -78,14 +79,17 @@ class Workbook
     private function getDefinedNamesXml(array $sheetIds)
     {
         $definedNames = '';
-        if ($this->printTitleStart && $this->printTitleEnd) {
-            foreach ($sheetIds as $sheetId) {
-                $definedNames = sprintf(
-                    WorkbookXml::DEFINED_NAMES_XML,
-                    $sheetId,
-                    $this->printTitleStart,
-                    $this->printTitleEnd
-                );
+        if ($this->printTitleStarts && $this->printTitleEnds) {
+            foreach ($sheetIds as $key => $sheetId) {
+                if (isset($this->printTitleEnds[$sheetId])) {
+                    $definedNames .= sprintf(
+                        WorkbookXml::DEFINED_NAMES_XML,
+                        $key + 1,
+                        $sheetId,
+                        $this->printTitleStarts[$sheetId],
+                        $this->printTitleEnds[$sheetId]
+                    );
+                }
             }
         }
 

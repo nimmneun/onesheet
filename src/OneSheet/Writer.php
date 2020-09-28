@@ -73,7 +73,7 @@ class Writer
      */
     public function setPrintTitleRange($startRow, $endRow)
     {
-        $this->workbook->setPrintTitleRange($startRow, $endRow);
+        $this->workbook->setPrintTitleRange($startRow, $endRow, $this->currentSheet);
     }
 
     /**
