@@ -6,19 +6,19 @@
 [![Downloads](https://img.shields.io/packagist/dm/nimmneun/onesheet)](https://img.shields.io/packagist/dm/nimmneun/onesheet)
 
 
-OneSheet is a simple **single sheet** excel/xlsx file writer for PHP 5, PHP 7 & PHP 8 with cell auto-sizing and styling support.
+OneSheet is a simple **single/multi sheet** excel/xlsx file writer for PHP 5, PHP 7 & PHP 8 with cell auto-sizing and styling support.
 
 ![alt text](autosizing_excel_screencap.png "OneSheet excel output example")
 
 ### What it does
-- Write a single spreadsheet fast and with a small memory footprint.
-- Freeze the first [n] rows to have a fixed table header/headline.
+- Write a single/multiple spreadsheet(s) fast and with a small memory footprint.
+- Freeze the first [n] rows to have a fixed table header/headline per sheet.
 - Use different fonts, styles, borders and background colors on a row level.
 - Set your own custom column width per column.
 - Autosize column widths to fit cell contents. If no fonts are found, rough estimates are used.
 - Define minimum and maximum column widths to keep exceptionally large or small cell contents in check.
 
-### What it doesnt
+### What it doesn't
 - No cell individualisation, everything is applied at a row level.
 - No calculated / formula cells.
 - No conditional formatting.
@@ -54,6 +54,7 @@ $onesheet->writeToFile('hello_world.xlsx');
 ```
 Writer::setFreezePaneCellId(string $cellId)
 Writer::setPrintTitleRange(int $startRow, int $endRow)
+Writer::switchSheet(string $sheetName)
 Writer::setFixedColumnWidths(array $columnWidths)
 Writer::setColumnWidthLimits(float $minWidth, float $maxWidth)
 Writer::enableCellAutosizing()
@@ -178,6 +179,40 @@ $onesheet->setFixedColumnWidths(array(5 => 10, 6 => 10, 7 => 10));
 // write everything to the specified file
 $onesheet->writeToFile(str_replace('.php', '_onesheet.xlsx', __FILE__));
 ```
+
+##### Writing to multiple sheets
+```php
+<?php
+
+require_once '../vendor/autoload.php';
+
+$boldHeader = (new OneSheet\Style\Style())->setFontBold();
+
+// create initial writer instance with sheet name
+$writer = new \OneSheet\Writer(null, 'Invoices');
+$writer->enableCellAutosizing(); // enable for current sheet
+$writer->addRow(['InvoiceNo', 'Amount', 'CustomerNo'], $boldHeader);
+$writer->addRow(['']); // add empty row bcs fancy :D
+$writer->addRow(['I-123', 123.45, 'C-123']);
+
+// create new sheet with specific sheet name
+$writer->switchSheet('Refunds');
+$writer->enableCellAutosizing(); // enable for current sheet
+$writer->addRow(['RefundNo', 'Amount', 'InvoiceNo'], $boldHeader);
+$writer->addRow(['']); // add empty row bcs fancy :D
+$writer->addRow(['R-123', 123.45, 'I-123']);
+
+// create another sheet with specific sheet name
+$writer->switchSheet('Customers');
+$writer->enableCellAutosizing(); // enable for current sheet
+$writer->addRow(['CustomerNo', 'FirstName', 'LastName'], $boldHeader);
+$writer->addRow(['']); // add empty row bcs fancy :D
+$writer->addRow(['C-123', 'Bob', 'Johnson']);
+
+// send file to browser for downloading 
+$writer->writeToBrowser();
+```
+
 
 ### Issues, bugs, features and ...
 Feel free to report any sightings =).
