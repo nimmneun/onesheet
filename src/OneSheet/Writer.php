@@ -34,7 +34,7 @@ class Writer
     private $output;
 
     /**
-     * @var string|int
+     * @var string
      */
     private $currentSheet;
 
@@ -44,7 +44,7 @@ class Writer
      * file have to have that font on their machine. XLSX does not embed fonts!
      *
      * @param string|null $fontsDirectory
-     * @param int         $sheetId
+     * @param string|int  $sheetId
      * @throws \Exception
      */
     public function __construct($fontsDirectory = null, $sheetId = 1)
@@ -113,7 +113,7 @@ class Writer
     }
 
     /**
-     * Stop recording row specs for column autosizing.
+     * Stop recording row specs for column auto-sizing.
      *
      * @return Writer
      */
@@ -211,18 +211,8 @@ class Writer
     }
 
     /**
-     * Return array of available fonts & paths as key value pairs.
-     *
-     * @return array
-     */
-    public function getFonts()
-    {
-        return $this->sheets[$this->currentSheet]->getFonts();
-    }
-
-    /**
      * @param string $fontsDirectory
-     * @param int    $sheetId
+     * @param string $sheetId
      * @throws \Exception
      */
     private function createNewSheet($fontsDirectory, $sheetId)
@@ -230,5 +220,15 @@ class Writer
         $this->sheetFiles[$sheetId] = new SheetFile();
         $this->sheetFiles[$sheetId]->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
         $this->sheets[$sheetId] = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
+    }
+
+    /**
+     * Return array of available fonts & paths as key value pairs.
+     *
+     * @return array
+     */
+    public function getFonts()
+    {
+        return $this->sheets[$this->currentSheet]->getFonts();
     }
 }

@@ -17,9 +17,15 @@ class WorkbookXml
     /**
      * Optional XML for repeatable print headers / titles
      */
-    const DEFINED_NAMES_XML = '<definedNames><definedName name="_xlnm.Print_Titles" localSheetId="0">Sheet1!$%d:$%d</definedName></definedNames>';
+    const DEFINED_NAMES_XML = '<definedNames><definedName name="_xlnm.Print_Titles" localSheetId="0">%s!$%d:$%d</definedName></definedNames>';
 
+    /**
+     * A workbooks sheet file relations.
+     */
     const WORKBOOK_RELS_XML = '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Target="styles.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles"/>%s</Relationships>';
 
+    /**
+     * A single sheet file relation.
+     */
     const WORKBOOK_REL_XML = '<Relationship Id="rId%d" Target="worksheets/%s.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"/>';
 }

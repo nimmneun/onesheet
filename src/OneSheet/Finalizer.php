@@ -84,7 +84,7 @@ class Finalizer
     /**
      * @param SheetFile $sheetFile
      * @param Sheet     $sheet
-     * @param int       $sheetId
+     * @param string    $sheetId
      */
     private function finalizeSheet($sheetFile, $sheet, $sheetId)
     {

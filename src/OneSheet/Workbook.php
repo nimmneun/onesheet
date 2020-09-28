@@ -2,7 +2,6 @@
 
 namespace OneSheet;
 
-use OneSheet\Xml\DefaultXml;
 use OneSheet\Xml\WorkbookXml;
 
 class Workbook
@@ -33,19 +32,19 @@ class Workbook
     }
 
     /**
-     * @param array $sheetIds
+     * @param string[] $sheetIds
      * @return string
      */
     public function getWorkbookXml(array $sheetIds)
     {
         $sheets = $this->getSheetsXml($sheetIds);
-        $definedNames = $this->getDefinedNamesXml();
+        $definedNames = $this->getDefinedNamesXml($sheetIds);
 
         return sprintf(WorkbookXml::WORKBOOK_XML, $sheets, $definedNames);
     }
 
     /**
-     * @param array $sheetIds
+     * @param string[] $sheetIds
      * @return string
      */
     public function getWorkbookRelsXml($sheetIds)
@@ -59,7 +58,7 @@ class Workbook
     }
 
     /**
-     * @param array $sheetIds
+     * @param string[] $sheetIds
      * @return string
      */
     private function getSheetsXml($sheetIds)
@@ -73,17 +72,21 @@ class Workbook
     }
 
     /**
+     * @param string[] $sheetIds
      * @return string
      */
-    private function getDefinedNamesXml()
+    private function getDefinedNamesXml(array $sheetIds)
     {
         $definedNames = '';
         if ($this->printTitleStart && $this->printTitleEnd) {
-            $definedNames = sprintf(
-                WorkbookXml::DEFINED_NAMES_XML,
-                $this->printTitleStart,
-                $this->printTitleEnd
-            );
+            foreach ($sheetIds as $sheetId) {
+                $definedNames = sprintf(
+                    WorkbookXml::DEFINED_NAMES_XML,
+                    $sheetId,
+                    $this->printTitleStart,
+                    $this->printTitleEnd
+                );
+            }
         }
 
         return $definedNames;
