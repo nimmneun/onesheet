@@ -64,7 +64,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setFreezePaneCellId('A5');
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getFirstSheet($writer);
         $value = $this->getObjectProperty($sheet, 'freezePaneCellId');
 
         self::assertEquals('A5', $value);
@@ -75,7 +75,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->enableCellAutosizing();
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getFirstSheet($writer);
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
         self::assertEquals(true, $value);
@@ -87,7 +87,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer->enableCellAutosizing();
         $writer->disableCellAutosizing();
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getFirstSheet($writer);
         $value = $this->getObjectProperty($sheet, 'useCellAutosizing');
 
         self::assertEquals(false, $value);
@@ -100,7 +100,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setFixedColumnWidths($widths);
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getFirstSheet($writer);
         $value = $this->getObjectProperty($sheet, 'columnWidths');
 
         self::assertEquals($widths, $value);
@@ -112,7 +112,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $writer = new Writer();
         $writer->setColumnWidthLimits(3, 10);
 
-        $sheet = $this->getObjectProperty($writer, 'sheet');
+        $sheet = $this->getFirstSheet($writer);
         $minWidth = $this->getObjectProperty($sheet, 'minColumnWidth');
         $maxWidth = $this->getObjectProperty($sheet, 'maxColumnWidth');
 
@@ -126,6 +126,34 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(255.86, $maxWidth);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowOnInvalidSheetName()
+    {
+        new Writer(null, '[invalid]');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowOnEmptySheetName()
+    {
+        new Writer(null, '');
+    }
+
+    public function testSetPrintTitleRange()
+    {
+        $writer = new Writer();
+        $writer->setPrintTitleRange(1, 2);
+        $workbook = $this->getObjectProperty($writer, 'workbook');
+        $startRanges = $this->getObjectProperty($workbook, 'printTitleStarts');
+        $endRanges = $this->getObjectProperty($workbook, 'printTitleEnds');
+
+        self::assertCount(1, $startRanges);
+        self::assertCount(1, $endRanges);
+    }
+
     public function testGetFonts()
     {
         $writer = new Writer();
@@ -135,13 +163,18 @@ class WriterTest extends \PHPUnit_Framework_TestCase
     public function testWriteToBrowser()
     {
         $writer = new Writer();
-        $writer->addRow([123,123]);
+        $writer->addRow([123, 123]);
 
         ob_start();
         $writer->writeToBrowser();
         $output = ob_get_clean();
 
         self::assertGreaterThan(100, strlen($output));
+    }
+
+    private function getFirstSheet($writer)
+    {
+        return $this->getObjectProperty($writer, 'sheets')['sheet1'];
     }
 
     private function getObjectProperty($object, $propertyName)

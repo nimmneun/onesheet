@@ -9,9 +9,9 @@ use OneSheet\Style\Styler;
 class Writer
 {
     /**
-     * @var SheetFile
+     * @var SheetFile[]
      */
-    private $sheetFile;
+    private $sheetFiles;
 
     /**
      * @var Styler
@@ -19,9 +19,9 @@ class Writer
     private $styler;
 
     /**
-     * @var Sheet
+     * @var Sheet[]
      */
-    private $sheet;
+    private $sheets;
 
     /**
      * @var Workbook
@@ -34,19 +34,23 @@ class Writer
     private $output;
 
     /**
+     * @var string
+     */
+    private $currentSheet;
+
+    /**
      * If a $fontsDirectory is supplied it will be scanned for usable ttf/otf fonts
      * to be used for cell auto-sizing. Keep in mind though - viewers of an excel
      * file have to have that font on their machine. XLSX does not embed fonts!
      *
      * @param string|null $fontsDirectory
+     * @param string|int  $sheetName
      * @throws \Exception
      */
-    public function __construct($fontsDirectory = null)
+    public function __construct($fontsDirectory = null, $sheetName = 'sheet1')
     {
-        $this->sheetFile = new SheetFile();
-        $this->sheetFile->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
         $this->styler = new Styler();
-        $this->sheet = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
+        $this->switchSheet($sheetName, $fontsDirectory);
         $this->workbook = new Workbook();
     }
 
@@ -57,7 +61,7 @@ class Writer
      */
     public function setFreezePaneCellId($cellId)
     {
-        $this->sheet->setFreezePaneCellId($cellId);
+        $this->sheets[$this->currentSheet]->setFreezePaneCellId($cellId);
     }
 
     /**
@@ -69,7 +73,7 @@ class Writer
      */
     public function setPrintTitleRange($startRow, $endRow)
     {
-        $this->workbook->setPrintTitleRange($startRow, $endRow);
+        $this->workbook->setPrintTitleRange($startRow, $endRow, $this->currentSheet);
     }
 
     /**
@@ -78,12 +82,12 @@ class Writer
      * If used alongside cell autosizing, these should be set
      * after the last row has been added.
      *
-     * @param array $columnWidths
+     * @param int[]|float[] $columnWidths
      * @throws \InvalidArgumentException
      */
     public function setFixedColumnWidths(array $columnWidths)
     {
-        $this->sheet->setFixedColumnWidths($columnWidths);
+        $this->sheets[$this->currentSheet]->setFixedColumnWidths($columnWidths);
     }
 
     /**
@@ -94,7 +98,7 @@ class Writer
      */
     public function setColumnWidthLimits($minWidth = null, $maxWidth = null)
     {
-        $this->sheet->setColumnWidthLimits($minWidth, $maxWidth);
+        $this->sheets[$this->currentSheet]->setColumnWidthLimits($minWidth, $maxWidth);
     }
 
     /**
@@ -104,18 +108,18 @@ class Writer
      */
     public function enableCellAutosizing()
     {
-        $this->sheet->enableCellAutosizing();
+        $this->sheets[$this->currentSheet]->enableCellAutosizing();
         return $this;
     }
 
     /**
-     * Stop recording row specs for column autosizing.
+     * Stop recording row specs for column auto-sizing.
      *
      * @return Writer
      */
     public function disableCellAutosizing()
     {
-        $this->sheet->disableCellAutosizing();
+        $this->sheets[$this->currentSheet]->disableCellAutosizing();
         return $this;
     }
 
@@ -148,8 +152,22 @@ class Writer
         if (!empty($row)) {
             $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
             $this->styler->addStyle($style);
-            $this->sheetFile->fwrite($this->sheet->addRow($row, $style));
+            $this->sheetFiles[$this->currentSheet]->fwrite(
+                $this->sheets[$this->currentSheet]->addRow($row, $style)
+            );
         }
+    }
+
+    /**
+     * @param string|int  $sheetName
+     * @param string|null $fontsDirectory
+     * @throws \Exception
+     */
+    public function switchSheet($sheetName, $fontsDirectory = null)
+    {
+        $sheetName = is_int($sheetName) ? sprintf('sheet%s', $sheetName) : $sheetName;
+        isset($this->sheets[$sheetName]) || $this->createNewSheet($fontsDirectory, $sheetName);
+        $this->currentSheet = $sheetName;
     }
 
     /**
@@ -160,7 +178,7 @@ class Writer
     public function writeToFile($fileName = 'report.xlsx')
     {
         $this->output = fopen($fileName, 'w');
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->workbook);
+        $finalizer = new Finalizer($this->sheets, $this->styler, $this->sheetFiles, $this->workbook);
         $finalizer->finalize($this->output);
     }
 
@@ -172,7 +190,7 @@ class Writer
     public function writeToBrowser($fileName = 'report.xlsx')
     {
         $this->output = fopen('php://output', 'w');
-        $finalizer = new Finalizer($this->sheet, $this->styler, $this->sheetFile, $this->workbook);
+        $finalizer = new Finalizer($this->sheets, $this->styler, $this->sheetFiles, $this->workbook);
         $this->sendHeaders($fileName);
         $finalizer->finalize($this->output);
     }
@@ -193,12 +211,30 @@ class Writer
     }
 
     /**
+     * @param string $fontsDirectory
+     * @param string $sheetName
+     * @throws \Exception|\InvalidArgumentException
+     */
+    private function createNewSheet($fontsDirectory, $sheetName)
+    {
+        $pattern = '\/*?:\[\]';
+        if (strlen($sheetName) === 0 || 1 === preg_match('~[' . $pattern . ']~', $sheetName)) {
+            throw new \InvalidArgumentException(
+                sprintf('sheet name must not be empty and not contain %s', $pattern)
+            );
+        }
+        $this->sheetFiles[$sheetName] = new SheetFile();
+        $this->sheetFiles[$sheetName]->fwrite(str_repeat(' ', 1024 * 1024) . '<sheetData>');
+        $this->sheets[$sheetName] = new Sheet(new CellBuilder(), new SizeCalculator($fontsDirectory));
+    }
+
+    /**
      * Return array of available fonts & paths as key value pairs.
      *
      * @return array
      */
     public function getFonts()
     {
-        return $this->sheet->getFonts();
+        return $this->sheets[$this->currentSheet]->getFonts();
     }
 }

@@ -77,7 +77,7 @@ class Sheet
     }
 
     /**
-     * Enable cell autosizing (~30-100% performance hit!).
+     * Enable cell auto-sizing (~30-100% performance hit!).
      */
     public function enableCellAutosizing()
     {
@@ -85,7 +85,7 @@ class Sheet
     }
 
     /**
-     * Disable cell autosizing (default).
+     * Disable cell auto-sizing (default).
      */
     public function disableCellAutosizing()
     {
@@ -103,7 +103,7 @@ class Sheet
     /**
      * Set custom column widths with 0 representing the first column.
      *
-     * @param array $columnWidths
+     * @param int[]|float[] $columnWidths
      * @throws \InvalidArgumentException
      */
     public function setFixedColumnWidths(array $columnWidths)
@@ -133,7 +133,7 @@ class Sheet
      * Return array containing all column widths, limited to min or max
      * column width, if one or both of them are set.
      *
-     * @return array
+     * @return int[]|float[]
      */
     public function getColumnWidths()
     {
