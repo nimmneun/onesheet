@@ -35,7 +35,7 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('', $sheet->getSheetViewsXml());
 
         $sheet->setFreezePaneCellId('A5');
-        $expectedXml = '<sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+        $expectedXml = '<sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
         self::assertEquals($expectedXml, $sheet->getSheetViewsXml());
     }
 
