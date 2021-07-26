@@ -17,7 +17,7 @@ class SheetXml
     /**
      * Constant for sheetview xml string containing the freeze pane xml.
      */
-    const SHEETVIEWS_XML = '<sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane ySplit="%d" topLeftCell="%s" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
+    const SHEETVIEWS_XML = '<sheetViews><sheetView workbookViewId="0"><pane ySplit="%d" topLeftCell="%s" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>';
 
     /**
      * Constant for single column width string.
