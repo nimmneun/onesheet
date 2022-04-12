@@ -28,7 +28,7 @@ class Sheet
     /**
      * @var string
      */
-    private $freezePaneCellId;
+    private $freezePaneCellId = '';
 
     /**
      * Track next row index.
