@@ -24,7 +24,7 @@ class SizeCalculator
      */
     public function __construct($fontsDirectory = null)
     {
-        if (is_dir($fontsDirectory)) {
+        if ($fontsDirectory !== null && is_dir($fontsDirectory)) {
             $this->findFonts($fontsDirectory);
         }
     }
