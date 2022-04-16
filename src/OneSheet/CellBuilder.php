@@ -65,7 +65,7 @@ class CellBuilder
             return sprintf(CellXml::NUMBER_XML, $cellId, $styleId, $cellValue);
         } elseif (is_bool($cellValue)) {
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
-        } elseif (0 === strlen($cellValue)) {
+        } elseif ($cellValue === null || 0 === strlen($cellValue)) {
             return 0 === $styleId ? '' : sprintf(CellXml::EMPTY_XML, $cellId, $styleId);
         }
 
