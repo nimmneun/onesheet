@@ -139,7 +139,7 @@ for ($i = 1; $i <= 100; $i++) {
         microtime(1),
         date(DATE_RSS, time() + $i*60*60*24),
         date('H:i:s', time() + $i),
-        uniqid(null, 1)
+        uniqid('', true)
     );
 }
 
