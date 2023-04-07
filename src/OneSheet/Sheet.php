@@ -156,11 +156,11 @@ class Sheet
      *
      * @return string
      */
-    public function addRow(array $row, Style $style)
+    public function addRow(array $row, $styles = null)
     {
         $columnCount = count($row);
         $this->updateMaxColumnCount($columnCount);
-        $cellXml = $this->getCellXml($row, $style);
+        $cellXml = $this->getCellXml($row, $styles);
 
         return $this->getRowXml($columnCount, $cellXml);
     }
@@ -196,13 +196,25 @@ class Sheet
      * @param Style $style
      * @return string
      */
-    private function getCellXml(array $row, Style $style)
+    private function getCellXml(array $row, $styles = null)
     {
         $cellXml = '';
+
+        if (!is_array($styles)) {
+            $style = $styles;
+        }
+
         foreach (array_values($row) as $cellIndex => $cellValue) {
+            if (is_array($styles) && isset($styles[$cellIndex])) {
+                $style = $styles[$cellIndex];
+            }
+
             $this->updateColumnWidths($cellValue, $cellIndex, $style->getFont());
+
+            $styleId = $style->getId();
+
             $cellXml .= $this->cellBuilder->build(
-                $this->rowIndex, $cellIndex, $cellValue, $style->getId()
+                $this->rowIndex, $cellIndex, $cellValue, $styleId
             );
         }
 

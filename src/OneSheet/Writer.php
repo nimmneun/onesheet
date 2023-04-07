@@ -147,13 +147,16 @@ class Writer
      * @param array $row
      * @param Style $style
      */
-    public function addRow(array $row, Style $style = null)
+    public function addRow(array $row, $styles)
     {
         if (!empty($row)) {
-            $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
-            $this->styler->addStyle($style);
+            foreach ($styles as $style) {
+                $newStyle = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
+                $this->styler->addStyle($newStyle);
+            }
+
             $this->sheetFiles[$this->currentSheet]->fwrite(
-                $this->sheets[$this->currentSheet]->addRow($row, $style)
+                $this->sheets[$this->currentSheet]->addRow($row, $styles)
             );
         }
     }
