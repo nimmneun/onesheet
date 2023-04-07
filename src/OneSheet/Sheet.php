@@ -209,9 +209,11 @@ class Sheet
                 $style = $styles[$cellIndex];
             }
 
-            $this->updateColumnWidths($cellValue, $cellIndex, $style->getFont());
+            if ($style) {
+                $this->updateColumnWidths($cellValue, $cellIndex, $style->getFont());
+            }
 
-            $styleId = $style->getId();
+            $styleId = $style ? $style->getId() : 0;
 
             $cellXml .= $this->cellBuilder->build(
                 $this->rowIndex, $cellIndex, $cellValue, $styleId

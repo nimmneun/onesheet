@@ -145,9 +145,9 @@ class Writer
      * Add a single new row to the sheet and supply an optional style.
      *
      * @param array $row
-     * @param Style $style
+     * @param Style[] $styles
      */
-    public function addRow(array $row, $styles)
+    public function addRow(array $row, $styles = null)
     {
         if (!empty($row)) {
             foreach ($styles as $style) {
