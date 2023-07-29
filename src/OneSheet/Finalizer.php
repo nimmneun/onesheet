@@ -108,6 +108,7 @@ class Finalizer
 
     /**
      * Write workbook file.
+     *
      * @param string[] $sheetNames
      */
     private function finalizeWorkbook(array $sheetNames)
@@ -121,11 +122,26 @@ class Finalizer
      */
     private function finalizeDefaultXmls()
     {
-        $this->zip->addFromString('[Content_Types].xml', DefaultXml::CONTENT_TYPES);
+        $this->zip->addFromString('[Content_Types].xml', $this->buildContentTypesXml());
         $this->zip->addFromString('docProps/core.xml',
             sprintf(DefaultXml::DOCPROPS_CORE, date(DATE_W3C), date(DATE_W3C)));
         $this->zip->addFromString('docProps/app.xml', DefaultXml::DOCPROPS_APP);
         $this->zip->addFromString('_rels/.rels', DefaultXml::RELS_RELS);
+    }
+
+    /**
+     * Required for e.g. MS Access to find data sheets
+     *
+     * @return string
+     */
+    public function buildContentTypesXml()
+    {
+        $sheetContentTypes = '';
+        foreach (array_keys($this->sheets) as $sheetName) {
+            $sheetContentTypes .= sprintf(DefaultXml::CONTENT_TYPES_SHEETS, $sheetName);
+        }
+
+        return  sprintf(DefaultXml::CONTENT_TYPES, $sheetContentTypes);
     }
 
     /**
