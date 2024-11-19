@@ -129,7 +129,8 @@ class SizeCalculator
      */
     private function getSingleCharacterArray($value)
     {
-        if (mb_strlen($value) == strlen($value)) {
+        $value = (string)$value;
+        if (mb_strlen($value) === strlen($value)) {
             return str_split($value);
         }
 

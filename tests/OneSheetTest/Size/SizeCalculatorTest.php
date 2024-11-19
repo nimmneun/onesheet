@@ -19,6 +19,13 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
         mb_internal_encoding(self::$encoding);
     }
 
+    public function testNullValues()
+    {
+        $calculator = new SizeCalculator();
+        $fontSize = 12;
+        self::assertLessThanOrEqual(1 + $fontSize * 0.1, $calculator->getCellWidth('Arial', $fontSize, null));
+    }
+
     public function testGetCellWidthForUnknownFont()
     {
         $calculator = new SizeCalculator();
