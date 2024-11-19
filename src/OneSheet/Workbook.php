@@ -56,7 +56,8 @@ class Workbook
     {
         $relations = '';
         foreach ($sheetNames as $key => $sheetName) {
-            $relations .= sprintf(WorkbookXml::WORKBOOK_REL_XML, $key + 1, $sheetName);
+            $sheetId = $key + 1;
+            $relations .= sprintf(WorkbookXml::WORKBOOK_REL_XML, $sheetId, "sheet{$sheetId}");
         }
 
         return sprintf(WorkbookXml::WORKBOOK_RELS_XML, $relations);

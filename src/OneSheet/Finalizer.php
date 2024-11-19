@@ -73,8 +73,9 @@ class Finalizer
     private function fillZipWithFileContents($zipFileUrl)
     {
         $this->zip->open($zipFileUrl, \ZipArchive::CREATE);
+        $sheetId = 1;
         foreach ($this->sheets as $sheetName => $sheet) {
-            $this->finalizeSheet($this->sheetFiles[$sheetName], $sheet, $sheetName);
+            $this->finalizeSheet($this->sheetFiles[$sheetName], $sheet, $sheetId++);
         }
         $this->finalizeWorkbook(array_keys($this->sheets));
         $this->finalizeStyles();
@@ -84,9 +85,9 @@ class Finalizer
     /**
      * @param SheetFile $sheetFile
      * @param Sheet     $sheet
-     * @param string    $sheetName
+     * @param int       $sheetId
      */
-    private function finalizeSheet($sheetFile, $sheet, $sheetName)
+    private function finalizeSheet($sheetFile, $sheet, $sheetId)
     {
         $sheetFile->fwrite('</sheetData></worksheet>');
         $sheetFile->rewind();
@@ -94,8 +95,7 @@ class Finalizer
         $sheetFile->fwrite($sheet->getDimensionXml());
         $sheetFile->fwrite($sheet->getSheetViewsXml());
         $sheetFile->fwrite($sheet->getColsXml());
-        $this->zip->addFile($sheetFile->getFilePath(),
-            sprintf("xl/worksheets/%s.xml", $sheetName));
+        $this->zip->addFile($sheetFile->getFilePath(), sprintf("xl/worksheets/%s.xml", "sheet{$sheetId}"));
     }
 
     /**
@@ -137,8 +137,8 @@ class Finalizer
     public function buildContentTypesXml()
     {
         $sheetContentTypes = '';
-        foreach (array_keys($this->sheets) as $sheetName) {
-            $sheetContentTypes .= sprintf(DefaultXml::CONTENT_TYPES_SHEETS, $sheetName);
+        for ($sheetId = 1; $sheetId <= count($this->sheets); $sheetId++) {
+            $sheetContentTypes .= sprintf(DefaultXml::CONTENT_TYPES_SHEETS, "sheet{$sheetId}");
         }
 
         return  sprintf(DefaultXml::CONTENT_TYPES, $sheetContentTypes);
