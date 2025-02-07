@@ -130,7 +130,7 @@ class Writer
      * @param Style              $style
      * @throws \InvalidArgumentException
      */
-    public function addRows($rows, Style $style = null)
+    public function addRows($rows, ?Style $style = null)
     {
         if (!is_array($rows) && false === $rows instanceof \Traversable) {
             throw new \InvalidArgumentException('Expected array or traversable object as rows');
@@ -147,7 +147,7 @@ class Writer
      * @param array $row
      * @param Style $style
      */
-    public function addRow(array $row, Style $style = null)
+    public function addRow(array $row, ?Style $style = null)
     {
         if (!empty($row)) {
             $style = $style instanceof Style ? $style : $this->styler->getDefaultStyle();
