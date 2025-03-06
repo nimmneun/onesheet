@@ -1,6 +1,6 @@
 {
     "name":             "nimmneun/onesheet",
-    "description":      "OneSheet is a fast and lightweight single/multi sheet excel/xlsx file writer for PHP 5.4+, PHP 7 & PHP 8 with styling and cell auto-sizing support.",
+    "description":      "OneSheet is a fast and lightweight single/multi sheet excel/xlsx file writer for PHP 5.4+ (until v1.2.6), PHP 7 & PHP 8 with styling and cell auto-sizing support.",
     "homepage":         "https://github.com/nimmneun/onesheet",
     "type":             "library",
     "license":          "MIT",
@@ -17,6 +17,10 @@
             "email":    "nimmneun@gmail.com"
         }
     ],
+    "_comment": [
+        "min required version to run unit tests PHP7.3, bcs PHPUnit < 9 is incompatible with PHP8",
+        "last version supporting PHP5 1.2.6"
+    ],
     "autoload": {
         "psr-4": {
             "OneSheet\\": "src/OneSheet/"
@@ -24,13 +28,13 @@
     },
     "require": {
         "php": ">=7.1.0",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4"
+        "phpunit/phpunit": "^9.6.22"
     },
     "suggest": {
-        "ext-mbstring": "Required for cell width auto sizing",
-        "ext-gd": "Required for accurate cell width sizing only."
+      "ext-gd": "Required for accurate cell width sizing only."
     }
 }

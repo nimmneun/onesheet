@@ -3,14 +3,13 @@
 namespace OneSheetTest;
 
 use OneSheet\SheetFile;
+use PHPUnit\Framework\TestCase;
 
-class SheetFileTest extends \PHPUnit_Framework_TestCase
+class SheetFileTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testSheetFileThrowsErrorOnWrite()
     {
+        $this->expectException(\RuntimeException::class);
         $sheetFile = new SheetFile();
         $sheetFile->fwrite('should work');
         $sheetFilePointer = $this->getObjectProperty($sheetFile, 'filePointer');
@@ -19,11 +18,9 @@ class SheetFileTest extends \PHPUnit_Framework_TestCase
         $sheetFile->fwrite('should fail');
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testSheetFileThrowsErrorOneRewind()
     {
+        $this->expectException(\RuntimeException::class);
         $sheetFile = new SheetFile();
         $sheetFilePointer = $this->getObjectProperty($sheetFile, 'filePointer');
         fclose($sheetFilePointer);

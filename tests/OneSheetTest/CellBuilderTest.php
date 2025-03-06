@@ -3,8 +3,9 @@
 namespace OneSheetTest;
 
 use OneSheet\CellBuilder;
+use PHPUnit\Framework\TestCase;
 
-class CellBuilderTest extends \PHPUnit_Framework_TestCase
+class CellBuilderTest extends TestCase
 {
     public function testGetCellId()
     {

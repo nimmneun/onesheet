@@ -127,8 +127,7 @@ class Writer
      * Add multiple rows at once.
      *
      * @param array|\Traversable $rows
-     * @param Style              $style
-     * @throws \InvalidArgumentException
+     * @param Style|null         $style
      */
     public function addRows($rows, ?Style $style = null)
     {
@@ -144,8 +143,8 @@ class Writer
     /**
      * Add a single new row to the sheet and supply an optional style.
      *
-     * @param array $row
-     * @param Style $style
+     * @param array      $row
+     * @param Style|null $style
      */
     public function addRow(array $row, ?Style $style = null)
     {

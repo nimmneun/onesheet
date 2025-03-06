@@ -2,12 +2,13 @@
 
 namespace OneSheetTest;
 
-use OneSheet\Sheet;
-use OneSheet\Style\Style;
 use OneSheet\CellBuilder;
+use OneSheet\Sheet;
 use OneSheet\Size\SizeCalculator;
+use OneSheet\Style\Style;
+use PHPUnit\Framework\TestCase;
 
-class SheetTest extends \PHPUnit_Framework_TestCase
+class SheetTest extends TestCase
 {
     public function testAddRow()
     {
@@ -66,20 +67,16 @@ class SheetTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(30, array_sum($sheet->getColumnWidths()));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetFixedColumnWidthsWithInvalidValues()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $sheet = new Sheet(new CellBuilder(), new SizeCalculator(null));
         $sheet->setFixedColumnWidths(array(1 => 'abc', 7 => 10));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetFixedColumnWidthsWithInvalidKeys()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $sheet = new Sheet(new CellBuilder(), new SizeCalculator(null));
         $sheet->setFixedColumnWidths(array('A1' => 10, 7 => 10));
     }

@@ -5,8 +5,9 @@ namespace OneSheetTest;
 use OneSheet\Style\BorderStyle;
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
+use PHPUnit\Framework\TestCase;
 
-class StyleTest extends \PHPUnit_Framework_TestCase
+class StyleTest extends TestCase
 {
     public function testFont()
     {
