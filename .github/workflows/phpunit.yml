@@ -11,8 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      max-parallel: 2
       matrix:
         php-version: [ "7.3", "7.4", "8.0", "8.2", "8.3", "8.4" ]
+
+    concurrency:
+      group: phpunit-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout code
