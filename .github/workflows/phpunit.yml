@@ -30,8 +30,14 @@ jobs:
           extensions: zip, mbstring, gd
           tools: composer
 
-      - name: Check GD Extension was installed
-        run: php -m | grep gd
+      - name: Check GD and FreeType Support
+        run: php -r "var_dump(gd_info());"
+
+      - name: Install Fonts
+        run: sudo apt-get update && sudo apt-get install -y fonts-dejavu ttf-mscorefonts-installer
+
+      - name: List Installed Fonts
+        run: fc-list
 
       - name: Update Composer
         run: composer self-update
