@@ -29,12 +29,12 @@
     "require": {
         "php": ">=7.1.0",
         "ext-zip": "*",
-        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6.22"
     },
     "suggest": {
-      "ext-gd": "Required for accurate cell width sizing only."
+        "ext-mbstring": "Required for cell auto-sizing only.",
+        "ext-gd": "Required for accurate cell-auto sizing only."
     }
 }
