@@ -30,12 +30,6 @@ jobs:
           extensions: zip, mbstring, gd
           tools: composer
 
-      - name: Check GD and FreeType Support
-        run: php -r "var_dump(gd_info());"
-
-      - name: List Installed Fonts
-        run: fc-list
-
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist
 
