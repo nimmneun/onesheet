@@ -49,7 +49,7 @@ class SizeCalculatorTest extends TestCase
             self::markTestSkipped('No open/true type fonts found - skipping');
         }
 
-        $fontName = array_pop($availableFonts);
+        $fontName = array_shift($availableFonts);
         $string = 'äßö22 4eä18 åæçè €äÜ';
 
         $cellWidth1 = $calculator->getCellWidth($fontName, 12, $string);
