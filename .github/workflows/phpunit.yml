@@ -22,8 +22,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: zip, mbstring
+          extensions: zip, mbstring, gd
           tools: composer
+
+      - name: Update Composer
+        run: composer self-update
 
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist
