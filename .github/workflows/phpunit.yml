@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      max-parallel: 2
+      max-parallel: 1
       matrix:
         php-version: [ "7.3", "7.4", "8.0", "8.2", "8.3", "8.4" ]
 
@@ -29,6 +29,9 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: zip, mbstring, gd
           tools: composer
+
+      - name: Check GD Extension was installed
+        run: php -m | grep gd
 
       - name: Update Composer
         run: composer self-update
