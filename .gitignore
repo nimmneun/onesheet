@@ -2,3 +2,4 @@
 vendor/
 dummy/
 /composer.lock
+/.phpunit.result.cache

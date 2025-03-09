@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/packagist/dm/nimmneun/onesheet)](https://img.shields.io/packagist/dm/nimmneun/onesheet)
 
 
-OneSheet is a simple **single/multi sheet** excel/xlsx file writer for PHP 5, PHP 7 & PHP 8 with cell auto-sizing and styling support.
+OneSheet is a simple **single/multi sheet** excel/xlsx file writer for PHP 5 (until v1.2.6), PHP 7 & PHP 8 with cell auto-sizing and styling support.
 
 ![alt text](autosizing_excel_screencap.png "OneSheet excel output example")
 
@@ -212,7 +212,6 @@ $writer->addRow(['C-123', 'Bob', 'Johnson']);
 // send file to browser for downloading 
 $writer->writeToBrowser();
 ```
-
 
 ### Issues, bugs, features and ...
 Feel free to report any sightings =).

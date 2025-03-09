@@ -4,8 +4,9 @@ namespace OneSheetTest;
 
 use OneSheet\Workbook;
 use OneSheet\Xml\WorkbookXml;
+use PHPUnit\Framework\TestCase;
 
-class WorkbookTest extends \PHPUnit_Framework_TestCase
+class WorkbookTest extends TestCase
 {
     const SHEET_ONE = 'Sheet1';
     const SHEET_TWO = 'Sheet2';

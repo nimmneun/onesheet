@@ -4,8 +4,9 @@ namespace OneSheetTest;
 
 use OneSheet\Style\Style;
 use OneSheet\Style\Styler;
+use PHPUnit\Framework\TestCase;
 
-class StylerTest extends \PHPUnit_Framework_TestCase
+class StylerTest extends TestCase
 {
     public function testAddStyle()
     {

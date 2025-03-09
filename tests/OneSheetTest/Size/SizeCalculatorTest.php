@@ -3,18 +3,19 @@
 namespace OneSheetTest\Size;
 
 use OneSheet\Size\SizeCalculator;
+use PHPUnit\Framework\TestCase;
 
-class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
+class SizeCalculatorTest extends TestCase
 {
     private static $encoding;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$encoding = mb_internal_encoding();
         mb_internal_encoding('UTF-8');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         mb_internal_encoding(self::$encoding);
     }
@@ -48,7 +49,7 @@ class SizeCalculatorTest extends \PHPUnit_Framework_TestCase
             self::markTestSkipped('No open/true type fonts found - skipping');
         }
 
-        $fontName = array_pop($availableFonts);
+        $fontName = array_shift($availableFonts);
         $string = 'äßö22 4eä18 åæçè €äÜ';
 
         $cellWidth1 = $calculator->getCellWidth($fontName, 12, $string);

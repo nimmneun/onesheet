@@ -4,8 +4,9 @@ namespace OneSheetTest;
 
 use OneSheet\Style\Style;
 use OneSheet\Writer;
+use PHPUnit\Framework\TestCase;
 
-class WriterTest extends \PHPUnit_Framework_TestCase
+class WriterTest extends TestCase
 {
     public function testAddRowsWithStyle()
     {
@@ -50,11 +51,9 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAddRowsExceptionOnNonArrayOrTraversableObject()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $writer = new Writer();
         $writer->addRows(new \stdClass());
     }
@@ -126,19 +125,15 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(255.86, $maxWidth);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowOnInvalidSheetName()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new Writer(null, '[invalid]');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowOnEmptySheetName()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new Writer(null, '');
     }
 
