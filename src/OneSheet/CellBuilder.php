@@ -111,12 +111,5 @@ class CellBuilder
             $this->controlCharacters, $this->escapeCharacters, htmlspecialchars($value, ENT_QUOTES)
         );
     }
-
-    private function validateCellValue($cellValue): void
-    {
-        if (is_array($cellValue)) {
-            throw new InvalidArgumentException('Cannot use type array as cell value');
-        }
-    }
 }
 
