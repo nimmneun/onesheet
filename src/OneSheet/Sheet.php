@@ -2,6 +2,7 @@
 
 namespace OneSheet;
 
+use InvalidArgumentException;
 use OneSheet\Size\SizeCalculator;
 use OneSheet\Style\Font;
 use OneSheet\Style\Style;
@@ -66,10 +67,6 @@ class Sheet
      */
     private $maxColumnWidth = 254.86;
 
-    /**
-     * @param CellBuilder    $cellBuilder
-     * @param SizeCalculator $sizeCalculator
-     */
     public function __construct(CellBuilder $cellBuilder, SizeCalculator $sizeCalculator)
     {
         $this->cellBuilder = $cellBuilder;
@@ -79,7 +76,7 @@ class Sheet
     /**
      * Enable cell auto-sizing (~30-100% performance hit!).
      */
-    public function enableCellAutosizing()
+    public function enableCellAutosizing(): void
     {
         $this->useCellAutosizing = true;
     }
@@ -87,7 +84,7 @@ class Sheet
     /**
      * Disable cell auto-sizing (default).
      */
-    public function disableCellAutosizing()
+    public function disableCellAutosizing(): void
     {
         $this->useCellAutosizing = false;
     }
@@ -95,7 +92,7 @@ class Sheet
     /**
      * @param string $cellId
      */
-    public function setFreezePaneCellId($cellId)
+    public function setFreezePaneCellId($cellId): void
     {
         $this->freezePaneCellId = $cellId;
     }
@@ -104,14 +101,15 @@ class Sheet
      * Set custom column widths with 0 representing the first column.
      *
      * @param int[]|float[] $columnWidths
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
-    public function setFixedColumnWidths(array $columnWidths)
+    public function setFixedColumnWidths(array $columnWidths): void
     {
         if ($columnWidths !== array_filter($columnWidths, 'is_numeric')
             || array_keys($columnWidths) !== array_filter(array_keys($columnWidths), 'is_int')
         ) {
-            throw new \InvalidArgumentException('Array must contain integer keys and numeric values only!');
+            throw new InvalidArgumentException('Array must contain integer keys and numeric values only!');
         }
 
         $this->columnWidths = $columnWidths + $this->columnWidths;
@@ -123,7 +121,7 @@ class Sheet
      * @param int|float|null $minWidth
      * @param int|float|null $maxWidth
      */
-    public function setColumnWidthLimits($minWidth = null, $maxWidth = null)
+    public function setColumnWidthLimits($minWidth = null, $maxWidth = null): void
     {
         $this->minColumnWidth = is_numeric($minWidth) && $minWidth >= 0 ? $minWidth : 0;
         $this->maxColumnWidth = is_numeric($maxWidth) && $maxWidth < 255.86 ? $maxWidth : 255.86;
@@ -135,7 +133,7 @@ class Sheet
      *
      * @return int[]|float[]
      */
-    public function getColumnWidths()
+    public function getColumnWidths(): array
     {
         foreach ($this->columnWidths as $column => $width) {
             if ($width > $this->maxColumnWidth) {
@@ -155,8 +153,9 @@ class Sheet
      * @param Style $style
      *
      * @return string
+     * @throws InvalidArgumentException
      */
-    public function addRow(array $row, Style $style)
+    public function addRow(array $row, Style $style): string
     {
         $columnCount = count($row);
         $this->updateMaxColumnCount($columnCount);
@@ -170,7 +169,7 @@ class Sheet
      *
      * @param int $columnCount
      */
-    private function updateMaxColumnCount($columnCount)
+    private function updateMaxColumnCount($columnCount): void
     {
         if ($this->maxColumnCount < $columnCount) {
             $this->maxColumnCount = $columnCount;
@@ -182,9 +181,8 @@ class Sheet
      *
      * @param int    $columnCount
      * @param string $cellXml
-     * @return string
      */
-    private function getRowXml($columnCount, $cellXml)
+    private function getRowXml($columnCount, $cellXml): string
     {
         return sprintf(RowXml::DEFAULT_XML, $this->rowIndex++, $columnCount, $cellXml);
     }
@@ -194,9 +192,11 @@ class Sheet
      *
      * @param array $row
      * @param Style $style
+     *
      * @return string
+     * @throws InvalidArgumentException
      */
-    private function getCellXml(array $row, Style $style)
+    private function getCellXml(array $row, Style $style): string
     {
         $cellXml = '';
         foreach (array_values($row) as $cellIndex => $cellValue) {
@@ -216,7 +216,7 @@ class Sheet
      * @param int   $cellIndex
      * @param Font  $font
      */
-    private function updateColumnWidths($value, $cellIndex, Font $font)
+    private function updateColumnWidths($value, $cellIndex, Font $font): void
     {
         if ($this->useCellAutosizing) {
             $cellWidth = $this->sizeCalculator->getCellWidth($font->getName(), $font->getSize(), $value);
@@ -230,10 +230,8 @@ class Sheet
 
     /**
      * Return <dimension> xml string.
-     *
-     * @return string
      */
-    public function getDimensionXml()
+    public function getDimensionXml(): string
     {
         return sprintf(SheetXml::DIMENSION_XML,
             $this->cellBuilder->getCellId($this->maxColumnCount - 1, $this->rowIndex - 1)
@@ -242,10 +240,8 @@ class Sheet
 
     /**
      * Return <sheetViews> xml containing the freeze pane.
-     *
-     * @return string
      */
-    public function getSheetViewsXml()
+    public function getSheetViewsXml(): string
     {
         if (1 !== preg_match('~^[A-Z]+(\d+)$~', $this->freezePaneCellId, $m)) {
             return '';
@@ -258,10 +254,8 @@ class Sheet
      * Return <cols> xml for column widths or an empty string,
      * if there are no column widths.
      * Format widths to account for locales with comma as decimal point.
-     *
-     * @return string
      */
-    public function getColsXml()
+    public function getColsXml(): string
     {
         $colsXml = '';
         if (0 !== count($this->getColumnWidths())) {
@@ -279,10 +273,8 @@ class Sheet
 
     /**
      * Return array of available font names and paths.
-     *
-     * @return array
      */
-    public function getFonts()
+    public function getFonts(): array
     {
         return $this->sizeCalculator->getFonts();
     }

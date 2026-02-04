@@ -2,12 +2,13 @@
 
 namespace OneSheetTest;
 
+use InvalidArgumentException;
 use OneSheet\CellBuilder;
 use PHPUnit\Framework\TestCase;
 
 class CellBuilderTest extends TestCase
 {
-    public function testGetCellId()
+    public function testGetCellId(): void
     {
         $cellBuilder = new CellBuilder();
         self::assertEquals('A1', $cellBuilder->getCellId(0, 1));
@@ -15,7 +16,7 @@ class CellBuilderTest extends TestCase
         self::assertEquals('ALL9', $cellBuilder->getCellId(999, 9));
     }
 
-    public function testBuildContentCell()
+    public function testBuildContentCell(): void
     {
         $cellBuilder = new CellBuilder();
 
@@ -26,7 +27,7 @@ class CellBuilderTest extends TestCase
         self::assertEquals($expectedXml, $cellBuilder->build(1, 3, chr(3)));
     }
 
-    public function testBuildEmptyCell()
+    public function testBuildEmptyCell(): void
     {
         $cellBuilder = new CellBuilder();
 
@@ -35,5 +36,13 @@ class CellBuilderTest extends TestCase
 
         $expectedXml = '<c r="D1" s="1"/>';
         self::assertEquals($expectedXml, $cellBuilder->build(1, 3, '', 1));
+    }
+
+    public function testExceptionOnArrayCellValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $cellBuilder = new CellBuilder();
+        $cellBuilder->build(1, 1, []);
     }
 }
