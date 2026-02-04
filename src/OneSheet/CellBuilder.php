@@ -70,7 +70,9 @@ class CellBuilder
         } elseif ($cellValue === null || (is_string($cellValue) && 0 === strlen($cellValue))) {
             return 0 === $styleId ? '' : sprintf(CellXml::EMPTY_XML, $cellId, $styleId);
         } elseif (is_array($cellValue)) {
-            throw new InvalidArgumentException('Cannot use type array as cell value');
+            throw new InvalidArgumentException(
+                'Cannot use type array as cell value: ' . var_export($cellValue, true)
+            );
         }
 
         return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escape($cellValue));
