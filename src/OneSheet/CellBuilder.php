@@ -2,6 +2,7 @@
 
 namespace OneSheet;
 
+use InvalidArgumentException;
 use OneSheet\Xml\CellXml;
 
 /**
@@ -56,6 +57,7 @@ class CellBuilder
      * @param int   $styleId
      *
      * @return string
+     * @throws InvalidArgumentException
      */
     public function build($rowNumber, $cellNumber, $cellValue, $styleId = 0)
     {
@@ -67,6 +69,8 @@ class CellBuilder
             return sprintf(CellXml::BOOLEAN_XML, $cellId, $styleId, (int)$cellValue);
         } elseif ($cellValue === null || (is_string($cellValue) && 0 === strlen($cellValue))) {
             return 0 === $styleId ? '' : sprintf(CellXml::EMPTY_XML, $cellId, $styleId);
+        } elseif (is_array($cellValue)) {
+            throw new InvalidArgumentException('Cannot use type array as cell value');
         }
 
         return sprintf(CellXml::STRING_XML, $cellId, $styleId, $this->escape($cellValue));
@@ -106,6 +110,13 @@ class CellBuilder
         return str_replace(
             $this->controlCharacters, $this->escapeCharacters, htmlspecialchars($value, ENT_QUOTES)
         );
+    }
+
+    private function validateCellValue($cellValue): void
+    {
+        if (is_array($cellValue)) {
+            throw new InvalidArgumentException('Cannot use type array as cell value');
+        }
     }
 }
 
